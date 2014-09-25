@@ -1,0 +1,133 @@
+/*
+ * $Id$
+ *
+ * Jaak environment model is an open-source multiagent library.
+ * More details on http://www.sarl.io
+ *
+ * Copyright (C) 2014 Stéphane GALLAND.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.sarl.jaak.kernel
+
+import io.sarl.jaak.envinterface.perception.EnvironmentalObject
+import io.sarl.jaak.envinterface.perception.Perceivable
+import org.arakhne.afc.math.continous.object2d.Vector2f
+import org.arakhne.afc.math.discrete.object2d.Point2i
+
+skill PhysicBodySkill implements PhysicBody {
+	
+	def install() {
+	}
+		
+	def beIddle {
+		
+	}
+
+	def move(direction : Vector2f, changeHeading : boolean) {
+		//var evt = new Move
+	}
+	
+	def moveForward(cells : int) {
+		
+	}
+	
+	def moveBackward(cells : int) {
+		
+	}
+
+	def turnLeft(radians : float) {
+		
+	}
+
+	def turnRight(radians : float) {
+		
+	}
+
+	def setHeading(radians : float) {
+		
+	}
+	
+	def setHeading(direction : Vector2f) {
+		
+	}
+
+	def dropOff(object : EnvironmentalObject) {
+		
+	}
+
+	//TODO: def pickUp(type : Class<T>) : T with T extends Perceivable
+	def pickUp(type : Class<? extends Perceivable>) : Perceivable {
+		
+	}
+
+	def pickUp(object : EnvironmentalObject) {
+		
+	}
+
+	//TODO: def touchUp(type : Class<T>) : T with T extends EnvironmentalObject
+	def touchUp(type : Class<? extends EnvironmentalObject>) : EnvironmentalObject {
+		
+	}
+
+	def setSemantic(semantic : Object) {
+		
+	}
+
+	def setPerceptionEnable(enable : boolean) {
+		
+	}
+	def getHeadingAngle : float {
+		// TODO: Auto-generated action.
+		0.0f
+	}
+	def getHeadingVector : Vector2f {
+		// TODO: Auto-generated action.
+		null
+	}
+	def getOrientation : float {
+		// TODO: Auto-generated action.
+		0.0f
+	}
+	def getPosition : Point2i {
+		// TODO: Auto-generated action.
+		null
+	}
+	def getSemantic : Object {
+		// TODO: Auto-generated action.
+		null
+	}
+	def getSpeed : float {
+		// TODO: Auto-generated action.
+		0.0f
+	}
+	def getViewVector : Vector2f {
+		// TODO: Auto-generated action.
+		null
+	}
+	def getX : int {
+		// TODO: Auto-generated action.
+		0
+	}
+	def getY : int {
+		// TODO: Auto-generated action.
+		0
+	}
+	def hasInfluences : boolean {
+		// TODO: Auto-generated action.
+		true
+	}
+	def isPerceptionEnable : boolean {
+		// TODO: Auto-generated action.
+		true
+	}
+}

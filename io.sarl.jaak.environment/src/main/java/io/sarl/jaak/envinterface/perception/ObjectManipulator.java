@@ -1,0 +1,53 @@
+/*
+ * $Id$
+ *
+ * Jaak environment model is an open-source multiagent library.
+ * More details on http://www.sarl.io
+ *
+ * Copyright (C) 2014 Stéphane GALLAND.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.sarl.jaak.envinterface.perception;
+
+/** This interface permits to manipulate the environmental objects.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+public interface ObjectManipulator {
+
+	/** Set the position of the object.
+	 * 
+	 * @param object is the object to set.
+	 * @param x is the position of the object.
+	 * @param y is the position of the object.
+	 */
+	public void setPosition(EnvironmentalObject object, int x, int y);
+	
+	/**
+	 * Combine the given substance <var>s</var> with the current substance.
+	 * <p>
+	 * The concept of substance combination depends on the semantic of the substance.
+	 * 
+	 * @param s1 is the substance to combine and which may receive the result.
+	 * @param s2 is the substance to combine with.
+	 * @param additionOperation indicates if the combination is an addition
+	 * if <code>true</code>, or a substraction if <code>false</code>.
+	 * @return the change amount in <var>s1</var>. It is a substance lower or equal to <var>s2</var>,
+	 * or <code>null</code> if the operation is not possible.
+	 */
+	public Substance combine(Substance s1, Substance s2, boolean additionOperation);
+		
+}
