@@ -44,7 +44,7 @@ public class StampedEvent extends Event {
   }
   
   /**
-   * Returns a String representation of the Event StampedEvent attributes only.
+   * Returns a String representation of the StampedEvent event's attributes only.
    */
   @Generated
   protected String attributesToString() {

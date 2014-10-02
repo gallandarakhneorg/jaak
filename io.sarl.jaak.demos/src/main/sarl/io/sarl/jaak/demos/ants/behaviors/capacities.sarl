@@ -1,0 +1,42 @@
+package io.sarl.jaak.demos.ants.behaviors
+
+import io.sarl.jaak.demos.ants.environment.Food
+import io.sarl.jaak.demos.ants.environment.Pheromone
+import org.arakhne.afc.math.discrete.object2d.Point2i
+
+/** This interface defines the capacity to select a route of pheromone.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+capacity PheromoneFollowingCapacity {
+	
+	/** Select and replies a pheromone to follow.
+	 * 
+	 * @param position is the current position of the follower.
+	 * @param pheromones are the pheromones in which the selection should be done.
+	 * @return a selectesd pheromone to follow or <code>null</code> to follow nothing.
+	 */
+	def followPheromone(position : Point2i, pheromones : Iterable<? extends Pheromone>) : Pheromone
+	
+}
+
+/** This interface defines a selector of food. 
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+capacity FoodSelectionCapacity {
+	
+	/** Replies the best food location.
+	 * 
+	 * @param foods is the collection of food object in which a selection must be done.
+	 * @return the selected food.
+	 */
+	def getBestFood(foods : Iterable<Food>) : Food
+	
+}

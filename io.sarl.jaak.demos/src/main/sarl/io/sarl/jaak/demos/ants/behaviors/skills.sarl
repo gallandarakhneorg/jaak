@@ -1,0 +1,64 @@
+package io.sarl.jaak.demos.ants.behaviors
+
+import io.sarl.jaak.demos.ants.environment.Food
+import io.sarl.jaak.demos.ants.environment.Pheromone
+import io.sarl.jaak.kernel.PhysicBody
+import org.arakhne.afc.math.discrete.object2d.Point2i
+
+/** The skill to select a route of pheromone.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+skill PheromoneFollowingSkill implements PheromoneFollowingCapacity {
+	
+	def followPheromone(position : Point2i, pheromones : Iterable<? extends Pheromone>) : Pheromone {
+		var minAmount = Float::POSITIVE_INFINITY
+		var currentP : Pheromone
+		var minP : Pheromone
+		for(p : pheromones) {
+			var pp = p.position
+			if (pp != position) {
+				if (minP === null || (p.floatValue < minAmount)) {
+					minP = p
+					minAmount = p.floatValue
+				}
+			} else {
+				currentP = p
+			}
+		}
+		if (currentP === null || (minP !== null && currentP.floatValue >= minAmount)) {
+			return minP
+		}
+		return null
+	}
+	
+}
+
+/** A selector of food. 
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+skill FoodSelectionSkill implements FoodSelectionCapacity {
+	
+	def getBestFood(foods : Iterable<Food>) : Food {
+		var bestFood : Food
+		var distance = Integer::MAX_VALUE
+		var ap = getSkill(PhysicBody).position
+		for(food : foods) {
+			var fp = food.position
+			var d = Math.abs(fp.x() - ap.x()) + Math.abs(fp.y() - ap.y())
+			if (bestFood === null || d < distance) {
+				distance = d
+				bestFood = food
+			}
+		}
+		return bestFood
+	}
+	
+}

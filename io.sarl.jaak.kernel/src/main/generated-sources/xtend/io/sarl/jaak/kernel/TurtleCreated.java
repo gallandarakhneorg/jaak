@@ -66,7 +66,7 @@ public class TurtleCreated extends StampedEvent {
   }
   
   /**
-   * Returns a String representation of the Event TurtleCreated attributes only.
+   * Returns a String representation of the TurtleCreated event's attributes only.
    */
   @Generated
   protected String attributesToString() {

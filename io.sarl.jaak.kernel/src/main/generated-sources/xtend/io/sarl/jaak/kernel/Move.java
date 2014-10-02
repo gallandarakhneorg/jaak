@@ -65,7 +65,7 @@ public class Move extends StampedEvent {
   }
   
   /**
-   * Returns a String representation of the Event Move attributes only.
+   * Returns a String representation of the Move event's attributes only.
    */
   @Generated
   protected String attributesToString() {

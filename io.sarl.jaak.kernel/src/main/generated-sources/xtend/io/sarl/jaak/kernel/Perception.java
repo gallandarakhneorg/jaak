@@ -62,7 +62,7 @@ public class Perception extends StampedEvent {
   }
   
   /**
-   * Returns a String representation of the Event Perception attributes only.
+   * Returns a String representation of the Perception event's attributes only.
    */
   @Generated
   protected String attributesToString() {

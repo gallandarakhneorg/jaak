@@ -51,7 +51,7 @@ public class DropDown extends StampedEvent {
   }
   
   /**
-   * Returns a String representation of the Event DropDown attributes only.
+   * Returns a String representation of the DropDown event's attributes only.
    */
   @Generated
   protected String attributesToString() {

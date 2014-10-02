@@ -17,7 +17,6 @@ import io.sarl.lang.core.Event;
 public class ExecuteSimulationStep extends Event {
   /**
    * Construct an event. The source of the event is unknown.
-   * 
    */
   @Generated
   public ExecuteSimulationStep() {
@@ -27,7 +26,6 @@ public class ExecuteSimulationStep extends Event {
   /**
    * Construct an event.
    * @param source - address of the agent that is emitting this event.
-   * 
    */
   @Generated
   public ExecuteSimulationStep(final Address source) {

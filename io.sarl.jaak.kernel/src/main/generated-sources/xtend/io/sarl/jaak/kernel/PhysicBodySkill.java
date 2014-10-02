@@ -110,8 +110,7 @@ public class PhysicBodySkill extends Skill implements PhysicBody {
   
   /**
    * Construct a skill.
-   * @param owner - agent that is owning this skill. 
-   * 
+   * @param owner - agent that is owning this skill.
    */
   @Generated
   public PhysicBodySkill(final Agent owner) {
@@ -119,8 +118,7 @@ public class PhysicBodySkill extends Skill implements PhysicBody {
   }
   
   /**
-   * Construct a skill. The owning agent is unknown. 
-   * 
+   * Construct a skill. The owning agent is unknown.
    */
   @Generated
   public PhysicBodySkill() {

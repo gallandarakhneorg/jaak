@@ -66,7 +66,7 @@ public class PickUp extends StampedEvent {
   }
   
   /**
-   * Returns a String representation of the Event PickUp attributes only.
+   * Returns a String representation of the PickUp event's attributes only.
    */
   @Generated
   protected String attributesToString() {

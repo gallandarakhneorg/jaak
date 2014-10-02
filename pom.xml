@@ -44,6 +44,7 @@ Jaak lets students open simulations and "play" with them, exploring their behavi
 	<modules>
 		<module>io.sarl.jaak.environment</module>
 		<module>io.sarl.jaak.kernel</module>
+		<module>io.sarl.jaak.demos</module>
 	</modules>
 	<!-- ======================================= -->
 	<!-- ==== Organization and License details === -->
