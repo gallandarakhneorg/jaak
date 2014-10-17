@@ -24,31 +24,31 @@ import org.arakhne.afc.math.discrete.object2d.Rectangle2i;
 import org.arakhne.afc.math.discrete.object2d.Shape2i;
 
 /** Provide implementation for a turtle spawner on a point.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
 public abstract class JaakPointSpawner extends JaakSpawner {
-	
+
 	private final Point2i position;
-	
+
 	/**
 	 * @param x is the position of the spawner.
 	 * @param y is the position of the spawner.
 	 */
 	public JaakPointSpawner(int x, int y) {
-		this.position = new Point2i(x,y);
+		this.position = new Point2i(x, y);
 	}
-	
+
 	/** {@inheritDoc}
 	 */
 	@Override
 	public Point2i computeCurrentSpawningPosition(Point2i desiredPosition) {
 		return this.position;
 	}
-		
+
 	/** {@inheritDoc}
 	 */
 	@Override

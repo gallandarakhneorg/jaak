@@ -33,56 +33,56 @@ import org.arakhne.afc.math.discrete.object2d.Rectangle2i;
 import org.arakhne.afc.math.discrete.object2d.Shape2i;
 
 /** A spawner which is spawning on the overall world surface.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
 public class JaakWorldSpawner extends JaakSpawner {
-	
+
 	private final WeakReference<EnvironmentArea> environment;
-	
+
 	/**
 	 * @param environment is the environment in which the spawning may proceed.
 	 */
 	public JaakWorldSpawner(EnvironmentArea environment) {
-		this.environment = new WeakReference<EnvironmentArea>(environment);
+		this.environment = new WeakReference<>(environment);
 	}
-	
+
 	/** {@inheritDoc}
 	 */
 	@Override
 	public Point2i computeCurrentSpawningPosition(Point2i desiredPosition) {
 		EnvironmentArea area = this.environment.get();
-		assert(area!=null);
-		if (desiredPosition!=null
-		 && desiredPosition.x()>=area.getX()
-		 && desiredPosition.y()>=area.getY()
-		 && desiredPosition.x()<=area.getX()+area.getWidth()
-		 && desiredPosition.y()<=area.getY()+area.getHeight()) {
+		assert (area != null);
+		if (desiredPosition != null
+				&& desiredPosition.x() >= area.getX()
+				&& desiredPosition.y() >= area.getY()
+				&& desiredPosition.x() <= area.getX() + area.getWidth()
+				&& desiredPosition.y() <= area.getY() + area.getHeight()) {
 			return new Point2i(desiredPosition);
 		}
 		int dx = RandomNumber.nextInt(area.getWidth());
 		int dy = RandomNumber.nextInt(area.getHeight());
 		return new Point2i(area.getX() + dx, area.getY() + dy);
 	}
-		
+
 	/** {@inheritDoc}
 	 */
 	@Override
 	public Point2i getReferenceSpawningPosition() {
 		EnvironmentArea area = this.environment.get();
-		assert(area!=null);
+		assert (area != null);
 		return new Point2i(area.getX(), area.getY());
 	}
-	
+
 	/** {@inheritDoc}
 	 */
 	@Override
 	public Shape2i toShape() {
 		EnvironmentArea area = this.environment.get();
-		assert(area!=null);
+		assert (area != null);
 		return new Rectangle2i(area.getX(), area.getY(), area.getWidth(), area.getHeight());
 	}
 

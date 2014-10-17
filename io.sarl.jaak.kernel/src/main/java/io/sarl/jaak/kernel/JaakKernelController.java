@@ -66,6 +66,10 @@ class JaakKernelController implements JaakController {
 		return this.timeManager == null ? null : this.timeManager.get();
 	}
 
+	/** Wake the simulator by running one step of the simulation.
+	 * <p>
+	 * This function sends the event <code>ExecuteSimulationStep</code>.
+	 */
 	public synchronized void wakeSimulator() {
 		if (this.state == State.RUNNING) {
 			EventSpace s = getSpace();

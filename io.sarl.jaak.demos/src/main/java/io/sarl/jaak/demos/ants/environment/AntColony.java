@@ -10,9 +10,9 @@ import io.sarl.jaak.envinterface.perception.Burrow;
  * @mavenartifactid $ArtifactId$
  */
 public class AntColony extends Burrow {
-
-	private static final long serialVersionUID = -4345780257640925234L;
 	
+	private static final long serialVersionUID = 1535270256418318232L;
+
 	private final int colonyId;
 	
 	/**

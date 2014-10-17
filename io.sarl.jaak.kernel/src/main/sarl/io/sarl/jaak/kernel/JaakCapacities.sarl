@@ -26,13 +26,6 @@ import org.arakhne.afc.math.discrete.object2d.Point2i
 
 capacity PhysicBody {	
 
-	/** Notify the body that is should do nothing.
-	 * <p>
-	 * This method should be invoked when no other kind of
-	 * influence is sent by the turtle.
-	 */
-	def beIddle
-
 	/** Move the turtle along the given direction and
 	 * change the heading orientation if necessary.
 	 * The norm of the <var>direction</var> is the number
@@ -131,13 +124,6 @@ capacity PhysicBody {
 	 */
 	def setSemantic(semantic : Object)
 
-	/** Notifies the body that perceptions should be enabled or not.
-	 * 
-	 * @param enable is <code>true</code> to enable perception from the body,
-	 * <code>false</code> to disable perceptions.
-	 */
-	def setPerceptionEnable(enable : boolean)
-
 	/** Replies the position of the body in the environment. */
 	def getPosition : Point2i
 	
@@ -145,7 +131,7 @@ capacity PhysicBody {
 	def getOrientation : float
 	
 	/** Replies the orientation vector of the body on the cell. */
-	def getViewVector : Vector2f
+	def getOrientationVector : Vector2f
 	
 	/** Replies the orientation of the turtle head
 	 * in radians according to a trigonometric circle.
@@ -178,25 +164,10 @@ capacity PhysicBody {
 	 */
 	def getSemantic : Object
 
-	/** Replies if this body has registered influences which are not
-	 * yet consumed by the environment.
-	 * 
-	 * @return <code>true</code> if the body has not-consumed influences,
-	 * otherwise <code>false</code>.
-	 */
-	def hasInfluences : boolean
-
 	/** Replies the instant speed of the turtle.
 	 * 
 	 * @return the instant speed of the turtle in cells per second.
 	 */
 	def getSpeed : float
-
-	/** Replies if the perceptions are computed or not.
-	 * 
-	 * @return <code>true</code> if perceptions are enable from the body,
-	 * <code>false</code> if they are disable.
-	 */
-	def isPerceptionEnable : boolean 
 
 }

@@ -23,7 +23,7 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 import org.arakhne.afc.math.discrete.object2d.Shape2i;
 
 /** Describes the public/read-only API of a body spawner.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -32,15 +32,15 @@ import org.arakhne.afc.math.discrete.object2d.Shape2i;
 public interface BodySpawner {
 
 	/** Replies the position of this spawner.
-	 * 
+	 *
 	 * @return a position.
 	 */
 	Point2i getReferenceSpawningPosition();
 
 	/** Replies the shape of spawning for this spawner.
-	 * 
+	 *
 	 * @return a shape.
 	 */
 	Shape2i toShape();
-	
+
 }

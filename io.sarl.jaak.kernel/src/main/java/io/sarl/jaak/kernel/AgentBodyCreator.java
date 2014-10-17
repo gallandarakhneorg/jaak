@@ -61,7 +61,7 @@ class AgentBodyCreator implements JaakBodyCreator {
 
 	/** Change the creation parameters.
 	 * 
-	 * @param parameters - the parameters.
+	 * @param creationEvent - the event used for creating.
 	 */
 	public void set(TurtleCreated creationEvent) {
 		this.parameters = creationEvent;

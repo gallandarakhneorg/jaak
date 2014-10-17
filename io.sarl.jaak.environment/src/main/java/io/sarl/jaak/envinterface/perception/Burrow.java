@@ -26,7 +26,7 @@ import io.sarl.jaak.envinterface.influence.Influence;
  * the number of turtles to be on the cell.
  * Moreover, all turtles inside the burrow are not perceivable by the
  * other turtles.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -34,19 +34,19 @@ import io.sarl.jaak.envinterface.influence.Influence;
  */
 public class Burrow extends EnvironmentalObject {
 
-	private static final long serialVersionUID = 7690399061756387663L;
-	
 	/** Default Burrow semantic.
 	 */
 	public static final Object BURROW_SEMANTIC = new Object();
-	
+
+	private static final long serialVersionUID = 7690399061756387663L;
+
 	/**
 	 * @param semantic is the semantic associated to this environmental object.
 	 */
 	public Burrow(Object semantic) {
 		super(semantic);
 	}
-	
+
 	/**
 	 */
 	public Burrow() {
@@ -59,7 +59,7 @@ public class Burrow extends EnvironmentalObject {
 	protected final Influence createRemovalInfluenceForItself() {
 		return null;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

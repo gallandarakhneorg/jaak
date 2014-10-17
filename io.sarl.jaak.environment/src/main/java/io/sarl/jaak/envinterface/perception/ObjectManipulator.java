@@ -20,7 +20,7 @@
 package io.sarl.jaak.envinterface.perception;
 
 /** This interface permits to manipulate the environmental objects.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -29,25 +29,25 @@ package io.sarl.jaak.envinterface.perception;
 public interface ObjectManipulator {
 
 	/** Set the position of the object.
-	 * 
+	 *
 	 * @param object is the object to set.
 	 * @param x is the position of the object.
 	 * @param y is the position of the object.
 	 */
-	public void setPosition(EnvironmentalObject object, int x, int y);
-	
+	void setPosition(EnvironmentalObject object, int x, int y);
+
 	/**
-	 * Combine the given substance <var>s</var> with the current substance.
+	 * Combine the given substance s2 with the current substance.
 	 * <p>
 	 * The concept of substance combination depends on the semantic of the substance.
-	 * 
+	 *
 	 * @param s1 is the substance to combine and which may receive the result.
 	 * @param s2 is the substance to combine with.
 	 * @param additionOperation indicates if the combination is an addition
 	 * if <code>true</code>, or a substraction if <code>false</code>.
-	 * @return the change amount in <var>s1</var>. It is a substance lower or equal to <var>s2</var>,
+	 * @return the change amount in s1. It is a substance lower or equal to s2,
 	 * or <code>null</code> if the operation is not possible.
 	 */
-	public Substance combine(Substance s1, Substance s2, boolean additionOperation);
-		
+	Substance combine(Substance s1, Substance s2, boolean additionOperation);
+
 }

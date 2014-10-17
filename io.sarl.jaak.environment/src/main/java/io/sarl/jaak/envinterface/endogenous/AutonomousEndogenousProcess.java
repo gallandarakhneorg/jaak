@@ -27,7 +27,7 @@ import io.sarl.jaak.envinterface.influence.Influence;
  * inside the environment. An autonomous endogenous process
  * does not provide a side effect in environment but
  * does not output any influence.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -36,12 +36,12 @@ import io.sarl.jaak.envinterface.influence.Influence;
 public interface AutonomousEndogenousProcess {
 
 	/** Run the endogenous process.
-	 * 
+	 *
 	 * @param currentTime is the current simulation time
 	 * @param simulationStepDuration is the duration of the current simulation step.
 	 * @return the influence created by the autonomous process, or <code>null</code> if
 	 * no external influence was generated.
 	 */
-	public Influence runAutonomousEndogenousProcess(float currentTime, float simulationStepDuration);
+	Influence runAutonomousEndogenousProcess(float currentTime, float simulationStepDuration);
 
 }

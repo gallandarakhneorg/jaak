@@ -24,7 +24,7 @@ import java.math.BigInteger;
 
 /** This class defines a substance with a single precision
  * floating point value as the internal substance value.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -33,18 +33,18 @@ import java.math.BigInteger;
 public abstract class FloatSubstance extends AbstractNumberSubstance {
 
 	private static final long serialVersionUID = -6809995815683796406L;
-	
+
 	/** Value of the substance.
 	 */
 	protected float value;
-	
+
 	/**
 	 * @param semantic is the semantic associated to this environmental object.
 	 */
 	public FloatSubstance(Object semantic) {
 		this(0f, semantic);
 	}
-	
+
 	/**
 	 * @param initialValue is the initial value of this substance.
 	 * @param semantic is the semantic associated to this environmental object.
@@ -61,14 +61,16 @@ public abstract class FloatSubstance extends AbstractNumberSubstance {
 	protected void increment(float a) {
 		this.value += a;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	protected void decrement(float a) {
 		this.value -= a;
-		if (this.value<0f) this.value = 0f;
+		if (this.value < 0f) {
+			this.value = 0f;
+		}
 	}
 
 	/**
@@ -76,9 +78,9 @@ public abstract class FloatSubstance extends AbstractNumberSubstance {
 	 */
 	@Override
 	public final boolean isDisappeared() {
-		return this.value<=0f;
+		return this.value <= 0f;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -108,7 +110,7 @@ public abstract class FloatSubstance extends AbstractNumberSubstance {
 	 */
 	@Override
 	public final byte byteValue() {
-		return (byte)this.value;
+		return (byte) this.value;
 	}
 
 	/**
@@ -132,7 +134,7 @@ public abstract class FloatSubstance extends AbstractNumberSubstance {
 	 */
 	@Override
 	public final int intValue() {
-		return (int)this.value;
+		return (int) this.value;
 	}
 
 	/**
@@ -140,7 +142,7 @@ public abstract class FloatSubstance extends AbstractNumberSubstance {
 	 */
 	@Override
 	public final long longValue() {
-		return (long)this.value;
+		return (long) this.value;
 	}
 
 	/**
@@ -148,7 +150,7 @@ public abstract class FloatSubstance extends AbstractNumberSubstance {
 	 */
 	@Override
 	public final short shortValue() {
-		return (short)this.value;
+		return (short) this.value;
 	}
 
 }

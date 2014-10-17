@@ -11,15 +11,19 @@
 
 
 	<name>Jaak Environment</name>
-	<url>http://www.sarl.io/</url>
-	<inceptionYear>2014</inceptionYear>
+	<url>https://github.com/gallandarakhneorg/jaak</url>
+	<inceptionYear>2010</inceptionYear>
 
 	<description>
-	Jaak is an agent environment that runs on the synchronous engine of Janus. It provides a discrete 2D environment model and a simplified agent-environment interaction model based on LOGO-like primitives. Its purpose is similar to NetLogo, StarLogo, and TurtleKit. Jaak also provides the definition of capacities for using Jaak from agents developed in SARL.
-
-Jaak relies on a logo-based simulation model. Unlike StarLogo or NetLogo, Jaak proposes a Logo programming approach while giving all the possibilities afforded by high level programming languages such as Java.
-
-Jaak lets students open simulations and "play" with them, exploring their behavior under various conditions. It is also an authoring environment which enables students, teachers, and junior and senior developers to create their own models.
+	Jaak is an agent environment that runs on the synchronous engine of Janus. It provides a discrete 2D environment
+	model and a simplified agent-environment interaction model based on LOGO-like primitives. Its purpose is similar
+	to NetLogo, StarLogo, and TurtleKit. Jaak also provides the definition of capacities for using Jaak from agents
+	developed in SARL.
+	Jaak relies on a logo-based simulation model. Unlike StarLogo or NetLogo, Jaak proposes a Logo programming approach
+	while giving all the possibilities afforded by high level programming languages such as Java.
+	Jaak lets students open simulations and "play" with them, exploring their behavior under various conditions. It is
+	also an authoring environment which enables students, teachers, and junior and senior developers to create their
+	own models.
 	</description>
 
 	<packaging>pom</packaging>
@@ -33,8 +37,7 @@ Jaak lets students open simulations and "play" with them, exploring their behavi
 		<copyrighters>Stéphane GALLAND</copyrighters>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compiler.level>1.7</compiler.level>
-		<sarl.version.range>[0.1.0-SNAPSHOT,0.2.0-SNAPSHOT)</sarl.version.range>
-		<xtext.version>2.6.2</xtext.version>
+		<sarl.version>0.1.0</sarl.version>
 		<guice.version>4.0-beta4</guice.version>
 	</properties>
 
@@ -71,7 +74,7 @@ Jaak lets students open simulations and "play" with them, exploring their behavi
 			<dependency>
 				<groupId>io.sarl.maven</groupId>
 				<artifactId>io.sarl.maven.sdk</artifactId>
-				<version>${sarl.version.range}</version>
+				<version>${sarl.version}</version>
 				<type>pom</type>
 			</dependency>
 
@@ -105,7 +108,7 @@ Jaak lets students open simulations and "play" with them, exploring their behavi
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-all</artifactId>
 				<scope>test</scope>
-				<version>1.9.5</version>
+				<version>1.10.8</version>
 			</dependency>
 		</dependencies>
 
@@ -118,87 +121,15 @@ Jaak lets students open simulations and "play" with them, exploring their behavi
 	<build>
 		<pluginManagement>
 			<plugins>
-
 				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>build-helper-maven-plugin</artifactId>
-					<version>1.9</version>
-					<executions>
-						<execution>
-							<goals>
-								<goal>add-source</goal>
-							</goals>
-							<configuration>
-								<sources>
-									<source>src/main/sarl</source>
-									<source>src/main/generated-sources/xtend/</source>
-									<source>src/test/generated-sources/xtend/</source>
-								</sources>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-clean-plugin</artifactId>
-					<version>2.5</version>
-					<executions>
-						<execution>
-							<phase>clean</phase>
-							<goals>
-								<goal>clean</goal>
-							</goals>
-							<configuration>
-								<filesets>
-									<fileset>
-										<directory>src/main/generated-sources/xtend</directory>
-									</fileset>
-									<fileset>
-										<directory>src/test/generated-sources/xtend</directory>
-									</fileset>
-								</filesets>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.eclipse.xtext</groupId>
-					<artifactId>xtext-maven-plugin</artifactId>
-					<version>${xtext.version}</version>
-					<executions>
-						<execution>
-							<goals>
-								<goal>generate</goal>
-							</goals>
-						</execution>
-					</executions>
+					<groupId>io.sarl.maven</groupId>
+					<artifactId>sarl-maven-plugin</artifactId>
+					<version>${sarl.version}</version>
+					<extensions>true</extensions>
 					<configuration>
-						<compilerSourceLevel>${compiler.level}</compilerSourceLevel>
-						<compilerTargetLevel>${compiler.level}</compilerTargetLevel>
-						<encoding>${project.build.sourceEncoding}</encoding>
-						<languages>
-							<language>
-								<setup>io.sarl.lang.SARLStandaloneSetup</setup>
-								<outputConfigurations>
-									<outputConfiguration>
-										<outputDirectory>src/main/generated-sources/xtend/</outputDirectory>
-									</outputConfiguration>
-								</outputConfigurations>
-							</language>
-						</languages>
+						<source>${compiler.level}</source>
+						<target>${compiler.level}</target>
 					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>io.sarl.lang</groupId>
-							<artifactId>io.sarl.lang</artifactId>
-							<version>${sarl.version.range}</version>
-						</dependency>
-						<dependency>
-							<groupId>io.sarl.lang</groupId>
-							<artifactId>io.sarl.lang.core</artifactId>
-							<version>${sarl.version.range}</version>
-						</dependency>
-					</dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -212,8 +143,13 @@ Jaak lets students open simulations and "play" with them, exploring their behavi
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.6</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>2.2.1</version>
+					<version>2.4</version>
 					<executions>
 						<execution>
 							<id>attach-sources</id>
@@ -233,11 +169,6 @@ Jaak lets students open simulations and "play" with them, exploring their behavi
 					<groupId>org.jasig.maven</groupId>
 					<artifactId>maven-notice-plugin</artifactId>
 					<version>1.0.6.1</version>
-				</plugin>
-				<plugin>
-					<groupId>org.eclipse.xtend</groupId>
-					<artifactId>xtend-maven-plugin</artifactId>
-					<version>${xtext.version}</version>
 				</plugin>
 
 				<!-- Configure the checkstyle plugin. This plugin must be activated module 
@@ -275,66 +206,6 @@ Jaak lets students open simulations and "play" with them, exploring their behavi
 					<version>1.5</version>
 				</plugin>
 
-				<plugin>
-					<groupId>org.arakhne.afc.maven</groupId>
-					<artifactId>tag-replacer</artifactId>
-					<version>11.0</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.9.1</version>
-					<configuration>
-						<docencoding>${project.build.sourceEncoding}</docencoding>
-						<encoding>${project.build.sourceEncoding}</encoding>
-						<charset>${project.build.sourceEncoding}</charset>
-						<show>protected</show>
-						<detectLinks>true</detectLinks>
-						<detectJavaApiLink>true</detectJavaApiLink>
-						<links>
-							<link>http://www.sarl.io/docs/api/</link>
-							<link>http://docs.guava-libraries.googlecode.com/git-history/release/javadoc/</link>
-						</links>
-						<docfilessubdirs>true</docfilessubdirs>
-						<excludePackageNames></excludePackageNames>
-						<breakiterator>true</breakiterator>
-						<version>true</version>
-						<author>true</author>
-						<keywords>true</keywords>
-						<useStandardDocletOptions>true</useStandardDocletOptions>
-						<excludePackageNames></excludePackageNames>
-						<bottom>&lt;small&gt;Copyright &amp;copy;
-							${project.inceptionYear}-${year} ${copyrighters}.
-						</bottom>
-						<tags>
-							<tag>
-								<name>mavengroupid</name>
-								<placement>pt</placement>
-								<head>Maven Group Id:</head>
-							</tag>
-							<tag>
-								<name>mavenartifactid</name>
-								<placement>pt</placement>
-								<head>Maven Artifact Id:</head>
-							</tag>
-							<tag>
-								<name>fires</name>
-								<placement>m</placement>
-								<head>Fired Events:</head>
-							</tag>
-						</tags>
-					</configuration>
-					<executions>
-						<execution>
-							<id>attach-javadocs</id>
-							<goals>
-								<goal>jar</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-
 				<!--This plugin's configuration is used to store Eclipse m2e settings 
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
@@ -344,79 +215,6 @@ Jaak lets students open simulations and "play" with them, exploring their behavi
 					<configuration>
 						<lifecycleMappingMetadata>
 							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.codehaus.mojo</groupId>
-										<artifactId>license-maven-plugin</artifactId>
-										<versionRange>[1.2,)</versionRange>
-										<goals>
-											<goal>check-file-header</goal>
-											<goal>update-project-license</goal>
-											<goal>update-file-header</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore />
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.apache.maven.plugins</groupId>
-										<artifactId>maven-dependency-plugin</artifactId>
-										<versionRange>[2.4,)</versionRange>
-										<goals>
-											<goal>properties</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore />
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.apache.maven.plugins</groupId>
-										<artifactId>maven-changes-plugin</artifactId>
-										<versionRange>[2.7,)</versionRange>
-										<goals>
-											<goal>announcement-generate</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore />
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.apache.maven.plugins</groupId>
-										<artifactId>maven-assembly-plugin</artifactId>
-										<versionRange>[2.2.1,)</versionRange>
-										<goals>
-											<goal>single</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore />
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.eclipse.xtext
-										</groupId>
-										<artifactId>
-											xtext-maven-plugin
-										</artifactId>
-										<versionRange>
-											[2.6.2,)
-										</versionRange>
-										<goals>
-											<goal>generate</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
@@ -425,197 +223,13 @@ Jaak lets students open simulations and "play" with them, exploring their behavi
 			</plugins>
 		</pluginManagement>
 
-		<plugins>
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.6</version>
-				<executions>
-					<execution>
-						<id>copy-resources</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/target/classes/META-INF</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${basedir}</directory>
-									<filtering>true</filtering>
-									<includes>
-										<include>**/NOTICE</include>
-										<include>**/LICENSE</include>
-									</includes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.jasig.maven</groupId>
-				<artifactId>maven-notice-plugin</artifactId>
-				<configuration>
-					<generateChildNotices>true</generateChildNotices>
-					<noticeTemplate>licenses/NOTICE.template</noticeTemplate>
-					<licenseMapping>
-						<param>licenses/license-mappings-janus.xml</param>
-						<param>licenses/license-mappings.xml</param>
-					</licenseMapping>
-					<!-- <outputDir>src/main/resources/META-INF/</outputDir> -->
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>check</goal>
-							<goal>generate</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<configuration>
-					<verbose>false</verbose>
-					<addSvnKeyWords>false</addSvnKeyWords>
-					<copyrightOwners>${copyrighters}</copyrightOwners>
-				</configuration>
-				<executions>
-					<execution>
-						<id>first</id>
-						<goals>
-							<goal>update-file-header</goal>
-						</goals>
-						<phase>process-sources</phase>
-						<configuration>
-							<licenseName>apache_v2</licenseName>
-							<includes>
-								<include>*.java</include>
-								<include>*.xml</include>
-							</includes>
-							<excludes>
-								<exclude>*.png</exclude>
-								<exclude>*.txt</exclude>
-								<exclude>NOTICE</exclude>
-								<exclude>**/NOTICE.expected</exclude>
-								<exclude>**/NOTICE.template</exclude>
-								<exclude>LICENSE</exclude>
-							</excludes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-
 	</build>
-
-	<profiles>
-		<profile>
-			<id>release-tasks</id>
-			<activation>
-				<property>
-					<name>performRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.arakhne.afc.maven</groupId>
-						<artifactId>tag-replacer</artifactId>
-						<executions>
-							<execution>
-								<id>update-source-tags</id>
-								<phase>process-sources</phase>
-								<goals>
-									<goal>generatereplacesrc</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-
-	<!-- ======================================= -->
-	<!-- ==== Third-Party Repositories === -->
-	<!-- ==== Should be removed when all === -->
-	<!-- ==== dependencies are available on === -->
-	<!-- ==== central === -->
-	<!-- ======================================= -->
-	<repositories>
-		<repository>
-			<id>io.sarl.maven</id>
-			<name>SARL Repository</name>
-			<url>http://maven.sarl.io/</url>
-		</repository>
-	</repositories>
 
 	<!-- ======================================= -->
 	<!-- ==== Organization Information === -->
 	<!-- ======================================= -->
 
 	<developers>
-		<developer>
-			<id>srodriguez</id>
-			<name>Sebastian Rodriguez</name>
-			<email>srodriguez@citat.org.ar</email>
-			<url>http://citat.org.ar/members/sebastian-rodriguez/</url>
-			<organization>
-				Grupo de Investigaci&amp;oacute;n en Tecnolog&amp;iacute;as Inform&amp;aacute;ticas Avanzadas de Tucum&amp;aacute;n
-			</organization>
-			<organizationUrl>http://citat.org.ar/</organizationUrl>
-			<roles>
-				<role>Co-founder</role>
-				<role>Architect</role>
-				<role>Developer</role>
-			</roles>
-		</developer>
-		<developer>
-			<id>ngaud</id>
-			<name>Nicolas Gaud</name>
-			<email>nicolas.gaud@utbm.fr</email>
-			<url>http://www.multiagent.fr/People:Gaud_nicolas</url>
-			<organization>
-				IRTES-SET -
-				Universit&amp;eacute; de
-				Technologie de
-				Belfort-Montba&amp;eacute;liard
-			</organization>
-			<organizationUrl>http://www.multiagent.fr</organizationUrl>
-			<roles>
-				<role>Co-founder</role>
-				<role>Architect</role>
-				<role>Developer</role>
-			</roles>
-		</developer>
 		<developer>
 			<id>sgalland</id>
 			<name>St&amp;eacute;phane Galland</name>
@@ -639,25 +253,25 @@ Jaak lets students open simulations and "play" with them, exploring their behavi
 	<!-- ==== Deployment === -->
 	<!-- =================== -->
 
-	<distributionManagement>
-		<repository>
-			<id>local-release-repository</id>
-			<url>file:///var/www/janus-maven-repository/</url>
-		</repository>
-		<snapshotRepository>
-			<id>local-snapshot-repository</id>
-			<url>file:///var/www/janus-maven-repository/</url>
-		</snapshotRepository>
-	</distributionManagement>
+<!-- 	<distributionManagement> -->
+<!-- 		<repository> -->
+<!-- 			<id>local-release-repository</id> -->
+<!-- 			<url>file:///var/www/janus-maven-repository/</url> -->
+<!-- 		</repository> -->
+<!-- 		<snapshotRepository> -->
+<!-- 			<id>local-snapshot-repository</id> -->
+<!-- 			<url>file:///var/www/janus-maven-repository/</url> -->
+<!-- 		</snapshotRepository> -->
+<!-- 	</distributionManagement> -->
 
 	<!-- ==================== -->
 	<!-- ==== Development === -->
 	<!-- ==================== -->
 
 	<scm>
-		<connection>scm:git:git@github.com:janus-project/janusproject.git</connection>
-		<developerConnection>scm:git:git@github.com:janus-project/janusproject.git</developerConnection>
-		<url>git@github.com:janus-project/janusproject.git</url>
+		<connection>scm:git:git@github.com:gallandarakhneorg/jaak.git</connection>
+		<developerConnection>scm:git:git@github.com:gallandarakhneorg/jaak.git</developerConnection>
+		<url>git@github.com:gallandarakhneorg/jaak.git</url>
 	</scm>
 
 </project>

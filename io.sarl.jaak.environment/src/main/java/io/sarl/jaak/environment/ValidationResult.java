@@ -21,7 +21,7 @@ package io.sarl.jaak.environment;
 
 /** This enumeration indicates how a point was validated against the
  * grid coordinate system.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$

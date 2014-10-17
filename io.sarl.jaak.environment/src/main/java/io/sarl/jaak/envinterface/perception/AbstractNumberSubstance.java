@@ -21,7 +21,7 @@ package io.sarl.jaak.envinterface.perception;
 
 /** This class defines a substance with a number
  * value as the internal substance value.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -39,34 +39,34 @@ public abstract class AbstractNumberSubstance extends Substance {
 	}
 
 	/**
-	 * Add the given amount <var>a</var> to the current substance.
-	 * 
+	 * Add the given amount a to the current substance.
+	 *
 	 * @param a is the amount of substance to add.
 	 */
 	protected abstract void increment(float a);
-	
+
 	/**
-	 * Add the given amount <var>a</var> to the current substance.
-	 * 
+	 * Add the given amount a to the current substance.
+	 *
 	 * @param a is the amount of substance to add.
 	 */
 	protected abstract void decrement(float a);
 
 	/**
-	 * Add the given amount <var>a</var> (expressed per second) to the current substance
+	 * Add the given amount a (expressed per second) to the current substance
 	 * during the given duration (expressed in seconds).
-	 * 
+	 *
 	 * @param duration is the duration of the addition in seconds.
 	 * @param a is the amount of substance to add (per second).
 	 */
 	protected final void increment(float duration, Number a) {
 		increment(duration * a.floatValue());
 	}
-	
+
 	/**
-	 * Substract the given amount <var>a</var> (expressed per second) from the current substance
+	 * Substract the given amount a (expressed per second) from the current substance
 	 * during the given duration (expressed in seconds).
-	 * 
+	 *
 	 * @param duration is the duration of the substraction in seconds.
 	 * @param a is the amount of substance to substract (per second).
 	 */

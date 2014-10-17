@@ -61,7 +61,7 @@ public class JaakEvent extends EventObject {
 	 * @return the Jaak environment.
 	 */
 	public EnvironmentArea getEnvironment() {
-		return environment;
+		return this.environment;
 	}
 	
 	/** Replies the spawners associated to the environment.

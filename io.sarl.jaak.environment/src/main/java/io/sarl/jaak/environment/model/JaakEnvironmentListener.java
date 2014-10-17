@@ -23,7 +23,7 @@ import java.util.EventListener;
 
 /** This interface defines a listener on Jaak environment
  * events.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -33,10 +33,10 @@ public interface JaakEnvironmentListener extends EventListener {
 
 	/** Invoked at the end of a simulation step.
 	 */
-	public void postAgentScheduling();
+	void postAgentScheduling();
 
 	/** Invoked at the begining of a simulation step.
 	 */
-	public void preAgentScheduling();
-	
+	void preAgentScheduling();
+
 }

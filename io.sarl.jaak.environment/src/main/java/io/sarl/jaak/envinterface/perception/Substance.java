@@ -35,7 +35,7 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
  * </ul>
  * <p>
  * A substance is a non-atomic object.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -44,14 +44,14 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 public abstract class Substance extends EnvironmentalObject {
 
 	private static final long serialVersionUID = -1696947800104633172L;
-	
+
 	/**
 	 * @param semantic is the semantic associated to this environmental object.
 	 */
 	public Substance(Object semantic) {
 		super(semantic);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -80,32 +80,32 @@ public abstract class Substance extends EnvironmentalObject {
 	 * The identifier is unique for environmental objects
 	 * which are not a {@link Substance} and is common
 	 * to all instances of the same <code>Substance</code> class.
-	 * 
+	 *
 	 * @return the identifier of the environmental object.
 	 */
 	@Override
 	public String getEnvironmentalObjectIdentifier() {
 		return getClass().getCanonicalName() + "-o-o-o-*"; //$NON-NLS-1$
 	}
-	
+
 	/**
-	 * Add the given substance <var>s</var> to the current substance.
+	 * Add the given substance s to the current substance.
 	 * <p>
 	 * The concept of substance combination depends on the semantic of the substance.
 	 * <p>
-	 * 
+	 *
 	 * @param s is the substance to combine with.
 	 * @return the amount of substance added to the current substance, or <code>null</code> if
 	 * the operation is impossible.
 	 */
 	protected abstract Substance increment(Substance s);
-	
+
 	/**
-	 * Add the given substance <var>s</var> to the current substance.
+	 * Add the given substance s to the current substance.
 	 * <p>
 	 * The concept of substance combination depends on the semantic of the substance.
 	 * <p>
-	 * 
+	 *
 	 * @param s is the substance to combine with.
 	 * @return the amount of substance removed from the the current substance, or <code>null</code> if
 	 * the operation is impossible.
@@ -114,14 +114,14 @@ public abstract class Substance extends EnvironmentalObject {
 
 	/**
 	 * Replies if this substance has disappeared or not.
-	 * 
+	 *
 	 * @return <code>true</code> if this substance has disappeared,
 	 * otherwise <code>false</code>.
 	 */
 	public abstract boolean isDisappeared();
-	
+
 	/** Replies the amount of substance.
-	 * 
+	 *
 	 * @return the amount of substance.
 	 */
 	public abstract Number getAmount();
@@ -146,49 +146,49 @@ public abstract class Substance extends EnvironmentalObject {
 	}
 
 	/** Replies byte representation of the amount of substance.
-	 * 
+	 *
 	 * @return byte representation of the amount of substance.
 	 */
 	public abstract byte byteValue();
-	
+
 	/** Replies short representation of the amount of substance.
-	 * 
+	 *
 	 * @return short representation of the amount of substance.
 	 */
 	public abstract short shortValue();
 
 	/** Replies int representation of the amount of substance.
-	 * 
+	 *
 	 * @return int representation of the amount of substance.
 	 */
 	public abstract int intValue();
 
 	/** Replies long representation of the amount of substance.
-	 * 
+	 *
 	 * @return long representation of the amount of substance.
 	 */
 	public abstract long longValue();
 
 	/** Replies float representation of the amount of substance.
-	 * 
+	 *
 	 * @return float representation of the amount of substance.
 	 */
 	public abstract float floatValue();
 
 	/** Replies double representation of the amount of substance.
-	 * 
+	 *
 	 * @return doublerepresentation of the amount of substance.
 	 */
 	public abstract double doubleValue();
 
 	/** Replies big int representation of the amount of substance.
-	 * 
+	 *
 	 * @return big int representation of the amount of substance.
 	 */
 	public abstract BigInteger bigIntegerValue();
 
 	/** Replies big decimal representation of the amount of substance.
-	 * 
+	 *
 	 * @return big decimal representation of the amount of substance.
 	 */
 	public abstract BigDecimal bigDecimalValue();

@@ -23,7 +23,7 @@ import io.sarl.jaak.envinterface.perception.EnvironmentalObject;
 
 /** This class defines an influence to pick up
  * an object from the environment.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -38,11 +38,11 @@ public abstract class EnvironmentalObjectRemovalInfluence extends Influence {
 	}
 
 	/** Replies the environment object to remove.
-	 * 
+	 *
 	 * @return the environment object to remove.
 	 */
 	public abstract EnvironmentalObject getRemovableObject();
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -52,7 +52,7 @@ public abstract class EnvironmentalObjectRemovalInfluence extends Influence {
 		buffer.append(getEmitter().getTurtleId().toString());
 		buffer.append(": remove "); //$NON-NLS-1$
 		EnvironmentalObject obj = getRemovableObject();
-		buffer.append(obj==null ? null : obj.toString());
+		buffer.append(obj == null ? null : obj.toString());
 		return buffer.toString();
 	}
 

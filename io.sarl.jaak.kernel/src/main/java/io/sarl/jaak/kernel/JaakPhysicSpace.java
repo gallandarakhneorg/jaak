@@ -38,6 +38,20 @@ public interface JaakPhysicSpace extends Space {
 	 */
 	public UUID getCreatorID();
 	
+	/** Spawn the body with the given ID.
+	 * 
+	 * @param id - the identifier of the body.
+	 * @param listener - the listener on the space events, associated to the body.
+	 */
+	public void spawnBody(UUID id, Object listener);
+
+	/** Destroy the body with the given ID.
+	 * 
+	 * @param id - the identifier of the body.
+	 * @param listener - the listener on the space events, associated to the body.
+	 */
+	public void killBody(UUID id, Object listener);
+
 	/** Emit a perception for the given agent.
 	 * 
 	 * @param perception - the perception to send.

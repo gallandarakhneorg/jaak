@@ -28,7 +28,7 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 /** This class defines a frustum for for a turtle which is
  * restricted to a circle.
  * This frustum is not orientable.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -37,14 +37,14 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 public class CircleTurtleFrustum implements TurtleFrustum {
 
 	private final int radius;
-	
+
 	/**
 	 * @param radius is the radius of the perception frustum.
 	 */
 	public CircleTurtleFrustum(int radius) {
 		this.radius = radius;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -52,9 +52,9 @@ public class CircleTurtleFrustum implements TurtleFrustum {
 	public Iterator<Point2i> getPerceivedCells(Point2i origin, float direction, EnvironmentArea environment) {
 		return new PointIterator(origin);
 	}
-	
+
 	/** Replies the perception radius.
-	 * 
+	 *
 	 * @return the perception radius.
 	 */
 	public int getRadius() {
@@ -63,67 +63,73 @@ public class CircleTurtleFrustum implements TurtleFrustum {
 
 	/** This class defines a frustum for for a turtle which is
 	 * restricted to a circle.
-	 * 
+	 *
 	 * @author $Author: sgalland$
 	 * @version $FullVersion$
 	 * @mavengroupid $GroupId$
 	 * @mavenartifactid $ArtifactId$
 	 */
 	private class PointIterator implements Iterator<Point2i> {
-		
-		private final int cx, cy;
+
+		private final int cx;
+		private final int cy;
 		private final Point2i replied = new Point2i();
-		private final int sx, ex, ey;
-		private int x, y;
-		
+		private final int sx;
+		private final int ex;
+		private final int ey;
+		private int x;
+		private int y;
+
 		/**
 		 * @param center
 		 */
 		public PointIterator(Point2i center) {
 			this.cx = center.x();
 			this.cy = center.y();
-			
+
 			int r = getRadius();
-			this.sx = this.x = this.cx - r;
+			this.sx = this.cx - r;
+			this.x = this.sx;
 			this.y = this.cy - r;
 
 			this.ex = this.cx + r;
 			this.ey = this.cy + r;
-			
+
 			searchNext();
 		}
-		
+
 		private void searchNext() {
 			int sr;
-			int dx, dy;
-			
+			int dx;
+			int dy;
+
 			sr = getRadius();
 			sr = sr * sr;
-			
-			while (this.x<=this.ex || this.y<=this.ey) {
+
+			while (this.x <= this.ex || this.y <= this.ey) {
 				dx = Math.abs(this.x - this.cx);
 				dy = Math.abs(this.y - this.cy);
-				if ((dx*dx+dy*dy)<=sr) {
+				if ((dx * dx + dy * dy) <= sr) {
 					return;
 				}
 				inc();
 			}
 		}
-		
+
 		private void inc() {
-			this.x++;
-			if (this.x>this.ex) {
-				this.y++;
+			++this.x;
+			if (this.x > this.ex) {
+				++this.y;
 				this.x = this.sx;
 			}
 		}
-		
+
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
 		public boolean hasNext() {
-			return this.x<=this.ex || this.y<=this.ey;
+			return this.x <= this.ex || this.y <= this.ey;
 		}
 
 		/**
@@ -144,7 +150,7 @@ public class CircleTurtleFrustum implements TurtleFrustum {
 		public void remove() {
 			//
 		}
-		
+
 	}
-	
+
 }

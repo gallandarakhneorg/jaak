@@ -20,7 +20,7 @@
 package io.sarl.jaak.envinterface.influence;
 
 /** Status of the last emitted motion influence.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -36,31 +36,31 @@ public enum MotionInfluenceStatus {
 	 * proceeded entirely.
 	 */
 	COMPLETE_MOTION,
-	
+
 	/** The motion was stopped in such a way that the turtle
 	 * move on a distance strictly smaller than the influence request.
 	 */
 	PARTIAL_MOTION,
-	
+
 	/** The motion was completely discarted in such a way that the turtle
 	 * has not moved.
 	 */
 	NO_MOTION;
 
 	/** Replies if the status corresponds to a failure.
-	 * 
+	 *
 	 * @return <code>true</code> if no motion or status not available.
 	 */
 	public boolean isFailure() {
-		return this==NO_MOTION || this==NOT_AVAILABLE;
+		return this == NO_MOTION || this == NOT_AVAILABLE;
 	}
-	
+
 	/** Replies if the status corresponds to a success.
-	 * 
+	 *
 	 * @return <code>true</code> if complete or partial motion.
 	 */
 	public boolean isSuccess() {
-		return this==PARTIAL_MOTION|| this==COMPLETE_MOTION;
+		return this == PARTIAL_MOTION || this == COMPLETE_MOTION;
 	}
 
 }

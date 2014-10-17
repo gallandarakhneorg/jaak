@@ -29,7 +29,7 @@ import java.util.UUID;
  * This interface permits to create objects
  * that will create the bodies according to
  * their own preferences.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -38,13 +38,13 @@ import java.util.UUID;
 public interface JaakBodyCreator {
 
 	/** Create a body.
-	 * 
+	 *
 	 * @param turtleId is the identifier of the agent for which a body should be spawn.
 	 * @param bodyFactory is the body factory to use.
 	 * @param timeManager is the time manager used by the Jaak simulation.
 	 * @return the body or <code>null</code>
 	 */
-	public TurtleBody createBody(UUID turtleId,
+	TurtleBody createBody(UUID turtleId,
 			TurtleBodyFactory bodyFactory,
 			TimeManager timeManager);
 

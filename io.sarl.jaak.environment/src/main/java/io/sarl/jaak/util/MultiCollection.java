@@ -31,9 +31,9 @@ import java.util.NoSuchElementException;
  * This collection is not thread-safe.
  * <p>
  * This collection is read-only.
- * 
+ *
  * FIXME: Replace by the AFC or Guava equivalent.
- * 
+ *
  * @param <E> is the type of elements in the collections.
  * @author $Author: sgalland$
  * @version $FullVersion$
@@ -42,9 +42,9 @@ import java.util.NoSuchElementException;
  */
 public class MultiCollection<E>
 implements Collection<E> {
-	
-	private final List<Collection<? extends E>> collections = new ArrayList<Collection<? extends E>>();
-	
+
+	private final List<Collection<? extends E>> collections = new ArrayList<>();
+
 	/**
 	 */
 	public MultiCollection() {
@@ -52,18 +52,18 @@ implements Collection<E> {
 	}
 
 	/** Add a collection inside this multicollection.
-	 * 
-	 * @param collection
+	 *
+	 * @param collection - the collection to add.
 	 */
 	public void addCollection(Collection<? extends E> collection) {
-		if (collection!=null && !collection.isEmpty()) {
+		if (collection != null && !collection.isEmpty()) {
 			this.collections.add(collection);
 		}
 	}
-	
+
 	/** Remove a collection from this multicollection.
-	 * 
-	 * @param collection
+	 *
+	 * @param collection - the collection to remove.
 	 * @return <code>true</code> if the multi-collection has changed,
 	 * otherwise <code>false</code>.
 	 */
@@ -80,6 +80,9 @@ implements Collection<E> {
 
 	/**
 	 * This function is not supported, see {@link #addCollection(Collection)}.
+	 *
+	 * @param e - the element to add.
+	 * @return never return.
 	 */
 	@Override
 	public boolean add(E e) {
@@ -88,6 +91,9 @@ implements Collection<E> {
 
 	/**
 	 * This function is not supported, see {@link #addCollection(Collection)}.
+	 *
+	 * @param c - the elements to add.
+	 * @return never return.
 	 */
 	@Override
 	public boolean addAll(Collection<? extends E> c) {
@@ -99,8 +105,10 @@ implements Collection<E> {
 	 */
 	@Override
 	public boolean contains(Object o) {
-		for(Collection<? extends E> c : this.collections) {
-			if (c.contains(o)) return true;
+		for (Collection<? extends E> c : this.collections) {
+			if (c.contains(o)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -110,8 +118,10 @@ implements Collection<E> {
 	 */
 	@Override
 	public boolean containsAll(Collection<?> c) {
-		for(Object o : c) {
-			if (!contains(o)) return false;
+		for (Object o : c) {
+			if (!contains(o)) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -121,8 +131,10 @@ implements Collection<E> {
 	 */
 	@Override
 	public boolean isEmpty() {
-		for(Collection<? extends E> c : this.collections) {
-			if (!c.isEmpty()) return false;
+		for (Collection<? extends E> c : this.collections) {
+			if (!c.isEmpty()) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -132,11 +144,14 @@ implements Collection<E> {
 	 */
 	@Override
 	public Iterator<E> iterator() {
-		return new MultiIterator<E>(this.collections.iterator());
+		return new MultiIterator<>(this.collections.iterator());
 	}
 
 	/**
 	 * This function is not supported, see {@link #removeCollection(Collection)}.
+	 *
+	 * @param o - the element to remove.
+	 * @return never return.
 	 */
 	@Override
 	public boolean remove(Object o) {
@@ -145,6 +160,9 @@ implements Collection<E> {
 
 	/**
 	 * This function is not supported, see {@link #removeCollection(Collection)}.
+	 *
+	 * @param c - the elements to remove.
+	 * @return never return.
 	 */
 	@Override
 	public boolean removeAll(Collection<?> c) {
@@ -153,6 +171,9 @@ implements Collection<E> {
 
 	/**
 	 * This function is not supported, see {@link #removeCollection(Collection)}.
+	 *
+	 * @param c - the collection to test.
+	 * @return never return.
 	 */
 	@Override
 	public boolean retainAll(Collection<?> c) {
@@ -165,7 +186,7 @@ implements Collection<E> {
 	@Override
 	public int size() {
 		int t = 0;
-		for(Collection<? extends E> c : this.collections) {
+		for (Collection<? extends E> c : this.collections) {
 			t += c.size();
 		}
 		return t;
@@ -195,22 +216,22 @@ implements Collection<E> {
 	 * @mavenartifactid $ArtifactId$
 	 */
 	public static class MultiIterator<E> implements Iterator<E> {
-		
+
 		private final Iterator<Collection<? extends E>> iterator;
 		private Iterator<? extends E> currentIterator;
-		
+
 		/**
-		 * @param i
+		 * @param i - the iterator to use.
 		 */
 		public MultiIterator(Iterator<Collection<? extends E>> i) {
 			this.iterator = i;
 			searchNext();
 		}
-		
+
 		private void searchNext() {
-			if (this.currentIterator==null || !this.currentIterator.hasNext()) {
+			if (this.currentIterator == null || !this.currentIterator.hasNext()) {
 				this.currentIterator = null;
-				while (this.currentIterator==null && this.iterator.hasNext()) {
+				while (this.currentIterator == null && this.iterator.hasNext()) {
 					Collection<? extends E> iterable = this.iterator.next();
 					Iterator<? extends E> iter = iterable.iterator();
 					if (iter.hasNext()) {
@@ -222,12 +243,14 @@ implements Collection<E> {
 
 		@Override
 		public boolean hasNext() {
-			return this.currentIterator!=null && this.currentIterator.hasNext();
+			return this.currentIterator != null && this.currentIterator.hasNext();
 		}
 
 		@Override
 		public E next() {
-			if (this.currentIterator==null) throw new NoSuchElementException();
+			if (this.currentIterator == null) {
+				throw new NoSuchElementException();
+			}
 			E n = this.currentIterator.next();
 			searchNext();
 			return n;
@@ -238,7 +261,7 @@ implements Collection<E> {
 			throw new UnsupportedOperationException();
 		}
 
-		
+
 	}
-	
+
 }

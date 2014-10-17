@@ -26,7 +26,7 @@ import io.sarl.jaak.environment.solver.InfluenceSolver;
 
 /** Abstract implementation of an influence solver which is able to access
  * to the internal data structures of the Jaak environment.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -39,14 +39,14 @@ public abstract class AbstractJaakEnvironmentInfluenceSolver extends InfluenceSo
 	public AbstractJaakEnvironmentInfluenceSolver() {
 		//
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	protected void putBackPickingAction(TurtleBody body, PickedObject action) {
 		if (body instanceof RealTurtleBody) {
-			RealTurtleBody b = (RealTurtleBody)body;
+			RealTurtleBody b = (RealTurtleBody) body;
 			b.putBackPickingAction(action);
 		}
 	}
@@ -57,7 +57,7 @@ public abstract class AbstractJaakEnvironmentInfluenceSolver extends InfluenceSo
 	@Override
 	protected void putBackMotionInfluenceStatus(TurtleBody body, MotionInfluenceStatus status) {
 		if (body instanceof RealTurtleBody) {
-			RealTurtleBody b = (RealTurtleBody)body;
+			RealTurtleBody b = (RealTurtleBody) body;
 			b.putBackMotionInfluenceStatus(status);
 		}
 	}

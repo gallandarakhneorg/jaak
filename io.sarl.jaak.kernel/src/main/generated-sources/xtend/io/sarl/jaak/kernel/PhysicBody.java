@@ -13,18 +13,10 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 @SuppressWarnings("all")
 public interface PhysicBody extends Capacity {
   /**
-   * Notify the body that is should do nothing.
-   * <p>
-   * This method should be invoked when no other kind of
-   * influence is sent by the turtle.
-   */
-  public abstract void beIddle();
-  
-  /**
    * Default value for the parameter changeHeading
    */
   @Generated
-  public final static boolean ___FORMAL_PARAMETER_DEFAULT_VALUE_1_1 = false;
+  public final static boolean ___FORMAL_PARAMETER_DEFAULT_VALUE_0_1 = false;
   
   /**
    * Move the turtle along the given direction and
@@ -38,7 +30,7 @@ public interface PhysicBody extends Capacity {
    * otherwise <code>false</code>.
    */
   @DefaultValueSource
-  public abstract void move(final Vector2f direction, @DefaultValue("1_1") final boolean changeHeading);
+  public abstract void move(final Vector2f direction, @DefaultValue("0_1") final boolean changeHeading);
   
   /**
    * Move the turtle along the given direction and
@@ -150,14 +142,6 @@ public interface PhysicBody extends Capacity {
   public abstract void setSemantic(final Object semantic);
   
   /**
-   * Notifies the body that perceptions should be enabled or not.
-   * 
-   * @param enable is <code>true</code> to enable perception from the body,
-   * <code>false</code> to disable perceptions.
-   */
-  public abstract void setPerceptionEnable(final boolean enable);
-  
-  /**
    * Replies the position of the body in the environment.
    */
   public abstract Point2i getPosition();
@@ -170,7 +154,7 @@ public interface PhysicBody extends Capacity {
   /**
    * Replies the orientation vector of the body on the cell.
    */
-  public abstract Vector2f getViewVector();
+  public abstract Vector2f getOrientationVector();
   
   /**
    * Replies the orientation of the turtle head
@@ -209,26 +193,9 @@ public interface PhysicBody extends Capacity {
   public abstract Object getSemantic();
   
   /**
-   * Replies if this body has registered influences which are not
-   * yet consumed by the environment.
-   * 
-   * @return <code>true</code> if the body has not-consumed influences,
-   * otherwise <code>false</code>.
-   */
-  public abstract boolean hasInfluences();
-  
-  /**
    * Replies the instant speed of the turtle.
    * 
    * @return the instant speed of the turtle in cells per second.
    */
   public abstract float getSpeed();
-  
-  /**
-   * Replies if the perceptions are computed or not.
-   * 
-   * @return <code>true</code> if perceptions are enable from the body,
-   * <code>false</code> if they are disable.
-   */
-  public abstract boolean isPerceptionEnable();
 }

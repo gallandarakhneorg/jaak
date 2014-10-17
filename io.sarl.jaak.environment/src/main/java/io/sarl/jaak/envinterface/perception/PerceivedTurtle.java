@@ -25,7 +25,7 @@ import org.arakhne.afc.math.continous.object2d.Vector2f;
 import org.arakhne.afc.math.discrete.object2d.Point2i;
 
 /** This class defines a perceived turtle.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -34,11 +34,11 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 public class PerceivedTurtle extends AbstractPerceivable {
 
 	private static final long serialVersionUID = -758584526816638042L;
-	
+
 	private final UUID turtle;
 	private final float speed;
 	private final float angle;
-	
+
 	/**
 	 * @param perceivedTurtle is the identifier of the perceived turtle.
 	 * @param observer is the position of the observer.
@@ -47,12 +47,12 @@ public class PerceivedTurtle extends AbstractPerceivable {
 	 * @param observedOrientation is the orientation angle of the observed turtle.
 	 * @param semantic is the semantic associated to the turtle body.
 	 */
-	public PerceivedTurtle(UUID perceivedTurtle, Point2i observer, Point2i observed, 
+	public PerceivedTurtle(UUID perceivedTurtle, Point2i observer, Point2i observed,
 			float observedSpeed, float observedOrientation, Object semantic) {
 		super();
-		assert(perceivedTurtle!=null);
-		assert(observer!=null);
-		assert(observed!=null);
+		assert (perceivedTurtle != null);
+		assert (observer != null);
+		assert (observed != null);
 		this.turtle = perceivedTurtle;
 		this.position.set(observed);
 		this.speed = observedSpeed;
@@ -61,7 +61,7 @@ public class PerceivedTurtle extends AbstractPerceivable {
 	}
 
 	/** Replies the identifier of this perceived object.
-	 * 
+	 *
 	 * @return the identifier of this perceived object, or <code>null</code>
 	 * if the perceived object has no address.
 	 */
@@ -76,10 +76,10 @@ public class PerceivedTurtle extends AbstractPerceivable {
 	public final boolean isTurtle() {
 		return true;
 	}
-	
+
 	/**
 	 * Replies the instant speed of the perceived turtle.
-	 * 
+	 *
 	 * @return the instant speed in cell per second.
 	 */
 	public float getSpeed() {
@@ -88,7 +88,7 @@ public class PerceivedTurtle extends AbstractPerceivable {
 
 	/**
 	 * Replies the current orientation of the perceived turtle.
-	 * 
+	 *
 	 * @return the current orientation angle of the perceived turtle.
 	 */
 	public float getHeadingAngle() {
@@ -97,7 +97,7 @@ public class PerceivedTurtle extends AbstractPerceivable {
 
 	/**
 	 * Replies the current orientation of the perceived turtle.
-	 * 
+	 *
 	 * @return the current orientation vector of the perceived turtle.
 	 */
 	public Vector2f getHeadingVector() {

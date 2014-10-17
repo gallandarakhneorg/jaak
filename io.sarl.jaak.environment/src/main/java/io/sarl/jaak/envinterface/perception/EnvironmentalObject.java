@@ -24,7 +24,7 @@ import io.sarl.jaak.envinterface.influence.Influence;
 
 /** This class defines a situated object inside the Jaak environment
  * which is not an agent.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -41,12 +41,12 @@ public class EnvironmentalObject extends AbstractPerceivable implements JaakObje
 		super();
 		this.semantic = semantic;
 	}
-	
+
 	/** Replies an identifier for this object.
 	 * The identifier is unique for environmental objects
 	 * which are not a {@link Substance} and is common
 	 * to all instances of the same <code>Substance</code> class.
-	 * 
+	 *
 	 * @return the identifier of the environmental object.
 	 */
 	public String getEnvironmentalObjectIdentifier() {
@@ -56,9 +56,9 @@ public class EnvironmentalObject extends AbstractPerceivable implements JaakObje
 		buf.append(Integer.toHexString(System.identityHashCode(this)));
 		return buf.toString();
 	}
-	
+
 	/** Set the position of this object.
-	 * 
+	 *
 	 * @param x is the new position of the object.
 	 * @param y is the new position of the object.
 	 */
@@ -74,7 +74,7 @@ public class EnvironmentalObject extends AbstractPerceivable implements JaakObje
 	public final boolean isTurtle() {
 		return false;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -107,8 +107,7 @@ public class EnvironmentalObject extends AbstractPerceivable implements JaakObje
 		StringBuilder buffer = new StringBuilder();
 		if (isTurtle()) {
 			buffer.append("TURTLE("); //$NON-NLS-1$
-		}
-		else {
+		} else {
 			buffer.append("OBJECT("); //$NON-NLS-1$
 		}
 		buffer.append(getEnvironmentalObjectIdentifier());
@@ -118,13 +117,13 @@ public class EnvironmentalObject extends AbstractPerceivable implements JaakObje
 	}
 
 	/** Replies an influence which is permitting to remove this object from the environment.
-	 * 
+	 *
 	 * @return an influence, or <code>null</code> to not allow to remove the object.
 	 */
 	protected Influence createRemovalInfluenceForItself() {
 		return new RemoveItself();
 	}
-	
+
 	/**
 	 * @author $Author: sgalland$
 	 * @version $FullVersion$
@@ -138,12 +137,12 @@ public class EnvironmentalObject extends AbstractPerceivable implements JaakObje
 		public RemoveItself() {
 			//
 		}
-		
+
 		@Override
 		public EnvironmentalObject getRemovableObject() {
 			return EnvironmentalObject.this;
 		}
-		
+
 	}
-	
+
 }

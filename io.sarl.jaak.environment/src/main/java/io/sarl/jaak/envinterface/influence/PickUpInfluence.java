@@ -24,7 +24,7 @@ import io.sarl.jaak.envinterface.perception.EnvironmentalObject;
 
 /** This class defines an influence to pick up
  * an object from the environment.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -36,7 +36,7 @@ public class PickUpInfluence extends Influence {
 
 	/**
 	 * @param emitter is the identifier of the influence emitter.
-	 * @param object is the picked environmental object. 
+	 * @param object is the picked environmental object.
 	 */
 	public PickUpInfluence(TurtleBody emitter, EnvironmentalObject object) {
 		super(emitter);
@@ -44,13 +44,13 @@ public class PickUpInfluence extends Influence {
 	}
 
 	/** Replies the environment object to pick up.
-	 * 
+	 *
 	 * @return the environment object to pick up.
 	 */
 	public EnvironmentalObject getPickUpObject() {
 		return this.object;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -59,7 +59,7 @@ public class PickUpInfluence extends Influence {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append(getEmitter().getTurtleId().toString());
 		buffer.append(": pick "); //$NON-NLS-1$
-		buffer.append(this.object==null ? null : this.object.toString());
+		buffer.append(this.object == null ? null : this.object.toString());
 		return buffer.toString();
 	}
 

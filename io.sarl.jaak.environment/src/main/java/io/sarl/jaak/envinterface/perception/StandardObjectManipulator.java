@@ -21,7 +21,7 @@ package io.sarl.jaak.envinterface.perception;
 
 
 /** This class permits to manipulate the environmental objects.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -36,24 +36,25 @@ public class StandardObjectManipulator implements ObjectManipulator {
 	public StandardObjectManipulator() {
 		//
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void setPosition(EnvironmentalObject object, int x, int y) {
-		assert(object!=null);
-		object.setPosition(x,y);
+		assert (object != null);
+		object.setPosition(x, y);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Substance combine(Substance s1, Substance s2, boolean additionOperation) {
-		if (additionOperation)
+		if (additionOperation) {
 			return s1.increment(s2);
+		}
 		return s1.decrement(s2);
 	}
-		
+
 }

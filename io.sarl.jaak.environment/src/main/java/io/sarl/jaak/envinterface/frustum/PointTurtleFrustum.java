@@ -29,7 +29,7 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 /** This class defines a frustum for for a turtle which is
  * restricted to a point.
  * This frustum is not orientable.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -44,5 +44,5 @@ public class PointTurtleFrustum implements TurtleFrustum {
 	public Iterator<Point2i> getPerceivedCells(Point2i origin, float direction, EnvironmentArea environment) {
 		return Collections.singleton(origin).iterator();
 	}
-	
+
 }

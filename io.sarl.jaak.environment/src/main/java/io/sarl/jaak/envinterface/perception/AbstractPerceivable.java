@@ -26,7 +26,7 @@ import java.io.Serializable;
 import org.arakhne.afc.math.discrete.object2d.Point2i;
 
 /** This class defines a perceived turtle.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -35,14 +35,14 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 public abstract class AbstractPerceivable implements Perceivable, Serializable {
 
 	private static final long serialVersionUID = -7970321275288727456L;
-	
+
 	/** Position of the perceived object.
 	 */
 	final Point2i position = new Point2i();
 
 	/** Is the semantic associated to this perceived object.
 	 */
-	Object semantic = null;
+	Object semantic;
 
 	/**
 	 */
@@ -63,7 +63,9 @@ public abstract class AbstractPerceivable implements Perceivable, Serializable {
 	@Override
 	public Point2i getRelativePosition(TurtleBody body) {
 		Point2i p = this.position;
-		if (body==null) return p;
+		if (body == null) {
+			return p;
+		}
 		Point2i bp = body.getPosition();
 		return new Point2i(bp.x() - p.x(), bp.y() - p.y());
 	}
@@ -75,7 +77,7 @@ public abstract class AbstractPerceivable implements Perceivable, Serializable {
 	public Object getSemantic() {
 		return this.semantic;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -89,9 +91,12 @@ public abstract class AbstractPerceivable implements Perceivable, Serializable {
 		buffer.append(position.getY());
 		buffer.append("); semantic="); //$NON-NLS-1$
 		Object semantic = getSemantic();
-		if (semantic==null) buffer.append((String)null);
-		else buffer.append(semantic.toString());
+		if (semantic == null) {
+			buffer.append((String) null);
+		} else {
+			buffer.append(semantic.toString());
+		}
 		return buffer.toString();
 	}
-	
+
 }

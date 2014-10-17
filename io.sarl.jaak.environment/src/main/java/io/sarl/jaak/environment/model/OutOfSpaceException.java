@@ -21,7 +21,7 @@ package io.sarl.jaak.environment.model;
 
 /** This exception indicates that there is not more free
  * space on a grid.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -36,5 +36,5 @@ public class OutOfSpaceException extends RuntimeException {
 	public OutOfSpaceException() {
 		//
 	}
-	
+
 }

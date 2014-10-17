@@ -6,5 +6,23 @@
 
 <suppressions>
 
+	<suppress checks="ExecutableStatementCount" files="Bresenham.java"/>
+
+	<suppress checks="NestedIfDepth" files="JaakEnvironment.java"/>
+	<suppress checks="MethodCount" files="JaakEnvironment.java"/>
+
+	<suppress checks="MethodCount" files="RealTurtleBody.java"/>
+	<suppress checks="NPathComplexity" files="RealTurtleBody.java"/>
+
+	<suppress checks="NestedIfDepth" files="JaakGrid.java"/>
+	<suppress checks="NPathComplexity" files="JaakGrid.java"/>
+	
+	<suppress checks="NestedIfDepth" files="InfluenceSolver.java"/>
+	<suppress checks="MethodLength" files="InfluenceSolver.java"/>
+	
+	<suppress checks="NPathComplexity" files="PathBasedInfluenceSolver.java"/>
+
+	<suppress checks="MethodCount" files="TurtleBody.java"/>
+
 </suppressions>
 

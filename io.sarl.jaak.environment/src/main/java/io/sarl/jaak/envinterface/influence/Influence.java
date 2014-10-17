@@ -22,7 +22,7 @@ package io.sarl.jaak.envinterface.influence;
 import io.sarl.jaak.envinterface.body.TurtleBody;
 
 /** This class defines an influence from turtle to environment.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -31,28 +31,28 @@ import io.sarl.jaak.envinterface.body.TurtleBody;
 public abstract class Influence {
 
 	private final TurtleBody emitter;
-	
+
 	/**
 	 * @param emitter is the emitter of the influence.
 	 */
 	public Influence(TurtleBody emitter) {
 		this.emitter = emitter;
 	}
-	
+
 	/** Replies the influence emitter.
-	 * 
+	 *
 	 * @return the influence emitter.
 	 */
 	public TurtleBody getEmitter() {
 		return this.emitter;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
-		return this.emitter==null ? "" : this.emitter.getTurtleId().toString(); //$NON-NLS-1$
+		return this.emitter == null ? "" : this.emitter.getTurtleId().toString(); //$NON-NLS-1$
 	}
-		
+
 }

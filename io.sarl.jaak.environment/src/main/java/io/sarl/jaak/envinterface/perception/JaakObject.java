@@ -22,7 +22,7 @@ package io.sarl.jaak.envinterface.perception;
 import org.arakhne.afc.math.discrete.object2d.Point2i;
 
 /** This class defines an object in the Jaak environment.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -31,15 +31,15 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 public interface JaakObject {
 
 	/** Replies the position of this perceived object.
-	 * 
+	 *
 	 * @return the position of this perceived object.
 	 */
-	public Point2i getPosition();
-	
+	Point2i getPosition();
+
 	/** Replies the semantic associated to this object.
-	 * 
+	 *
 	 * @return the semantic associated to this object.
 	 */
-	public Object getSemantic();
-	
+	Object getSemantic();
+
 }

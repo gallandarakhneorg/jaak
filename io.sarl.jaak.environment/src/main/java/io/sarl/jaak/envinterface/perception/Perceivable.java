@@ -25,7 +25,7 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 
 /** This interface defines a situated object which is perceivable
  * inside the Jaak environment.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -34,50 +34,50 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 public interface Perceivable {
 
 	/** Replies the absolute position of this perceived object.
-	 * 
+	 *
 	 * @return the absolute position of this perceived object.
 	 */
-	public Point2i getPosition();
-	
+	Point2i getPosition();
+
 	/** Replies the relative position of this perceived object to the given body.
 	 *
-	 * @param body
+	 * @param body - the body for which the relative position should be computed.
 	 * @return the relative position of this perceived object to the given body.
 	 */
-	public Point2i getRelativePosition(TurtleBody body);
+	Point2i getRelativePosition(TurtleBody body);
 
 	/** Replies if this perceived object is a turtle.
-	 * 
+	 *
 	 * @return <code>true</code> if this perceived object is a turtle,
 	 * otherwise <code>false</code>.
 	 */
-	public boolean isTurtle();
-	
+	boolean isTurtle();
+
 	/** Replies if this perceived object is an obstacle.
-	 * 
+	 *
 	 * @return <code>true</code> if this perceived object is an obstacle,
 	 * otherwise <code>false</code>.
 	 */
-	public boolean isObstacle();
+	boolean isObstacle();
 
 	/** Replies if this perceived object is a burrow.
-	 * 
+	 *
 	 * @return <code>true</code> if this perceived object is a burrow,
 	 * otherwise <code>false</code>.
 	 */
-	public boolean isBurrow();
+	boolean isBurrow();
 
 	/** Replies if this perceived object is a substance.
-	 * 
+	 *
 	 * @return <code>true</code> if this perceived object is a substance,
 	 * otherwise <code>false</code>.
 	 */
-	public boolean isSubstance();
+	boolean isSubstance();
 
 	/** Replies the semantic associated to this object.
-	 * 
+	 *
 	 * @return the semantic associated to this object.
 	 */
-	public Object getSemantic();
-	
+	Object getSemantic();
+
 }

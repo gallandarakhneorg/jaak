@@ -25,7 +25,7 @@ import io.sarl.jaak.envinterface.perception.EnvironmentalObject;
 import org.arakhne.afc.math.discrete.object2d.Point2i;
 
 /** This interface defines a grid for the Jaak environment model.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -34,51 +34,47 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 public interface GridModel {
 
 	/** Replies the width of the grid.
-	 * 
+	 *
 	 * @return the width of the grid.
 	 */
-	public int getWidth();
-	
+	int getWidth();
+
 	/** Replies the height of the grid.
-	 * 
+	 *
 	 * @return the height of the grid.
 	 */
-	public int getHeight();
-		
+	int getHeight();
+
 	/** Replies the turtle body on the cell at the
 	 * given coordinate.
-	 * 
+	 *
 	 * @param x is the coordinate of the cell.
 	 * @param y is the coordinate of the cell.
 	 * @return the turtle body at the given position, or
 	 * <code>null</code> if no turtle body is located at
 	 * the given position.
-	 * @throws IndexOutOfBoundsException if the given position
-	 * is outside the grid.
 	 */
-	public TurtleBody getTurtle(int x, int y);
+	TurtleBody getTurtle(int x, int y);
 
 	/** Replies the environmental objects on the cell at the
 	 * given coordinate.
-	 * 
+	 *
 	 * @param x is the coordinate of the cell.
 	 * @param y is the coordinate of the cell.
-	 * @return the environmental objects at the given position, 
+	 * @return the environmental objects at the given position,
 	 * never {@link NullPointerException}.
-	 * @throws IndexOutOfBoundsException if the given position
-	 * is outside the grid.
 	 */
-	public Iterable<? extends EnvironmentalObject> getObjects(int x, int y);
-	
+	Iterable<? extends EnvironmentalObject> getObjects(int x, int y);
+
 	/** Validate the given position to be on the grid.
 	 * This function ensures that the given position is
 	 * updated to fit the bounds of the grid.
-	 * 
+	 *
 	 * @param isWrapped indicates if the grid is using wrapped coordinate system.
 	 * @param allowDiscard indicates if the coordinates are able to be discarded.
 	 * @param position is the position to validate.
-	 * @return how the <var>position</var> has been changed.
+	 * @return how the position has been changed.
 	 */
-	public ValidationResult validatePosition(boolean isWrapped, boolean allowDiscard, Point2i position);
-	
+	ValidationResult validatePosition(boolean isWrapped, boolean allowDiscard, Point2i position);
+
 }

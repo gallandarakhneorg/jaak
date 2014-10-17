@@ -38,7 +38,8 @@ class JaakPhysicSpaceImpl implements JaakPhysicSpace {
 	private final UUID creator;
 	
 	/**
-	 * @param id
+	 * @param id - the identifier of the space.
+	 * @param creator - the identifier of the creator of the space, usually of a Jaak kernel agent.
 	 */
 	public JaakPhysicSpaceImpl(SpaceID id, UUID creator) {
 		assert(id != null);
@@ -64,11 +65,21 @@ class JaakPhysicSpaceImpl implements JaakPhysicSpace {
 
 	@Override
 	public void emit(Perception perception, UUID receiver) {
+		
 	}
 
 	@Override
 	public void emit(Move move) {
-		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void spawnBody(UUID id, Object listener) {
+		
+	}
+
+	@Override
+	public void killBody(UUID id, Object listener) {
 		
 	}
 	

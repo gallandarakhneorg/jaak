@@ -21,7 +21,7 @@ package io.sarl.jaak.envinterface.perception;
 
 /** This class defines a location on the grid where no turtle nor other
  * environment object stay.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -29,19 +29,19 @@ package io.sarl.jaak.envinterface.perception;
  */
 public class Obstacle extends EnvironmentalObject {
 
-	private static final long serialVersionUID = 7180672612817853149L;
-	
 	/** Default Obstacle semantic.
 	 */
 	public static final Object OBSTACLE_SEMANTIC = new Object();
-	
+
+	private static final long serialVersionUID = 7180672612817853149L;
+
 	/**
 	 * @param semantic is the semantic associated to this environmental object.
 	 */
 	public Obstacle(Object semantic) {
 		super(semantic);
 	}
-	
+
 	/**
 	 */
 	public Obstacle() {

@@ -26,65 +26,65 @@ import java.util.Collection;
 
 /** This interface defines the methods which are used
  * to apply actions in a Jaak environment.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
 public interface ActionApplier {
-		
+
 	/** Remove the turtle body on the given cell.
 	 * <p>
 	 * If the given body is not on the cell at the given
 	 * position, this function does nothing.
-	 * 
+	 *
 	 * @param x is the position of the body.
 	 * @param y is the position of the body.
 	 * @param body is the body to remove.
 	 * @return success state.
 	 */
-	public boolean removeTurtle(int x, int y, TurtleBody body);
-	
+	boolean removeTurtle(int x, int y, TurtleBody body);
+
 	/** Add the turtle body on the given cell.
 	 * <p>
 	 * If a body is already on the cell at the given
 	 * position, this function does nothing.
-	 * 
+	 *
 	 * @param x is the position of the body.
 	 * @param y is the position of the body.
 	 * @param body is the body to add.
 	 * @return success state.
 	 */
-	public boolean putTurtle(int x, int y, TurtleBody body);
-	
+	boolean putTurtle(int x, int y, TurtleBody body);
+
 	/** Remove the environmental object on the given cell.
-	 * 
+	 *
 	 * @param x is the position of the object.
 	 * @param y is the position of the object.
 	 * @param object is the object to remove.
-	 * @return the removed object, not always the given <var>object</var> in the case
+	 * @return the removed object, not always the given object in the case
 	 * of substances.
 	 */
-	public EnvironmentalObject removeObject(int x, int y, EnvironmentalObject object);
-	
+	EnvironmentalObject removeObject(int x, int y, EnvironmentalObject object);
+
 	/** Remove all the environmental objects on the given cell.
-	 * 
+	 *
 	 * @param x is the position of the cell.
 	 * @param y is the position of the cell.
 	 * @return the removed objects.
 	 */
-	public Collection<EnvironmentalObject> removeObjects(int x, int y);
+	Collection<EnvironmentalObject> removeObjects(int x, int y);
 
 	/** Add the environmental object on the given cell.
-	 * 
+	 *
 	 * @param x is the position of the object.
 	 * @param y is the position of the object.
 	 * @param object is the object to add.
-	 * @return the added object, not always the given <var>object</var> in the case
+	 * @return the added object, not always the given object in the case
 	 * of substances.
 	 */
-	public EnvironmentalObject putObject(int x, int y, EnvironmentalObject object);
+	EnvironmentalObject putObject(int x, int y, EnvironmentalObject object);
 
 	/**
 	 * Update the body state with the given informations.
@@ -96,6 +96,6 @@ public interface ActionApplier {
 	 * @param body is the body to change.
 	 * @return success state.
 	 */
-	public boolean setPhysicalState(int x, int y, float headingAngle, float speed, TurtleBody body);
+	boolean setPhysicalState(int x, int y, float headingAngle, float speed, TurtleBody body);
 
 }

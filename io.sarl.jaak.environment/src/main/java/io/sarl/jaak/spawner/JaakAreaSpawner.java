@@ -26,19 +26,19 @@ import org.arakhne.afc.math.discrete.object2d.Rectangle2i;
 import org.arakhne.afc.math.discrete.object2d.Shape2i;
 
 /** Provide implementation for a turtle spawner on a rectangle.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
 public abstract class JaakAreaSpawner extends JaakSpawner {
-	
+
 	private final int x;
 	private final int y;
 	private final int w;
 	private final int h;
-	
+
 	/**
 	 * @param x is the position of the spawner.
 	 * @param y is the position of the spawner.
@@ -51,30 +51,30 @@ public abstract class JaakAreaSpawner extends JaakSpawner {
 		this.w = width;
 		this.h = height;
 	}
-	
+
 	/** {@inheritDoc}
 	 */
 	@Override
 	public Point2i computeCurrentSpawningPosition(Point2i desiredPosition) {
-		if (desiredPosition!=null
-		 && desiredPosition.x()>=this.x
-		 && desiredPosition.y()>=this.y
-		 && desiredPosition.x()<=this.x+this.w
-		 && desiredPosition.y()<=this.y+this.h) {
+		if (desiredPosition != null
+				&& desiredPosition.x() >= this.x
+				&& desiredPosition.y() >= this.y
+				&& desiredPosition.x() <= this.x + this.w
+				&& desiredPosition.y() <= this.y + this.h) {
 			return new Point2i(desiredPosition);
 		}
 		int dx = RandomNumber.nextInt(this.w);
 		int dy = RandomNumber.nextInt(this.h);
-		return new Point2i(this.x+dx, this.y+dy);
+		return new Point2i(this.x + dx, this.y + dy);
 	}
-		
+
 	/** {@inheritDoc}
 	 */
 	@Override
 	public Point2i getReferenceSpawningPosition() {
 		return new Point2i(this.x, this.y);
 	}
-	
+
 	/** {@inheritDoc}
 	 */
 	@Override

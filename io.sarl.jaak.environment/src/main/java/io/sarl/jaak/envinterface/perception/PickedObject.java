@@ -27,7 +27,7 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 
 /** This class defines a object which was picked up from the cell
  * according to a previous picking-up influence.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -36,24 +36,24 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 public class PickedObject implements Perceivable, Serializable {
 
 	private static final long serialVersionUID = -5408636984133012977L;
-	
+
 	private final EnvironmentalObject pickedObject;
-	
+
 	/**
 	 * @param pickedUpObject is the picked-up object.
 	 */
 	public PickedObject(EnvironmentalObject pickedUpObject) {
 		this.pickedObject = pickedUpObject;
 	}
-	
+
 	/** Replies the picked-up object.
-	 * 
+	 *
 	 * @return the picked-up object.
 	 */
 	public EnvironmentalObject getPickedUpObject() {
 		return this.pickedObject;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -84,7 +84,9 @@ public class PickedObject implements Perceivable, Serializable {
 	@Override
 	public Point2i getRelativePosition(TurtleBody body) {
 		Point2i p = this.pickedObject.getPosition();
-		if (body==null) return p;
+		if (body == null) {
+			return p;
+		}
 		Point2i bp = body.getPosition();
 		return new Point2i(bp.x() - p.x(), bp.y() - p.y());
 	}

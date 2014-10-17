@@ -27,33 +27,39 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 
 /** This class provides 2D Bresenham algorithms.
  * <p>
- * The label "Bresenham" is used today for a whole family of algorithms extending 
+ * The label "Bresenham" is used today for a whole family of algorithms extending
  * or modifying Bresenham's original algorithm. See further functions below.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
-public class Bresenham {
+public final class Bresenham {
 
-	/** The Bresenham line algorithm is an algorithm which determines which points in 
-	 * an n-dimensional raster should be plotted in order to form a close 
-	 * approximation to a straight line between two given points. It is 
-	 * commonly used to draw lines on a computer screen, as it uses only 
-	 * integer addition, subtraction and bit shifting, all of which are 
-	 * very cheap operations in standard computer architectures. It is one of the 
-	 * earliest algorithms developed in the field of computer graphics. A minor extension 
+	private static final int SIDES = 4;
+
+	private Bresenham() {
+		//
+	}
+
+	/** The Bresenham line algorithm is an algorithm which determines which points in
+	 * an n-dimensional raster should be plotted in order to form a close
+	 * approximation to a straight line between two given points. It is
+	 * commonly used to draw lines on a computer screen, as it uses only
+	 * integer addition, subtraction and bit shifting, all of which are
+	 * very cheap operations in standard computer architectures. It is one of the
+	 * earliest algorithms developed in the field of computer graphics. A minor extension
 	 * to the original algorithm also deals with drawing circles.
 	 * <p>
-	 * While algorithms such as Wu's algorithm are also frequently used in modern 
-	 * computer graphics because they can support antialiasing, the speed and 
-	 * simplicity of Bresenham's line algorithm mean that it is still important. 
-	 * The algorithm is used in hardware such as plotters and in the graphics 
-	 * chips of modern graphics cards. It can also be found in many software 
-	 * graphics libraries. Because the algorithm is very simple, it is often 
+	 * While algorithms such as Wu's algorithm are also frequently used in modern
+	 * computer graphics because they can support antialiasing, the speed and
+	 * simplicity of Bresenham's line algorithm mean that it is still important.
+	 * The algorithm is used in hardware such as plotters and in the graphics
+	 * chips of modern graphics cards. It can also be found in many software
+	 * graphics libraries. Because the algorithm is very simple, it is often
 	 * implemented in either the firmware or the hardware of modern graphics cards.
-	 * 
+	 *
 	 * @param x0 is the x-coordinate of the first point of the Bresenham line.
 	 * @param y0 is the y-coordinate of the first point of the Bresenham line.
 	 * @param x1 is the x-coordinate of the last point of the Bresenham line.
@@ -65,7 +71,7 @@ public class Bresenham {
 	}
 
 	/** Replies the points on a rectangle.
-	 * 
+	 *
 	 * @param x0 is the x-coordinate of the lowest point of the rectangle.
 	 * @param y0 is the y-coordinate of the lowest point of the rectangle.
 	 * @param width is the width of the rectangle.
@@ -79,23 +85,23 @@ public class Bresenham {
 		return new RectangleIterator(x0, y0, width, height, firstSide);
 	}
 
-	/** The Bresenham line algorithm is an algorithm which determines which points in 
-	 * an n-dimensional raster should be plotted in order to form a close 
-	 * approximation to a straight line between two given points. It is 
-	 * commonly used to draw lines on a computer screen, as it uses only 
-	 * integer addition, subtraction and bit shifting, all of which are 
-	 * very cheap operations in standard computer architectures. It is one of the 
-	 * earliest algorithms developed in the field of computer graphics. A minor extension 
+	/** The Bresenham line algorithm is an algorithm which determines which points in
+	 * an n-dimensional raster should be plotted in order to form a close
+	 * approximation to a straight line between two given points. It is
+	 * commonly used to draw lines on a computer screen, as it uses only
+	 * integer addition, subtraction and bit shifting, all of which are
+	 * very cheap operations in standard computer architectures. It is one of the
+	 * earliest algorithms developed in the field of computer graphics. A minor extension
 	 * to the original algorithm also deals with drawing circles.
 	 * <p>
-	 * While algorithms such as Wu's algorithm are also frequently used in modern 
-	 * computer graphics because they can support antialiasing, the speed and 
-	 * simplicity of Bresenham's line algorithm mean that it is still important. 
-	 * The algorithm is used in hardware such as plotters and in the graphics 
-	 * chips of modern graphics cards. It can also be found in many software 
-	 * graphics libraries. Because the algorithm is very simple, it is often 
+	 * While algorithms such as Wu's algorithm are also frequently used in modern
+	 * computer graphics because they can support antialiasing, the speed and
+	 * simplicity of Bresenham's line algorithm mean that it is still important.
+	 * The algorithm is used in hardware such as plotters and in the graphics
+	 * chips of modern graphics cards. It can also be found in many software
+	 * graphics libraries. Because the algorithm is very simple, it is often
 	 * implemented in either the firmware or the hardware of modern graphics cards.
-	 * 
+	 *
 	 * @author St&eacute;phane GALLAND &lt;stephane.galland@utbm.fr&gt;
 	 * @version $FullVersion$
 	 * @mavengroupid org.janus-project.jaak
@@ -109,7 +115,8 @@ public class Bresenham {
 		private final int deltax;
 		private final int deltay;
 		private final int x1;
-		private int y, x;
+		private int y;
+		private int x;
 		private int error;
 
 		/**
@@ -153,54 +160,50 @@ public class Bresenham {
 			this.error = this.deltax / 2;
 			this.y = _y0;
 
-			if (_x0 < _x1) this.xstep = 1;
-			else this.xstep = -1;
-			
-			if (_y0 < _y1) this.ystep = 1;
-			else this.ystep = -1;
-			
+			if (_x0 < _x1) {
+				this.xstep = 1;
+			} else {
+				this.xstep = -1;
+			}
+
+			if (_y0 < _y1) {
+				this.ystep = 1;
+			} else {
+				this.ystep = -1;
+			}
+
 			this.x1 = _x1;
 			this.x = _x0;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public boolean hasNext() {
-			return ((this.xstep>0) && (this.x <= this.x1))
-				   ||((this.xstep<0) && (this.x1 <= this.x));
+			return ((this.xstep > 0) && (this.x <= this.x1))
+					|| ((this.xstep < 0) && (this.x1 <= this.x));
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Point2i next() {
 			Point2i p = new Point2i();
-			
+
 			if (this.steep) {
 				p.set(this.y, this.x);
-			}
-			else {
+			} else {
 				p.set(this.x, this.y);
 			}
-			
+
 			this.error = this.error - this.deltay;
-			
+
 			if (this.error < 0) {
 				this.y = this.y + this.ystep;
 				this.error = this.error + this.deltax;
 			}
 
 			this.x += this.xstep;
-			
+
 			return p;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void remove() {
 			throw new UnsupportedOperationException();
@@ -209,7 +212,7 @@ public class Bresenham {
 	} // class LineIterator
 
 	/** Iterates on points on a rectangle.
-	 * 
+	 *
 	 * @author St&eacute;phane GALLAND &lt;stephane.galland@utbm.fr&gt;
 	 * @version $FullVersion$
 	 * @mavengroupid org.janus-project.jaak
@@ -222,10 +225,10 @@ public class Bresenham {
 		private final int x1;
 		private final int y1;
 		private final int firstSide;
-		
+
 		private int currentSide;
 		private int i;
-		
+
 		/**
 		 * @param x
 		 * @param y
@@ -234,77 +237,81 @@ public class Bresenham {
 		 * @param firstSide
 		 */
 		public RectangleIterator(int x, int y, int width, int height, int firstSide) {
-			assert(firstSide>=0 && firstSide<4);
+			assert (firstSide >= 0 && firstSide < SIDES);
 			this.firstSide = firstSide;
 			this.x0 = x;
 			this.y0 = y;
-			this.x1 = x+width-1;
-			this.y1 = y+height-1;
-			
-			this.currentSide = (width>0 && height>0) ? this.firstSide : -1;
+			this.x1 = x + width - 1;
+			this.y1 = y + height - 1;
+
+			this.currentSide = (width > 0 && height > 0) ? this.firstSide : -1;
 			this.i = 0;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public boolean hasNext() {
-			return this.currentSide!=-1;
+			return this.currentSide != -1;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public Point2i next() {
-			int x, y;
-			
+		private void computeCoordinates(Point2i p) {
 			switch(this.currentSide) {
-			case 0: // top
-				x = this.x0+this.i;
-				y = this.y0;
+			// top
+			case 0:
+				p.set(
+						this.x0 + this.i,
+						this.y0);
 				break;
-			case 1: // right
-				x = this.x1;
-				y = this.y0+this.i;
+			// right
+			case 1:
+				p.set(
+						this.x1,
+						this.y0 + this.i);
 				break;
-			case 2: // bottom
-				x = this.x1-this.i;
-				y = this.y1;
+			// bottom
+			case 2:
+				p.set(
+						this.x1 - this.i,
+						this.y1);
 				break;
-			case 3: // left
-				x = this.x0;
-				y = this.y1-this.i;
+			// left
+			case 3:
+				p.set(
+						this.x0,
+						this.y1 - this.i);
 				break;
 			default:
 				throw new NoSuchElementException();
 			}
-			
-			++ this.i;
+		}
+
+		private void changeSideIfNecessary(Point2i p) {
 			int newSide = -1;
-			
+
 			switch(this.currentSide) {
-			case 0: // top
-				if (x>=this.x1) {
+			// top
+			case 0:
+				if (p.x() >= this.x1) {
 					newSide = 1;
 					this.i = 0;
 				}
 				break;
-			case 1: // right
-				if (y>=this.y1) {
+			// right
+			case 1:
+				if (p.y() >= this.y1) {
 					newSide = 2;
 					this.i = 0;
 				}
 				break;
-			case 2: // bottom
-				if (x<=this.x0) {
+			// bottom
+			case 2:
+				if (p.x() <= this.x0) {
 					newSide = 3;
 					this.i = 0;
 				}
 				break;
-			case 3: // left
-				if (y<=this.y0) {
+			// left
+			case 3:
+				if (p.y() <= this.y0) {
 					newSide = 0;
 					this.i = 0;
 				}
@@ -313,21 +320,35 @@ public class Bresenham {
 				throw new NoSuchElementException();
 			}
 
-			if (newSide!=-1) {
-				this.currentSide = (this.firstSide==newSide) ? -1 : newSide;
-			}
-			
-			return new Point2i(x,y);
+			this.currentSide = filterSide(newSide);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
+		private int filterSide(int s) {
+			if (s != -1) {
+				if (this.firstSide == s) {
+					return -1;
+				}
+				return s;
+			}
+			return this.currentSide;
+		}
+
+		@Override
+		public Point2i next() {
+			Point2i p = new Point2i();
+
+			computeCoordinates(p);
+			++this.i;
+			changeSideIfNecessary(p);
+
+			return p;
+		}
+
 		@Override
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
-		
+
 	} // class RectangleIterator
-	
+
 }

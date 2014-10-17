@@ -23,18 +23,35 @@ import io.sarl.jaak.envinterface.perception.EnvironmentalObject
 import io.sarl.jaak.envinterface.perception.Perceivable
 import org.arakhne.afc.math.continous.object2d.Vector2f
 import org.arakhne.afc.math.discrete.object2d.Point2i
+import java.util.UUID
+import io.sarl.core.DefaultContextInteractions
 
 skill PhysicBodySkill implements PhysicBody {
 	
+	uses DefaultContextInteractions
+	
+	var physicSpace : JaakPhysicSpace
+	
+	val position = new Point2i
+	
 	def install() {
+		var spaceId = UUID::fromString(defaultContext.ID.toString + "!!!JaakPhysicSpace")
+		physicSpace = defaultContext.getOrCreateSpace(
+			typeof(JaakPhysicSpaceSpecification),
+			spaceId, owner.ID)
+		if (physicSpace === null) {
+			throw new IllegalStateException("No physic space found")
+		}
+		physicSpace.spawnBody(owner.ID, this)
 	}
 		
-	def beIddle {
-		
+	def uninstall() {
+		physicSpace?.killBody(owner.ID, this)
+		physicSpace = null
 	}
 
 	def move(direction : Vector2f, changeHeading : boolean) {
-		//var evt = new Move
+		
 	}
 	
 	def moveForward(cells : int) {
@@ -83,9 +100,10 @@ skill PhysicBodySkill implements PhysicBody {
 		
 	}
 
-	def setPerceptionEnable(enable : boolean) {
-		
+	def getPosition : Point2i {
+		this.position
 	}
+
 	def getHeadingAngle : float {
 		// TODO: Auto-generated action.
 		0.0f
@@ -97,10 +115,6 @@ skill PhysicBodySkill implements PhysicBody {
 	def getOrientation : float {
 		// TODO: Auto-generated action.
 		0.0f
-	}
-	def getPosition : Point2i {
-		// TODO: Auto-generated action.
-		null
 	}
 	def getSemantic : Object {
 		// TODO: Auto-generated action.
@@ -115,19 +129,14 @@ skill PhysicBodySkill implements PhysicBody {
 		null
 	}
 	def getX : int {
-		// TODO: Auto-generated action.
-		0
+		position.x()
 	}
 	def getY : int {
-		// TODO: Auto-generated action.
-		0
+		position.y()
 	}
-	def hasInfluences : boolean {
+	
+	def getOrientationVector : org.arakhne.afc.math.continous.object2d.Vector2f {
 		// TODO: Auto-generated action.
-		true
-	}
-	def isPerceptionEnable : boolean {
-		// TODO: Auto-generated action.
-		true
+		null
 	}
 }

@@ -26,7 +26,7 @@ import java.util.Iterator;
 import org.arakhne.afc.math.discrete.object2d.Point2i;
 
 /** This interface defines a frustum for for a turtle.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -36,12 +36,12 @@ public interface TurtleFrustum {
 
 	/**
 	 * Replies an iterator on the positions of the perceived cells.
-	 * 
+	 *
 	 * @param origin is the origin perception point.
 	 * @param direction is the angle which is corresponding to the turtle head direction.
 	 * @param environment is the environment in which the frustum should perceive.
 	 * @return the iterator on perceived cells' positions.
 	 */
-	public Iterator<Point2i> getPerceivedCells(Point2i origin, float direction, EnvironmentArea environment);
-	
+	Iterator<Point2i> getPerceivedCells(Point2i origin, float direction, EnvironmentArea environment);
+
 }

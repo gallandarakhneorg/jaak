@@ -54,6 +54,7 @@ public class JaakPhysicSpaceSpecification implements SpaceSpecification<JaakPhys
 	 * @param creatorId - the Id of the creator of the space.
 	 * @return an instance of {@link Space}
 	 */
+	@SuppressWarnings("static-method")
 	public JaakPhysicSpace create(SpaceID spaceId, UUID creatorId) {
 		return new JaakPhysicSpaceImpl(spaceId, creatorId);
 	}

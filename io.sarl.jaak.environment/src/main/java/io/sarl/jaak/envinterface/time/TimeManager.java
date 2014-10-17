@@ -22,7 +22,7 @@ package io.sarl.jaak.envinterface.time;
 import java.util.concurrent.TimeUnit;
 
 /** Time manager for the Jaak environment.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -31,49 +31,49 @@ import java.util.concurrent.TimeUnit;
 public interface TimeManager {
 
 	/** Replies the current time in milliseconds.
-	 * 
+	 *
 	 * @return the current time in milliseconds.
 	 */
-	public float getCurrentTime();
+	float getCurrentTime();
 
 	/** Replies the current time in the given time unit.
-	 * 
+	 *
 	 * @param unit is the time unit to use for replied value.
 	 * @return the current time.
 	 */
-	public float getCurrentTime(TimeUnit unit);
+	float getCurrentTime(TimeUnit unit);
 
 	/** Replies the duration of the last simulation step in seconds.
-	 * 
+	 *
 	 * @return the duration of the last simulation step in seconds.
 	 */
-	public float getLastStepDuration();
-	
+	float getLastStepDuration();
+
 	/** Replies the duration of the last simulation step in the given time unit.
-	 * 
+	 *
 	 * @param unit is the time unit used to format the replied value.
 	 * @return the duration of the last simulation step.
 	 */
-	public float getLastStepDuration(TimeUnit unit);
-	
+	float getLastStepDuration(TimeUnit unit);
+
 	/** Set the waiting duration at the end of each simulation step.
 	 * This waiting duration permits to control how fast the simulation
 	 * is running.
-	 * 
+	 *
 	 * @param duration is the duration in ms.
 	 */
-	public void setWaitingDuration(long duration);
+	void setWaitingDuration(long duration);
 
 	/** Replies the waiting duration at the end of each simulation step.
 	 * This waiting duration permits to control how fast the simulation
 	 * is running.
-	 * 
+	 *
 	 * @return the duration in ms.
 	 */
-	public long getWaitingDuration();
-	
+	long getWaitingDuration();
+
 	/** Increment the time.
 	 */
-	public void increment();
+	void increment();
 
 }

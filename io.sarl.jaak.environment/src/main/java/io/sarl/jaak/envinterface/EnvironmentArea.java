@@ -25,7 +25,7 @@ import java.util.Collection;
 
 
 /** This interface is for the area covered by the environment.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -34,90 +34,86 @@ import java.util.Collection;
 public interface EnvironmentArea {
 
 	/** Replies the minimal x coordinate on the environment.
-	 * 
+	 *
 	 * @return the min x.
 	 */
-	public int getX();
-	
+	int getX();
+
 	/** Replies the minimal y coordinate on the environment.
-	 * 
+	 *
 	 * @return the min y.
 	 */
-	public int getY();
+	int getY();
 
 	/** Replies the width of the environment.
-	 * 
+	 *
 	 * @return the width of the environment.
 	 */
-	public int getWidth();
-	
+	int getWidth();
+
 	/** Replies the height of the environment.
-	 * 
+	 *
 	 * @return the height of the environment.
 	 */
-	public int getHeight();
+	int getHeight();
 
 	/** Replies if the cell at the given position is free or not.
 	 * <p>
 	 * A cell is free when no turtle nor obstacle is inside.
 	 * Any coordinate outside the environment grid is assumed to be
 	 * not free.
-	 * 
+	 *
 	 * @param x - the position to test.
 	 * @param y - the position to test.
 	 * @return <code>true</code> if the cell at the given position is
 	 * free, otherwise <code>false</code>
 	 */
-	public boolean isFree(int x, int y);
+	boolean isFree(int x, int y);
 
 	/** Replies if the cell at the given position contains an obstacle.
 	 * <p>
 	 * Any coordinate outside the environment grid is assumed to be
 	 * an obstacle.
-	 * 
+	 *
 	 * @param x - the position to test.
 	 * @param y - the position to test.
 	 * @return <code>true</code> if the cell at the given position contains
 	 * an obstacle, otherwise <code>false</code>
 	 */
-	public boolean hasObstacle(int x, int y);
+	boolean hasObstacle(int x, int y);
 
 	/** Replies if a turtle body is on the cell at the
 	 * given coordinate.
-	 * 
+	 *
 	 * @param x is the coordinate of the cell.
 	 * @param y is the coordinate of the cell.
-	 * @return <code>true</code> if a turtle body is 
+	 * @return <code>true</code> if a turtle body is
 	 * on the cell, otherwise <code>false</code>.
-	 * @throws IndexOutOfBoundsException if the given position
-	 * is outside the grid.
 	 */
-	public boolean hasTurtle(int x, int y);
-	
+	boolean hasTurtle(int x, int y);
+
 	/** Replies the number of turtles on the environment.
-	 * 
+	 *
 	 * @return the number of turtles.
 	 */
-	public int getTurtleCount();
-	
+	int getTurtleCount();
+
 	/** Replies a read-only collection of the environmental objects located
 	 * in the cell at the given coordinate.
-	 * 
+	 *
 	 * @param x is the coordinate of the cell.
 	 * @param y is the coordinate of the cell.
 	 * @return the collection of objects, never <code>null</code>.
 	 */
-	public Collection<EnvironmentalObject> getEnvironmentalObjects(int x, int y);
-	
+	Collection<EnvironmentalObject> getEnvironmentalObjects(int x, int y);
+
 	/** Replies the instant speed of the turtle at the given position.
-	 * 
+	 *
 	 * @param x is the coordinate of the cell.
 	 * @param y is the coordinate of the cell.
 	 * @return the instant speed of the turtle in cells per second,
 	 * or {@link Float#NaN} if no turtle.
-	 * @throws IndexOutOfBoundsException if the given position
-	 * is outside the grid.
 	 */
-	public float getTurtleSpeed(int x, int y);
+	float getTurtleSpeed(int x, int y);
 
 }

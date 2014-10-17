@@ -24,7 +24,7 @@ import io.sarl.jaak.envinterface.perception.EnvironmentalObject;
 
 /** This class defines an influence to drop off an object
  * inside the environment.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -42,15 +42,15 @@ public class DropDownInfluence extends Influence {
 		super(emitter);
 		this.object = object;
 	}
-	
+
 	/** Replies the environmental object which may be dropped off.
-	 * 
+	 *
 	 * @return the environmental object which may be dropped off.
 	 */
 	public EnvironmentalObject getDropOffObject() {
 		return this.object;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -59,8 +59,8 @@ public class DropDownInfluence extends Influence {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append(getEmitter().getTurtleId().toString());
 		buffer.append(": drop "); //$NON-NLS-1$
-		buffer.append(this.object==null ? null : this.object.toString());
+		buffer.append(this.object == null ? null : this.object.toString());
 		return buffer.toString();
 	}
-	
+
 }

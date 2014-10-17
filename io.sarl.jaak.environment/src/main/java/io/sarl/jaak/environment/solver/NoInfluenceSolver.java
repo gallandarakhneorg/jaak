@@ -35,14 +35,14 @@ import java.util.List;
  * <li>generate a motion action corresponding to all the influences;</li>
  * <li>does not validate the other influences.</li>
  * </ul>
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
 public class NoInfluenceSolver extends AbstractJaakEnvironmentInfluenceSolver {
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -51,28 +51,28 @@ public class NoInfluenceSolver extends AbstractJaakEnvironmentInfluenceSolver {
 			Collection<? extends Influence> endogenousInfluences,
 			Collection<RealTurtleBody> bodies,
 			ActionApplier actionApplier) {
-		if (actionApplier!=null) {
-			if (endogenousInfluences!=null) {
-				for(Influence influence : endogenousInfluences) {
+		if (actionApplier != null) {
+			if (endogenousInfluences != null) {
+				for (Influence influence : endogenousInfluences) {
 					applyInfluence(actionApplier, influence, null);
 				}
 			}
-			if (bodies!=null) {
+			if (bodies != null) {
 				List<Influence> influences;
-				for(RealTurtleBody body : bodies) {
+				for (RealTurtleBody body : bodies) {
 					influences = body.consumeOtherInfluences();
-					if (influences!=null) {
-						for(Influence influence : influences) {
+					if (influences != null) {
+						for (Influence influence : influences) {
 							applyInfluence(actionApplier, influence, null);
 						}
 					}
 					MotionInfluence influence = body.consumeMotionInfluence();
-					if (influence!=null) {
+					if (influence != null) {
 						applyInfluence(actionApplier, influence, MotionInfluenceStatus.COMPLETE_MOTION);
 					}
 				}
 			}
 		}
 	}
-	
+
 }

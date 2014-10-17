@@ -28,7 +28,7 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 /** This class defines a frustum for for a turtle which is
  * restricted to a square.
  * This frustum is not orientable.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -37,22 +37,22 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 public class SquareTurtleFrustum implements TurtleFrustum {
 
 	private final int side;
-	
+
 	/**
 	 * @param side is the length of the square side
 	 */
 	public SquareTurtleFrustum(int side) {
 		this.side = side;
 	}
-	
+
 	/** Replies the side of the square.
-	 * 
+	 *
 	 * @return the side of the square.
 	 */
 	public int getSideLength() {
 		return this.side;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -60,40 +60,44 @@ public class SquareTurtleFrustum implements TurtleFrustum {
 	public Iterator<Point2i> getPerceivedCells(Point2i origin, float direction, EnvironmentArea environment) {
 		return new PointIterator(origin);
 	}
-	
+
 	/** This class defines a frustum for for a turtle which is
 	 * restricted to a square.
-	 * 
+	 *
 	 * @author $Author: sgalland$
 	 * @version $FullVersion$
 	 * @mavengroupid $GroupId$
 	 * @mavenartifactid $ArtifactId$
 	 */
 	private class PointIterator implements Iterator<Point2i> {
-		
+
 		private final Point2i replied = new Point2i();
-		private final int sx, ex, ey;
-		private int x, y;
-		
+		private final int sx;
+		private final int ex;
+		private final int ey;
+		private int x;
+		private int y;
+
 		/**
 		 * @param center
 		 */
 		public PointIterator(Point2i center) {
 			int s = getSideLength();
-			int ds = s / 2; 			
-			this.sx = this.x = center.x() - ds;
+			int ds = s / 2;
+			this.sx = center.x() - ds;
+			this.x = this.sx;
 			this.y = center.y() - ds;
 
 			this.ex = center.x() + ds;
 			this.ey = center.y() + ds;
 		}
-		
+
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
 		public boolean hasNext() {
-			return this.x<=this.ex && this.y<=this.ey;
+			return this.x <= this.ex && this.y <= this.ey;
 		}
 
 		/**
@@ -102,9 +106,9 @@ public class SquareTurtleFrustum implements TurtleFrustum {
 		@Override
 		public Point2i next() {
 			this.replied.set(this.x, this.y);
-			this.x++;
-			if (this.x>this.ex) {
-				this.y++;
+			++this.x;
+			if (this.x > this.ex) {
+				++this.y;
 				this.x = this.sx;
 			}
 			return this.replied;
@@ -117,7 +121,7 @@ public class SquareTurtleFrustum implements TurtleFrustum {
 		public void remove() {
 			//
 		}
-		
+
 	}
 
 }
