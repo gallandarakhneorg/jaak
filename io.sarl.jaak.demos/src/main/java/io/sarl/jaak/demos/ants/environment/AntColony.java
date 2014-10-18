@@ -1,6 +1,6 @@
 package io.sarl.jaak.demos.ants.environment;
 
-import io.sarl.jaak.envinterface.perception.Burrow;
+import io.sarl.jaak.environment.external.perception.Burrow;
 
 /** Defines an ant colony.
  * 

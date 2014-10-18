@@ -18,15 +18,19 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>io.sarl.jaak</groupId>
-			<artifactId>io.sarl.jaak.environment</artifactId>
-			<version>${project.version}</version>
+			<groupId>org.arakhne.afc.core</groupId>
+			<artifactId>math</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>io.sarl.maven</groupId>
 			<artifactId>io.sarl.maven.sdk</artifactId>
 			<type>pom</type>
+		</dependency>
+
+		<dependency>
+			<groupId>io.janusproject</groupId>
+			<artifactId>io.janusproject.kernel</artifactId>
 		</dependency>
 
 		<!-- Testing -->
@@ -47,12 +51,17 @@
 	<build>
 		<plugins>
 			<plugin>
-					<groupId>io.sarl.maven</groupId>
-					<artifactId>sarl-maven-plugin</artifactId>
+				<groupId>io.sarl.maven</groupId>
+				<artifactId>sarl-maven-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<source>${compiler.level}</source>
+					<target>${compiler.level}</target>
+				</configuration>
 			</plugin>
 			<plugin>
-		        	<groupId>org.apache.maven.plugins</groupId>
-		        	<artifactId>maven-checkstyle-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

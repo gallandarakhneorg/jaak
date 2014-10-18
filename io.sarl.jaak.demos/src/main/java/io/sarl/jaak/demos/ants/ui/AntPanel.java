@@ -3,11 +3,11 @@ package io.sarl.jaak.demos.ants.ui;
 import io.sarl.jaak.demos.ants.AntColonyConstants;
 import io.sarl.jaak.demos.ants.environment.Food;
 import io.sarl.jaak.demos.ants.environment.Pheromone;
-import io.sarl.jaak.envinterface.EnvironmentArea;
-import io.sarl.jaak.envinterface.body.BodySpawner;
-import io.sarl.jaak.envinterface.perception.EnvironmentalObject;
-import io.sarl.jaak.kernel.JaakEvent;
-import io.sarl.jaak.kernel.JaakListener;
+import io.sarl.jaak.environment.external.EnvironmentArea;
+import io.sarl.jaak.environment.external.body.BodySpawner;
+import io.sarl.jaak.environment.external.perception.EnvironmentalObject;
+import io.sarl.jaak.kernel.external.JaakEvent;
+import io.sarl.jaak.kernel.external.JaakListener;
 
 import java.awt.Color;
 import java.awt.Dimension;

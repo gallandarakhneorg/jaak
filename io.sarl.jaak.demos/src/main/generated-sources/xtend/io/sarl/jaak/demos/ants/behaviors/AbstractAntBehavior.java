@@ -4,13 +4,14 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 import io.sarl.jaak.demos.ants.behaviors.PheromoneFollowingCapacity;
 import io.sarl.jaak.demos.ants.environment.Pheromone;
-import io.sarl.jaak.envinterface.influence.MotionInfluenceStatus;
-import io.sarl.jaak.envinterface.perception.Perceivable;
-import io.sarl.jaak.kernel.PhysicBody;
+import io.sarl.jaak.environment.external.influence.MotionInfluenceStatus;
+import io.sarl.jaak.environment.external.perception.EnvironmentalObject;
+import io.sarl.jaak.environment.external.perception.Perceivable;
 import io.sarl.jaak.util.RandomNumber;
 import io.sarl.lang.annotation.Generated;
 import io.sarl.lang.core.Agent;
 import io.sarl.lang.core.Behavior;
+import java.io.Serializable;
 import org.arakhne.afc.math.MathConstants;
 import org.arakhne.afc.math.continous.object2d.Vector2f;
 import org.arakhne.afc.math.discrete.object2d.Point2i;
@@ -26,18 +27,118 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  */
 @SuppressWarnings("all")
 public class AbstractAntBehavior extends Behavior {
+  @Generated
+  protected void dropOff(final EnvironmentalObject object) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).dropOff(object);
+  }
+  
+  @Generated
+  protected float getHeadingAngle() {
+    return getSkill(io.sarl.jaak.environment.external.PhysicBody.class).getHeadingAngle();
+  }
+  
+  @Generated
+  protected Vector2f getHeadingVector() {
+    return getSkill(io.sarl.jaak.environment.external.PhysicBody.class).getHeadingVector();
+  }
+  
+  @Generated
+  protected Point2i getPosition() {
+    return getSkill(io.sarl.jaak.environment.external.PhysicBody.class).getPosition();
+  }
+  
+  @Generated
+  protected Serializable getSemantic() {
+    return getSkill(io.sarl.jaak.environment.external.PhysicBody.class).getSemantic();
+  }
+  
+  @Generated
+  protected float getSpeed() {
+    return getSkill(io.sarl.jaak.environment.external.PhysicBody.class).getSpeed();
+  }
+  
+  @Generated
+  protected int getX() {
+    return getSkill(io.sarl.jaak.environment.external.PhysicBody.class).getX();
+  }
+  
+  @Generated
+  protected int getY() {
+    return getSkill(io.sarl.jaak.environment.external.PhysicBody.class).getY();
+  }
+  
+  @Generated
+  protected void move(final Vector2f direction) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).move(direction);
+  }
+  
+  @Generated
+  protected void move(final Vector2f direction, final boolean changeHeading) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).move(direction, changeHeading);
+  }
+  
+  @Generated
+  protected void moveBackward(final int cells) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).moveBackward(cells);
+  }
+  
+  @Generated
+  protected void moveForward(final int cells) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).moveForward(cells);
+  }
+  
+  @Generated
+  protected void pickUp(final EnvironmentalObject object) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).pickUp(object);
+  }
+  
+  @Generated
+  protected Perceivable pickUp(final Class<? extends Perceivable> type) {
+    return getSkill(io.sarl.jaak.environment.external.PhysicBody.class).pickUp(type);
+  }
+  
+  @Generated
+  protected void setHeading(final float radians) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).setHeading(radians);
+  }
+  
+  @Generated
+  protected void setHeading(final Vector2f direction) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).setHeading(direction);
+  }
+  
+  @Generated
+  protected void setSemantic(final Serializable semantic) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).setSemantic(semantic);
+  }
+  
+  @Generated
+  protected EnvironmentalObject touchUp(final Class<? extends EnvironmentalObject> type) {
+    return getSkill(io.sarl.jaak.environment.external.PhysicBody.class).touchUp(type);
+  }
+  
+  @Generated
+  protected void turnLeft(final float radians) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).turnLeft(radians);
+  }
+  
+  @Generated
+  protected void turnRight(final float radians) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).turnRight(radians);
+  }
+  
   /**
    * Select and reply a pheromone.
    * 
    * @param pheromoneType is the type of pheromone to follow
    * @return the pheromone to reach.
    */
-  public Pheromone followPheromone(final PhysicBody body, final Class<? extends Pheromone> pheromoneType, final Iterable<? extends Perceivable> perception) {
+  public Pheromone followPheromone(final Class<? extends Pheromone> pheromoneType, final Iterable<? extends Perceivable> perception) {
     boolean _isEmpty = IterableExtensions.isEmpty(perception);
     boolean _not = (!_isEmpty);
     if (_not) {
       PheromoneFollowingCapacity followPheromoneSkill = this.<PheromoneFollowingCapacity>getSkill(PheromoneFollowingCapacity.class);
-      Point2i _position = body.getPosition();
+      Point2i _position = this.getPosition();
       Iterable<Pheromone> _filter = Iterables.<Pheromone>filter(perception, Pheromone.class);
       return followPheromoneSkill.followPheromone(_position, _filter);
     }
@@ -47,44 +148,44 @@ public class AbstractAntBehavior extends Behavior {
   /**
    * Move randomly.
    */
-  public void randomMotion(final PhysicBody body) {
+  public void randomMotion() {
     float _nextFloat = RandomNumber.nextFloat();
     float _nextFloat_1 = RandomNumber.nextFloat();
     float _minus = (_nextFloat - _nextFloat_1);
     float dAngle = (_minus * MathConstants.DEMI_PI);
     if ((dAngle > 0)) {
-      body.turnLeft(dAngle);
+      this.turnLeft(dAngle);
     } else {
-      body.turnRight((-dAngle));
+      this.turnRight((-dAngle));
     }
-    body.moveForward(1);
+    this.moveForward(1);
   }
   
   /**
    * Turn back.
    */
-  public void randomTurnBack(final PhysicBody body) {
+  public void randomTurnBack() {
     float _nextFloat = RandomNumber.nextFloat();
     float _nextFloat_1 = RandomNumber.nextFloat();
     float _minus = (_nextFloat - _nextFloat_1);
     float dAngle = (_minus * MathConstants.DEMI_PI);
     if ((dAngle > 0)) {
-      body.turnLeft((MathConstants.DEMI_PI + dAngle));
+      this.turnLeft((MathConstants.DEMI_PI + dAngle));
     } else {
-      body.turnRight((MathConstants.DEMI_PI - dAngle));
+      this.turnRight((MathConstants.DEMI_PI - dAngle));
     }
-    body.moveForward(1);
+    this.moveForward(1);
   }
   
   /**
    * Random patrol.
    */
-  public void randomPatrol(final PhysicBody body, final MotionInfluenceStatus status) {
+  public void randomPatrol(final MotionInfluenceStatus status) {
     boolean _equals = Objects.equal(status, MotionInfluenceStatus.NO_MOTION);
     if (_equals) {
-      this.randomTurnBack(body);
+      this.randomTurnBack();
     } else {
-      this.randomMotion(body);
+      this.randomMotion();
     }
   }
   
@@ -97,23 +198,21 @@ public class AbstractAntBehavior extends Behavior {
    * @return <code>true</code> if the ant does not move according to this function,
    * <code>false</code> if the ant is moving.
    */
-  public boolean gotoMotion(final PhysicBody body, final Point2i target, final boolean enableRandom) {
+  public boolean gotoMotion(final Point2i target, final boolean enableRandom) {
     int _x = target.x();
-    Point2i _position = body.getPosition();
-    int _x_1 = _position.x();
+    int _x_1 = this.getX();
     int dx = (_x - _x_1);
     int _y = target.y();
-    Point2i _position_1 = body.getPosition();
-    int _y_1 = _position_1.y();
+    int _y_1 = this.getY();
     int dy = (_y - _y_1);
     if (((dx != 0) || (dy != 0))) {
       Vector2f motion = new Vector2f(dx, dy);
       motion.normalize();
-      body.move(motion, true);
+      this.move(motion, true);
       return false;
     }
     if (enableRandom) {
-      this.randomMotion(body);
+      this.randomMotion();
       return false;
     }
     return true;

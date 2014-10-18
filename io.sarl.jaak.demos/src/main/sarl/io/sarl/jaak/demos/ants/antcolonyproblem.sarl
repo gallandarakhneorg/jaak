@@ -6,15 +6,15 @@ import io.sarl.jaak.demos.ants.environment.Food
 import io.sarl.jaak.demos.ants.spawn.AntColonySpawner
 import io.sarl.jaak.demos.ants.ui.AntFrame
 import io.sarl.jaak.demos.ants.ui.AntPanel
-import io.sarl.jaak.environment.model.JaakEnvironment
-import io.sarl.jaak.kernel.JaakKernelAgent
-import io.sarl.jaak.spawner.JaakSpawner
+import io.sarl.jaak.environment.internal.model.JaakEnvironment
+import io.sarl.jaak.environment.internal.spawner.JaakSpawner
+import io.sarl.jaak.kernel.internal.JaakKernelAgent
 import io.sarl.jaak.util.RandomNumber
 import io.sarl.lang.core.Agent
 import java.util.Set
 import org.arakhne.afc.math.discrete.object2d.Point2i
 
-import static extension io.sarl.jaak.demos.ants.AntColonyConstants.*
+import static io.sarl.jaak.demos.ants.AntColonyConstants.*
 
 /** This class defines the simulation environment for the ant colony problem.
  * 

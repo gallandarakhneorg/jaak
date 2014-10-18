@@ -7,9 +7,9 @@ import io.sarl.jaak.demos.ants.behaviors.Forager;
 import io.sarl.jaak.demos.ants.behaviors.Patroller;
 import io.sarl.jaak.demos.ants.behaviors.PheromoneFollowingCapacity;
 import io.sarl.jaak.demos.ants.behaviors.PheromoneFollowingSkill;
-import io.sarl.jaak.kernel.PhysicBody;
-import io.sarl.jaak.kernel.PhysicBodySkill;
-import io.sarl.jaak.kernel.SimulationStopped;
+import io.sarl.jaak.environment.external.PhysicBody;
+import io.sarl.jaak.environment.external.PhysicBodySkill;
+import io.sarl.jaak.environment.external.SimulationStopped;
 import io.sarl.lang.annotation.Generated;
 import io.sarl.lang.core.Agent;
 import io.sarl.lang.core.AgentContext;
@@ -17,6 +17,7 @@ import io.sarl.lang.core.Behavior;
 import io.sarl.lang.core.Event;
 import io.sarl.lang.core.EventListener;
 import io.sarl.lang.core.Percept;
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -107,7 +108,7 @@ public class Ant extends Agent {
     PheromoneFollowingSkill _pheromoneFollowingSkill = new PheromoneFollowingSkill();
     this.<PheromoneFollowingSkill>setSkill(PheromoneFollowingCapacity.class, _pheromoneFollowingSkill);
     Behavior beh = null;
-    Object _semantic = body.getSemantic();
+    Serializable _semantic = body.getSemantic();
     if ((_semantic instanceof Patroller)) {
       Patroller _patroller = new Patroller(this);
       beh = _patroller;

@@ -38,6 +38,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compiler.level>1.7</compiler.level>
 		<sarl.version>0.1.0</sarl.version>
+		<janus.version>2.0.1.0</janus.version>
 		<guice.version>4.0-beta4</guice.version>
 	</properties>
 
@@ -45,7 +46,6 @@
 	<!-- ==== Modules' configuration === -->
 	<!-- ======================================= -->
 	<modules>
-		<module>io.sarl.jaak.environment</module>
 		<module>io.sarl.jaak.kernel</module>
 		<module>io.sarl.jaak.demos</module>
 	</modules>
@@ -72,10 +72,28 @@
 
 		<dependencies>
 			<dependency>
+				<groupId>io.sarl.jaak</groupId>
+				<artifactId>io.sarl.jaak.kernel</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
 				<groupId>io.sarl.maven</groupId>
 				<artifactId>io.sarl.maven.sdk</artifactId>
 				<version>${sarl.version}</version>
 				<type>pom</type>
+				<exclusions>
+					<exclusion>
+						<groupId>com.google.guava</groupId>
+						<artifactId>guava</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+
+			<dependency>
+				<groupId>io.janusproject</groupId>
+				<artifactId>io.janusproject.kernel</artifactId>
+				<version>${janus.version}</version>
 			</dependency>
 
 			<dependency>
@@ -121,16 +139,6 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>io.sarl.maven</groupId>
-					<artifactId>sarl-maven-plugin</artifactId>
-					<version>${sarl.version}</version>
-					<extensions>true</extensions>
-					<configuration>
-						<source>${compiler.level}</source>
-						<target>${compiler.level}</target>
-					</configuration>
-				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -253,16 +261,16 @@
 	<!-- ==== Deployment === -->
 	<!-- =================== -->
 
-<!-- 	<distributionManagement> -->
-<!-- 		<repository> -->
-<!-- 			<id>local-release-repository</id> -->
-<!-- 			<url>file:///var/www/janus-maven-repository/</url> -->
-<!-- 		</repository> -->
-<!-- 		<snapshotRepository> -->
-<!-- 			<id>local-snapshot-repository</id> -->
-<!-- 			<url>file:///var/www/janus-maven-repository/</url> -->
-<!-- 		</snapshotRepository> -->
-<!-- 	</distributionManagement> -->
+	<!-- <distributionManagement> -->
+	<!-- <repository> -->
+	<!-- <id>local-release-repository</id> -->
+	<!-- <url>file:///var/www/janus-maven-repository/</url> -->
+	<!-- </repository> -->
+	<!-- <snapshotRepository> -->
+	<!-- <id>local-snapshot-repository</id> -->
+	<!-- <url>file:///var/www/janus-maven-repository/</url> -->
+	<!-- </snapshotRepository> -->
+	<!-- </distributionManagement> -->
 
 	<!-- ==================== -->
 	<!-- ==== Development === -->

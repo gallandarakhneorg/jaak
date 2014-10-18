@@ -1,6 +1,7 @@
 package io.sarl.jaak.demos.ants.environment;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 /** This class defines a pheromon which is permitting to return to a food source.
  * 
@@ -15,7 +16,7 @@ public class FoodPheromone extends Pheromone {
 
 	/** Semantic of a colony pheromone.
 	 */
-	public static Object SEMANTIC = new Object(); 
+	public static Serializable SEMANTIC = FoodPheromone.class.getName(); 
 	
 	/** Evaporation amount for the pheromone.
 	 */

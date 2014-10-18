@@ -2,7 +2,7 @@ package io.sarl.jaak.demos.ants.behaviors
 
 import io.sarl.jaak.demos.ants.environment.Food
 import io.sarl.jaak.demos.ants.environment.Pheromone
-import io.sarl.jaak.kernel.PhysicBody
+import io.sarl.jaak.environment.external.PhysicBody
 import org.arakhne.afc.math.discrete.object2d.Point2i
 
 /** The skill to select a route of pheromone.

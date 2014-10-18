@@ -1,8 +1,8 @@
 package io.sarl.jaak.demos.ants.ui;
 
-import io.sarl.jaak.kernel.JaakController;
-import io.sarl.jaak.kernel.JaakEvent;
-import io.sarl.jaak.kernel.JaakListener;
+import io.sarl.jaak.kernel.external.JaakController;
+import io.sarl.jaak.kernel.external.JaakEvent;
+import io.sarl.jaak.kernel.external.JaakListener;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -66,6 +66,7 @@ public class AntFrame extends JFrame implements JaakListener {
 		/**
 		 * {@inheritDoc}
 		 */
+		@SuppressWarnings("synthetic-access")
 		@Override
 		public void windowClosing(WindowEvent event) {
 			AntFrame.this.controller.stopSimulation();

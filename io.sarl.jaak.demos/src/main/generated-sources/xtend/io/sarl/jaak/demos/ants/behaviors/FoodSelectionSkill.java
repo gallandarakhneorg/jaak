@@ -2,7 +2,7 @@ package io.sarl.jaak.demos.ants.behaviors;
 
 import io.sarl.jaak.demos.ants.behaviors.FoodSelectionCapacity;
 import io.sarl.jaak.demos.ants.environment.Food;
-import io.sarl.jaak.kernel.PhysicBody;
+import io.sarl.jaak.environment.external.PhysicBody;
 import io.sarl.lang.annotation.Generated;
 import io.sarl.lang.core.Agent;
 import io.sarl.lang.core.Skill;

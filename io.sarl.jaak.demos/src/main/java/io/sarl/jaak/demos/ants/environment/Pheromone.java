@@ -1,12 +1,13 @@
 package io.sarl.jaak.demos.ants.environment;
 
 import io.sarl.jaak.demos.ants.AntColonyConstants;
-import io.sarl.jaak.envinterface.endogenous.AutonomousEndogenousProcess;
-import io.sarl.jaak.envinterface.influence.Influence;
-import io.sarl.jaak.envinterface.perception.FloatSubstance;
-import io.sarl.jaak.envinterface.perception.Substance;
+import io.sarl.jaak.environment.external.endogenous.AutonomousEndogenousProcess;
+import io.sarl.jaak.environment.external.influence.Influence;
+import io.sarl.jaak.environment.external.perception.FloatSubstance;
+import io.sarl.jaak.environment.external.perception.Substance;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 /** This class defines a pheromon.
  * <p>
@@ -47,7 +48,7 @@ public abstract class Pheromone extends FloatSubstance implements AutonomousEndo
 	 * @param semantic is the semantic of the pheromone.
 	 * @param color is the color of the pheromone.
 	 */
-	public Pheromone(float pheromoneIntensity, float evaporationAmount, Object semantic, Color color) {
+	public Pheromone(float pheromoneIntensity, float evaporationAmount, Serializable semantic, Color color) {
 		super(pheromoneIntensity, semantic);
 		this.evaporationAmount = evaporationAmount;
 		this.color = color;

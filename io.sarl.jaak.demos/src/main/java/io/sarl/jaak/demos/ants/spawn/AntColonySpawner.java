@@ -2,9 +2,9 @@ package io.sarl.jaak.demos.ants.spawn;
 
 import io.sarl.jaak.demos.ants.behaviors.Forager;
 import io.sarl.jaak.demos.ants.behaviors.Patroller;
-import io.sarl.jaak.envinterface.body.TurtleBody;
-import io.sarl.jaak.envinterface.time.TimeManager;
-import io.sarl.jaak.spawner.JaakPointSpawner;
+import io.sarl.jaak.environment.external.body.TurtleBody;
+import io.sarl.jaak.environment.external.time.TimeManager;
+import io.sarl.jaak.environment.internal.spawner.JaakPointSpawner;
 import io.sarl.jaak.util.RandomNumber;
 
 import java.util.UUID;

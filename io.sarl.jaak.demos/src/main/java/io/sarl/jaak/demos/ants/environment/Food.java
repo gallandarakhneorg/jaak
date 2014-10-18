@@ -1,7 +1,7 @@
 package io.sarl.jaak.demos.ants.environment;
 
-import io.sarl.jaak.envinterface.perception.FloatSubstance;
-import io.sarl.jaak.envinterface.perception.Substance;
+import io.sarl.jaak.environment.external.perception.FloatSubstance;
+import io.sarl.jaak.environment.external.perception.Substance;
 
 /** This class defines a source of food.
  * 

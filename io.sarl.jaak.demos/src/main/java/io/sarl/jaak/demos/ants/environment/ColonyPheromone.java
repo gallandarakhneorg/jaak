@@ -3,6 +3,7 @@ package io.sarl.jaak.demos.ants.environment;
 import io.sarl.jaak.demos.ants.AntColonyConstants;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 /** This class defines a pheromon which is permitting to return to a colony.
  * 
@@ -17,7 +18,7 @@ public class ColonyPheromone extends Pheromone {
 
 	/** Semantic of a colony pheromone.
 	 */
-	public static Object SEMANTIC = new Object(); 
+	public static Serializable SEMANTIC = ColonyPheromone.class.getName(); 
 	
 	/** Evaporation amount for the pheromone.
 	 */

@@ -8,6 +8,10 @@ package io.sarl.jaak.demos.ants.behaviors;
  * @mavenartifactid $ArtifactId$
  */
 public enum PatrollerState {
+	/** The ant is pratolling.
+	 */
 	PATROL,
+	/** The ant is returning to the colony.
+	 */
 	RETURN_TO_COLONY;
 }
