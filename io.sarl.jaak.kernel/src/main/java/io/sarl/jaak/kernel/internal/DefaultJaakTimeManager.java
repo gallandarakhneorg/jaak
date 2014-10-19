@@ -24,7 +24,7 @@ import io.sarl.jaak.environment.external.time.TimeManager;
 import java.util.concurrent.TimeUnit;
 
 /** Time manager for Jaak environment.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -35,23 +35,23 @@ class DefaultJaakTimeManager implements TimeManager {
 	/** Define the default duration of a simulation step.
 	 */
 	public static final float STEP_DURATION = 1.f;
-	
-	private long waitingDuration = 0;
-	
+
+	private long waitingDuration;
+
 	private float time;
 	private final float stepDuration;
 
 	/** Build a constant time manager starting at time 0.
-	 * 
+	 *
 	 * @param stepDuration is the duration of one step (in milliseconds).
 	 */
 	public DefaultJaakTimeManager(float stepDuration) {
 		this.stepDuration = stepDuration;
 		this.time = 0f;
 	}
-	
+
 	/** Build a constant time manager starting at the given time.
-	 * 
+	 *
 	 * @param stepDuration is the duration of one step (in milliseconds).
 	 * @param startTime is the start time in milliseconds.
 	 */
@@ -65,23 +65,22 @@ class DefaultJaakTimeManager implements TimeManager {
 	public DefaultJaakTimeManager() {
 		this(STEP_DURATION);
 	}
-	
+
 
 	/** Replies the duration of one time step.
-	 * 
+	 *
 	 * @return the duration of one time step.
 	 */
 	public double getTimeStepDuration() {
 		return this.stepDuration;
 	}
-	
+
 	@Override
 	public void increment() {
-		if (this.waitingDuration>0) {
+		if (this.waitingDuration > 0) {
 			try {
 				Thread.sleep(this.waitingDuration);
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 				//
 			}
 		}
@@ -95,8 +94,8 @@ class DefaultJaakTimeManager implements TimeManager {
 
 	@Override
 	public float getCurrentTime(TimeUnit unit) {
-		assert(unit!=null);
-		switch(unit) {
+		assert (unit != null);
+		switch (unit) {
 		case DAYS:
 		case HOURS:
 			return this.time * 3.6f;
@@ -116,24 +115,24 @@ class DefaultJaakTimeManager implements TimeManager {
 	}
 
 	/** Replies the duration of the last simulation step in seconds.
-	 * 
+	 *
 	 * @return the duration of the last simulation step in seconds.
 	 */
 	@Override
 	public float getLastStepDuration() {
 		return getLastStepDuration(TimeUnit.SECONDS);
 	}
-	
+
 	/** Replies the duration of the last simulation step in the given time unit.
-	 * 
+	 *
 	 * @param unit is the time unit used to format the replied value.
 	 * @return the duration of the last simulation step.
 	 */
 	@Override
 	public float getLastStepDuration(TimeUnit unit) {
-		assert(unit!=null);
-		float duration = (float)getTimeStepDuration();
-		switch(unit) {
+		assert (unit != null);
+		float duration = (float) getTimeStepDuration();
+		switch (unit) {
 		case DAYS:
 		case HOURS:
 			return duration * 3.6f;
@@ -159,10 +158,9 @@ class DefaultJaakTimeManager implements TimeManager {
 
 	@Override
 	public synchronized void setWaitingDuration(long duration) {
-		if (duration>0) {
+		if (duration > 0) {
 			this.waitingDuration = duration;
-		}
-		else {
+		} else {
 			this.waitingDuration = 0;
 		}
 	}

@@ -21,7 +21,7 @@ package io.sarl.jaak.kernel.external;
 
 
 /** This interface defines a controller for the Jaak simulation.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -32,7 +32,7 @@ public interface JaakController {
 	/** Start or re-start the simulation.
 	 */
 	void startSimulation();
-	
+
 	/** Make a pause in the simulation.
 	 */
 	void pauseSimulation();
@@ -40,5 +40,5 @@ public interface JaakController {
 	/** Stop the simulation and close the simulator.
 	 */
 	void stopSimulation();
-	
+
 }

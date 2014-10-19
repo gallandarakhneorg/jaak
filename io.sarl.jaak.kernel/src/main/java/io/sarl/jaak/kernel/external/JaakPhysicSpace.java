@@ -27,43 +27,43 @@ import io.sarl.lang.core.Space;
 import java.util.UUID;
 
 /** Space that is representing the Jaak environment.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
 public interface JaakPhysicSpace extends Space {
-	
+
 	/** Replies the identifier of the creator of the space.
-	 * 
+	 *
 	 * @return the identifier of the space creator.
 	 */
-	public UUID getCreatorID();
-	
+	UUID getCreatorID();
+
 	/** Spawn the body with the given ID.
-	 * 
+	 *
 	 * @param binder - the binder between the skill and the space.
 	 */
-	public void spawnBody(EventListener binder);
+	void spawnBody(EventListener binder);
 
 	/** Destroy the body with the given ID.
-	 * 
+	 *
 	 * @param binder - the binder between the skill and the space.
 	 */
-	public void killBody(EventListener binder);
+	void killBody(EventListener binder);
 
 	/** Give the perceptions to the agents that is owning the given body.
-	 * 
+	 *
 	 * @param perception - the event to give to the agent.
 	 */
-	public void notifyPerception(Perception perception);
+	void notifyPerception(Perception perception);
 
 	/** Emit an influence for the given agent.
-	 * 
+	 *
 	 * @param influenceTime - the time at which the influence is applied.
 	 * @param influence - the influence to emit.
 	 */
-	public void influence(float influenceTime, Influence influence);
+	void influence(float influenceTime, Influence influence);
 
 }

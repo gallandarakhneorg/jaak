@@ -24,25 +24,25 @@ import io.sarl.lang.core.AgentContext;
 import java.util.UUID;
 
 /** Space that is representing the Jaak environment.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
 public final class JaakPhysicSpaceConstants {
-	
+
+	private JaakPhysicSpaceConstants() {
+		//
+	}
+
 	/** Replies the identifier of the Jaak physic page in the given context.
-	 * 
+	 *
 	 * @param context - the context to consider.
 	 * @return the id of the Jaak space.
 	 */
 	public static UUID getSpaceIDInContext(AgentContext context) {
-		 return UUID.fromString(context.getID().toString() + "!!!JaakPhysicSpace");  //$NON-NLS-1$
-	}
-	
-	private JaakPhysicSpaceConstants() {
-		//
+		return UUID.fromString(context.getID().toString() + "!!!JaakPhysicSpace");  //$NON-NLS-1$
 	}
 
 }

@@ -27,7 +27,7 @@ import io.sarl.lang.core.EventListener;
 import java.util.UUID;
 
 /** Object that may be used to link a skill to a JaakPhysicSpace.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -39,32 +39,32 @@ public class SkillBinder implements EventListener {
 	private TurtleBody body;
 	private float currentTime;
 	private float currentStepSize;
-	
+
 	/**
 	 * @param owner - the owner of the skill.
 	 */
 	public SkillBinder(EventListener owner) {
 		this.owner = owner;
 	}
-	
+
 	/** Replies the owner.
-	 * 
+	 *
 	 * @return the owner.
 	 */
 	public EventListener getOwner() {
 		return this.owner;
 	}
-	
+
 	/** Replies the body.
-	 * 
+	 *
 	 * @return the body.
 	 */
 	public TurtleBody getBody() {
 		return this.body;
 	}
-	
+
 	/** Replies the current simulation time.
-	 * 
+	 *
 	 * @return the current time.
 	 */
 	public float getCurrentTime() {
@@ -72,7 +72,7 @@ public class SkillBinder implements EventListener {
 	}
 
 	/** Replies the size of the current simulation step.
-	 * 
+	 *
 	 * @return the current simulation step.
 	 */
 	public float getCurrentStepSize() {

@@ -57,7 +57,7 @@ public final class RealTurtleBody implements TurtleBody, Comparable<RealTurtleBo
 	private static final long serialVersionUID = 8419445126805542938L;
 
 	private final UUID turtle;
-	private transient final TurtleFrustum frustum;
+	private final transient TurtleFrustum frustum;
 	private Serializable semantic;
 	private Collection<EnvironmentalObject> perceivedObjects;
 	private Collection<PerceivedTurtle> perceivedBodies;
@@ -323,7 +323,7 @@ public final class RealTurtleBody implements TurtleBody, Comparable<RealTurtleBo
 			this.otherInfluences.add(influence);
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

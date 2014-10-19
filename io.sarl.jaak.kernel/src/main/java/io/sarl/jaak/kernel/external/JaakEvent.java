@@ -26,7 +26,7 @@ import java.util.Collection;
 import java.util.EventObject;
 
 /** This event describes something appended in a Jaak simulation.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -35,37 +35,38 @@ import java.util.EventObject;
 public class JaakEvent extends EventObject {
 
 	private static final long serialVersionUID = -5008386864452410572L;
-	
+
 	private final EnvironmentArea environment;
 	private final Collection<BodySpawner> spawners;
 	private final float currentTime;
 	private final float lastStepDuration;
-	
+
 	/**
-	 * @param source
-	 * @param environment
-	 * @param spawners
-	 * @param currentTime
-	 * @param lastStepDuration
+	 * @param source - source of the event.
+	 * @param environment - the environment.
+	 * @param spawners - the existing spawners.
+	 * @param currentTime - the current simulation time.
+	 * @param lastStepDuration - the duration of the last simulation step.
 	 */
-	public JaakEvent(Object source, EnvironmentArea environment, Collection<BodySpawner> spawners, float currentTime, float lastStepDuration) {
+	public JaakEvent(Object source, EnvironmentArea environment, Collection<BodySpawner> spawners,
+			float currentTime, float lastStepDuration) {
 		super(source);
 		this.environment = environment;
 		this.spawners = spawners;
 		this.currentTime = currentTime;
 		this.lastStepDuration = lastStepDuration;
 	}
-	
+
 	/** Replies the environment to which this event is related to.
-	 *  
+	 *
 	 * @return the Jaak environment.
 	 */
 	public EnvironmentArea getEnvironment() {
 		return this.environment;
 	}
-	
+
 	/** Replies the spawners associated to the environment.
-	 * 
+	 *
 	 * @return the spawners.
 	 */
 	public Collection<BodySpawner> getBodySpawners() {
@@ -73,19 +74,19 @@ public class JaakEvent extends EventObject {
 	}
 
 	/** Replies the time at which the event occurs.
-	 * 
+	 *
 	 * @return the time at which the event occurs.
 	 */
 	public float getCurrentTime() {
 		return this.currentTime;
 	}
-	
+
 	/** Replies the duration of the last simulation step.
-	 * 
+	 *
 	 * @return the duration of the last simulation step.
 	 */
 	public float getLastStepDuration() {
 		return this.lastStepDuration;
 	}
-	
+
 }

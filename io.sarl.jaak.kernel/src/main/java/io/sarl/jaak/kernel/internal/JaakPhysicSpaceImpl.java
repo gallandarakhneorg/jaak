@@ -42,7 +42,7 @@ import java.util.UUID;
 import com.google.inject.Inject;
 
 /** Implementation of the physic space for Jaak.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -76,7 +76,8 @@ class JaakPhysicSpaceImpl implements JaakPhysicSpace, DistributedSpace {
 	 * or <code>null</code> if the current instance of the space is not directly linked to the
 	 * environment agent.
 	 */
-	public JaakPhysicSpaceImpl(SpaceID id, UUID creator, DistributedDataStructureService factory, EventListener environmentAgent) {
+	public JaakPhysicSpaceImpl(SpaceID id, UUID creator, DistributedDataStructureService factory,
+			EventListener environmentAgent) {
 		assert (id != null);
 		assert (creator != null);
 		this.id = id;
@@ -131,8 +132,7 @@ class JaakPhysicSpaceImpl implements JaakPhysicSpace, DistributedSpace {
 	protected void putOnNetwork(Event event, UUID scope) {
 		try {
 			this.network.publish(new UUIDScope(scope), event);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			this.logger.error(JaakPhysicSpaceImpl.class,
 					"CANNOT_NOTIFY_OVER_NETWORK", scope, event, e); //$NON-NLS-1$
 		}
@@ -184,8 +184,8 @@ class JaakPhysicSpaceImpl implements JaakPhysicSpace, DistributedSpace {
 					"INVALID_SCOPE", scope, event); //$NON-NLS-1$
 		}
 	}
-	
-	
+
+
 
 	/**
 	 * @author $Author: sgalland$
@@ -194,20 +194,20 @@ class JaakPhysicSpaceImpl implements JaakPhysicSpace, DistributedSpace {
 	 * @mavenartifactid $ArtifactId$
 	 */
 	private static class UUIDScope implements Scope<UUID> {
-		
+
 		private static final long serialVersionUID = -2678036964365090540L;
 
 		private final UUID id;
-		
+
 		/**
 		 * @param id - the identifier.
 		 */
 		public UUIDScope(UUID id) {
 			this.id = id;
 		}
-		
+
 		/** Replies the identifier that is matched by this scope.
-		 * 
+		 *
 		 * @return the identifier.
 		 */
 		public UUID getID() {
@@ -218,7 +218,7 @@ class JaakPhysicSpaceImpl implements JaakPhysicSpace, DistributedSpace {
 		public boolean matches(UUID element) {
 			return this.id.equals(element);
 		}
-		
+
 	}
 
 	/**

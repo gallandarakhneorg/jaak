@@ -32,7 +32,7 @@ import java.io.Serializable;
 public class SemanticChangeInfluence extends Influence {
 
 	private final Serializable newSemantic;
-	
+
 	/**
 	 * @param semantic - the new semantic.
 	 */

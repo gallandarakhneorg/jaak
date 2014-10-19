@@ -23,7 +23,7 @@ import java.util.EventListener;
 
 /** This interface defines a listener on Jaak
  * events.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -32,22 +32,22 @@ import java.util.EventListener;
 public interface JaakListener extends EventListener {
 
 	/** Invoked when the simulated has started.
-	 * 
+	 *
 	 * @param event - the description of the event.
 	 */
-	public void simulationStarted(JaakEvent event);
+	void simulationStarted(JaakEvent event);
 
 	/** Invoked when the state of the environment model
-	 * has changed. 
-	 * 
+	 * has changed.
+	 *
 	 * @param event - the description of the event.
 	 */
-	public void environmentStateChanged(JaakEvent event);
-	
+	void environmentStateChanged(JaakEvent event);
+
 	/** Invoked when the simulated has stopped.
-	 * 
+	 *
 	 * @param event - the description of the event.
 	 */
-	public void simulationStopped(JaakEvent event);
-	
+	void simulationStopped(JaakEvent event);
+
 }

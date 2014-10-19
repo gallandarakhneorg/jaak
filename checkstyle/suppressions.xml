@@ -24,5 +24,10 @@
 
 	<suppress checks="MethodCount" files="TurtleBody.java"/>
 
+	<suppress checks="MagicNumber" files="DefaultJaakTimeManager.java"/>
+	<suppress checks="ReturnCount" files="DefaultJaakTimeManager.java"/>
+
+	<suppress checks="CyclomaticComplexity" files="InfluenceSolver.java"/>
+
 </suppressions>
 

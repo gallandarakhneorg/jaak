@@ -239,9 +239,9 @@ public class MotionInfluence extends Influence {
 		buffer.append(getAngularMotion());
 		return buffer.toString();
 	}
-	
+
 	/** Replies if this influence has a linear motion.
-	 * 
+	 *
 	 * @return <code>true</code> if the influence has a linear motion.
 	 */
 	public boolean hasLinearMotion() {
@@ -249,7 +249,7 @@ public class MotionInfluence extends Influence {
 	}
 
 	/** Replies if this influence has an angular motion.
-	 * 
+	 *
 	 * @return <code>true</code> if the influence has an angular motion.
 	 */
 	public boolean hasAngularMotion() {

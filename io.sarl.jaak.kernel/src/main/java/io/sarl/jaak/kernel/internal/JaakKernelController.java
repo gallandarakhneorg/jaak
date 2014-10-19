@@ -30,7 +30,7 @@ import java.lang.ref.WeakReference;
 
 
 /** Standard implementation of a JaakController.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -39,19 +39,19 @@ import java.lang.ref.WeakReference;
 class JaakKernelController implements JaakController {
 
 	private State state = State.NEVER_STARTED;
-	
-	private WeakReference<EventSpace> space = null;
-	private WeakReference<TimeManager> timeManager = null;
-	private Address address = null;
-	
+
+	private WeakReference<EventSpace> space;
+	private WeakReference<TimeManager> timeManager;
+	private Address address;
+
 	/**
 	 */
 	public JaakKernelController() {
 		//
 	}
-	
+
 	/** Set the communication space used by the controller.
-	 * 
+	 *
 	 * @param space the space.
 	 * @param address the address.
 	 * @param timeManager the time manager.
@@ -60,7 +60,7 @@ class JaakKernelController implements JaakController {
 		this.space = (space == null) ? null : new WeakReference<>(space);
 		this.address = address;
 	}
-	
+
 	private EventSpace getSpace() {
 		return this.space == null ? null : this.space.get();
 	}
@@ -83,7 +83,7 @@ class JaakKernelController implements JaakController {
 			}
 		}
 	}
-	
+
 	@Override
 	public synchronized void startSimulation() {
 		if (this.state == State.NEVER_STARTED) {

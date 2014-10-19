@@ -16,7 +16,7 @@ import org.arakhne.afc.vmutil.locale.Locale;
 
 /**
  * Graphic User Interface for the ant demo.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -27,7 +27,7 @@ public class AntFrame extends JFrame implements JaakListener {
 	private static final long serialVersionUID = 530029308607649235L;
 
 	private final JaakController controller;
-	
+
 	/**
 	 * @param panel is the panel which is able to display the ant colony.
 	 * @param width - the preferred width of the frame (in number of cells).
@@ -36,7 +36,7 @@ public class AntFrame extends JFrame implements JaakListener {
 	 */
 	public AntFrame(AntPanel panel, int width, int height, JaakController controller) {
 		this.controller = controller;
-		
+
 		setTitle(Locale.getString(AntFrame.class, "TITLE_0")); //$NON-NLS-1$
 		getContentPane().setLayout(new BorderLayout());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -46,7 +46,7 @@ public class AntFrame extends JFrame implements JaakListener {
 		JScrollPane scrollPane = new JScrollPane(panel);
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 
-		setPreferredSize(new Dimension(50+AntPanel.CELL_SIZE*width, 50+AntPanel.CELL_SIZE*height));
+		setPreferredSize(new Dimension(50 + AntPanel.CELL_SIZE * width, 50 + AntPanel.CELL_SIZE * height));
 
 		pack();
 	}

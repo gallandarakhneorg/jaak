@@ -29,14 +29,14 @@ import io.sarl.lang.core.SpaceID;
 import io.sarl.lang.core.SpaceSpecification;
 
 /** Space that is representing the Jaak environment.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
 public class JaakPhysicSpaceSpecification implements SpaceSpecification<JaakPhysicSpace> {
-	
+
 	/**
 	 */
 	public JaakPhysicSpaceSpecification() {
@@ -45,9 +45,9 @@ public class JaakPhysicSpaceSpecification implements SpaceSpecification<JaakPhys
 
 	@Override
 	public JaakPhysicSpace create(SpaceID id, Object... params) {
-		assert(params.length >= 1);
-		assert(params[0] instanceof UUID);
-		assert(params[1] instanceof DistributedDataStructureService);
+		assert (params.length >= 1);
+		assert (params[0] instanceof UUID);
+		assert (params[1] instanceof DistributedDataStructureService);
 		if (params.length >= 3 && params[2] instanceof EventListener) {
 			return createSpace(id,
 					(UUID) params[0],
@@ -58,7 +58,7 @@ public class JaakPhysicSpaceSpecification implements SpaceSpecification<JaakPhys
 				(UUID) params[0],
 				(DistributedDataStructureService) params[1]);
 	}
-	
+
 	/**
 	 * Creates a {@link Space} that respects this specification.
 	 *
@@ -71,7 +71,8 @@ public class JaakPhysicSpaceSpecification implements SpaceSpecification<JaakPhys
 	 * @return an instance of {@link Space}
 	 */
 	@SuppressWarnings("static-method")
-	public JaakPhysicSpace createSpace(SpaceID spaceId, UUID creatorId, DistributedDataStructureService factory, EventListener environmentAgent) {
+	public JaakPhysicSpace createSpace(SpaceID spaceId, UUID creatorId, DistributedDataStructureService factory,
+			EventListener environmentAgent) {
 		return new JaakPhysicSpaceImpl(spaceId, creatorId, factory, environmentAgent);
 	}
 

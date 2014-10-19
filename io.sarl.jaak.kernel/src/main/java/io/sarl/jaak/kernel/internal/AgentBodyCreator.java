@@ -33,7 +33,7 @@ import java.util.UUID;
 import org.arakhne.afc.math.discrete.object2d.Point2i;
 
 /** Creator of bodies for the SARL agents.
- * 
+ *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
@@ -42,16 +42,16 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
 class AgentBodyCreator implements JaakBodyCreator {
 
 	private TurtleCreated parameters;
-	
+
 	/**
 	 */
 	public AgentBodyCreator() {
 		//
 	}
-	
+
 	/** Check if the position is forced.
-	 * 
-	 * @param environment
+	 *
+	 * @param environment - the environment.
 	 * @return <code>true</code> if the position if forced.
 	 */
 	public boolean isPositionForced(JaakEnvironment environment) {
@@ -60,13 +60,13 @@ class AgentBodyCreator implements JaakBodyCreator {
 	}
 
 	/** Change the creation parameters.
-	 * 
+	 *
 	 * @param creationEvent - the event used for creating.
 	 */
 	public void set(TurtleCreated creationEvent) {
 		this.parameters = creationEvent;
 	}
-	
+
 	@Override
 	public TurtleBody createBody(
 			UUID turtleId,
@@ -82,11 +82,11 @@ class AgentBodyCreator implements JaakBodyCreator {
 		}
 		return null;
 	}
-	
+
 	private TurtleFrustum createFrustum() {
 		if (this.parameters.frustumType != null
-			&& this.parameters.frustumType.isEmpty()
-			&& this.parameters.frustumLength > 0) {
+				&& this.parameters.frustumType.isEmpty()
+				&& this.parameters.frustumLength > 0) {
 			try {
 				Class<?> f = Class.forName(this.parameters.frustumType);
 				if (TurtleFrustum.class.isAssignableFrom(f)) {
@@ -97,7 +97,7 @@ class AgentBodyCreator implements JaakBodyCreator {
 				//
 			}
 		}
-		return new PointTurtleFrustum(); 
+		return new PointTurtleFrustum();
 	}
 
 }

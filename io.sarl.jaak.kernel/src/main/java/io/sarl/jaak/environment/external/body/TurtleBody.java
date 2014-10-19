@@ -49,11 +49,11 @@ public interface TurtleBody extends JaakObject {
 	UUID getTurtleId();
 
 	/** Send the gien influence to the environment.
-	 * 
+	 *
 	 * @param influence - the influence to send.
 	 */
 	void influence(Influence influence);
-	
+
 	/** Move the turtle along the given direction and
 	 * change the heading orientation if necessary.
 	 * The norm of the direction is the number
