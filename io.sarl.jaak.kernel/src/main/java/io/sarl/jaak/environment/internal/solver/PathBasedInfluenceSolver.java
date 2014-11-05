@@ -196,7 +196,7 @@ public class PathBasedInfluenceSolver extends AbstractJaakEnvironmentInfluenceSo
 			// search for the last path element
 			pathElement = path.getLastTraversableElementInPath(conflictingCells);
 			if (pathElement != null) {
-				body = motionInfluence.getEmitter();
+				body = (TurtleBody) motionInfluence.getEmitter();
 				assert (body != null);
 				bodyPosition = body.getPosition();
 				motion.set(motionInfluence.getLinearMotion());

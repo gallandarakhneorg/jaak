@@ -19,7 +19,7 @@
  */
 package io.sarl.jaak.environment.external
 
-import io.sarl.jaak.environment.external.body.TurtleBody
+import io.sarl.jaak.environment.external.body.TurtleObject
 import io.sarl.jaak.kernel.internal.AbstractStampedEvent
 
 /** The perception for an agent.
@@ -30,8 +30,8 @@ import io.sarl.jaak.kernel.internal.AbstractStampedEvent
  * @mavenartifactid $ArtifactId$
  */
 event Perception extends AbstractStampedEvent {
-	val body : TurtleBody
-	new(ct : float, lsd : float, body : TurtleBody) {
+	val body : TurtleObject
+	new(ct : float, lsd : float, body : TurtleObject) {
 		super(ct, lsd)
 		this.body = body
 	}
@@ -45,8 +45,8 @@ event Perception extends AbstractStampedEvent {
  * @mavenartifactid $ArtifactId$
  */
 event BodyCreated extends AbstractStampedEvent {
-	val body : TurtleBody
-	new(ct : float, lsd : float, body : TurtleBody) {
+	val body : TurtleObject
+	new(ct : float, lsd : float, body : TurtleObject) {
 		super(ct, lsd)
 		this.body = body
 	}

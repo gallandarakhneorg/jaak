@@ -27,6 +27,7 @@ import io.sarl.lang.core.SpaceID;
 import io.sarl.lang.core.SpaceSpecification;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 /** Space that is representing the Jaak environment.
  *
@@ -39,6 +40,9 @@ public class JaakPhysicSpaceSpecification implements SpaceSpecification<JaakPhys
 
 	@Inject
 	private DistributedDataStructureService dataStructureService;
+	
+	@Inject
+	private Injector injector;
 	
 	/**
 	 */
@@ -64,10 +68,11 @@ public class JaakPhysicSpaceSpecification implements SpaceSpecification<JaakPhys
 	 * environment agent.
 	 * @return an instance of {@link Space}
 	 */
-	@SuppressWarnings("static-method")
 	public JaakPhysicSpace createSpace(SpaceID spaceId, DistributedDataStructureService factory,
 			EventListener environmentAgent) {
-		return new JaakPhysicSpaceKernelImpl(spaceId, factory, environmentAgent);
+		JaakPhysicSpace space = new JaakPhysicSpaceKernelImpl(spaceId, factory, environmentAgent);
+		this.injector.injectMembers(space);
+		return space;
 	}
 
 	/**
@@ -77,9 +82,10 @@ public class JaakPhysicSpaceSpecification implements SpaceSpecification<JaakPhys
 	 * @param factory - the factory to be used for creating distributed data structures.
 	 * @return an instance of {@link Space}
 	 */
-	@SuppressWarnings("static-method")
 	public JaakPhysicSpace createSpace(SpaceID spaceId, DistributedDataStructureService factory) {
-		return new JaakPhysicSpaceTurtleImpl(spaceId, factory);
+		JaakPhysicSpace space = new JaakPhysicSpaceTurtleImpl(spaceId, factory);
+		this.injector.injectMembers(space);
+		return space;
 	}
 
 }

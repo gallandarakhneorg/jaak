@@ -19,17 +19,11 @@
  */
 package io.sarl.jaak.environment.external.body;
 
-import io.sarl.jaak.environment.external.frustum.TurtleFrustum;
 import io.sarl.jaak.environment.external.influence.Influence;
-import io.sarl.jaak.environment.external.influence.MotionInfluenceStatus;
 import io.sarl.jaak.environment.external.perception.EnvironmentalObject;
-import io.sarl.jaak.environment.external.perception.JaakObject;
 import io.sarl.jaak.environment.external.perception.Perceivable;
-import io.sarl.jaak.environment.external.perception.PerceivedTurtle;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.UUID;
 
 import org.arakhne.afc.math.continous.object2d.Vector2f;
 
@@ -40,19 +34,14 @@ import org.arakhne.afc.math.continous.object2d.Vector2f;
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
-public interface TurtleBody extends JaakObject {
-
-	/** Replies the owner of this body.
-	 *
-	 * @return the owner of this body.
-	 */
-	UUID getTurtleId();
+public interface TurtleBody extends TurtleObject {
 
 	/** Send the gien influence to the environment.
 	 *
 	 * @param influence - the influence to send.
+	 * @return <code>true</code> if the influence is a motion influence.
 	 */
-	void influence(Influence influence);
+	boolean influence(Influence influence);
 
 	/** Move the turtle along the given direction and
 	 * change the heading orientation if necessary.
@@ -109,19 +98,6 @@ public interface TurtleBody extends JaakObject {
 	 */
 	void setHeading(Vector2f direction);
 
-	/** Replies the orientation of the turtle head
-	 * in radians according to a trigonometric circle.
-	 *
-	 * @return the orientation of the head in radians.
-	 */
-	float getHeadingAngle();
-
-	/** Replies the orientation of the turtle head.
-	 *
-	 * @return the orientation of the head in radians.
-	 */
-	Vector2f getHeadingVector();
-
 	/** Put an object on the current cell of the environment.
 	 *
 	 * @param object is the object to drop off.
@@ -175,80 +151,6 @@ public interface TurtleBody extends JaakObject {
 	 */
 	EnvironmentalObject touchUpWithSemantic(Object semantic);
 
-	/** Replies x-coordinate of the position of the body.
-	 *
-	 * @return the x-coordinate of the body.
-	 */
-	int getX();
-
-	/** Replies y-coordinate of the position of the body.
-	 *
-	 * @return the y-coordinate of the body.
-	 */
-	int getY();
-
-	/** Replies the all the perceptions of the body.
-	 *
-	 * @return the collection of perceived objects.
-	 */
-	Collection<Perceivable> getPerception();
-
-	/** Replies the all the perceptions of the body of a given type.
-	 *
-	 * @param <T> is the type of the objects to perceived.
-	 * @param type is the type of the objects to perceived.
-	 * @return the collection of perceived objects.
-	 */
-	<T extends Perceivable> Collection<T> getPerception(Class<T> type);
-
-	/** Replies the first perception of the body of a given type.
-	 *
-	 * @param <T> is the type of the objects to perceived.
-	 * @param type is the type of the objects to perceived.
-	 * @return the collection of perceived objects.
-	 */
-	<T extends Perceivable> T getFirstPerception(Class<T> type);
-
-	/** Replies the all the environmental objects perceived by the body.
-	 *
-	 * @return the collection of perceived environmental objects.
-	 */
-	Collection<EnvironmentalObject> getPerceivedObjects();
-
-	/** Replies the all the turtles perceived by the body.
-	 *
-	 * @return the collection of perceived turtles.
-	 */
-	Collection<PerceivedTurtle> getPerceivedTurtles();
-
-	/** Replies if this body has perceived something.
-	 *
-	 * @return <code>true</code> if something is perceived,
-	 * otherwise <code>false</code>.
-	 */
-	boolean hasPerception();
-
-	/** Replies if this body has perceived environmental objects.
-	 *
-	 * @return <code>true</code> if an environmental
-	 * object is perceived, otherwise <code>false</code>.
-	 */
-	boolean hasPerceivedObject();
-
-	/** Replies if this body has perceived turtles.
-	 *
-	 * @return <code>true</code> if a turtle
-	 * is perceived, otherwise <code>false</code>.
-	 */
-	boolean hasPerceivedTurtle();
-
-	/** Replies the perception frustum owned by this body.
-	 *
-	 * @return the perception frustum or <code>null</code> if
-	 * this body is not able to perceive.
-	 */
-	TurtleFrustum getPerceptionFrustum();
-
 	/** Replies the semantic associated to the body.
 	 *
 	 * @param semantic is the semantic of the body.
@@ -263,12 +165,6 @@ public interface TurtleBody extends JaakObject {
 	 */
 	boolean hasInfluences();
 
-	/** Replies the instant speed of the turtle.
-	 *
-	 * @return the instant speed of the turtle in cells per second.
-	 */
-	float getSpeed();
-
 	/** Notifies the body that perceptions should be enabled or not.
 	 *
 	 * @param enable is <code>true</code> to enable perception from the body,
@@ -282,12 +178,5 @@ public interface TurtleBody extends JaakObject {
 	 * <code>false</code> if they are disable.
 	 */
 	boolean isPerceptionEnable();
-
-	/** Replies the status of the application of the last motion influence
-	 * sent by via this turtle body.
-	 *
-	 * @return the application status of the last motion influence.
-	 */
-	MotionInfluenceStatus getLastMotionInfluenceStatus();
 
 }

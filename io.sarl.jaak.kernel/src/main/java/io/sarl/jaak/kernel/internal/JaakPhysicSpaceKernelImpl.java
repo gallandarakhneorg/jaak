@@ -22,6 +22,7 @@ package io.sarl.jaak.kernel.internal;
 import io.janusproject.services.distributeddata.DistributedDataStructureService;
 import io.sarl.jaak.environment.external.Perception;
 import io.sarl.jaak.environment.external.influence.Influence;
+import io.sarl.lang.core.Address;
 import io.sarl.lang.core.Event;
 import io.sarl.lang.core.EventListener;
 import io.sarl.lang.core.Scope;
@@ -75,9 +76,17 @@ class JaakPhysicSpaceKernelImpl extends JaakPhysicSpaceTurtleImpl {
 
 	@Override
 	public void influence(float influenceTime, Influence influence) {
+		Event event;
+		if (influence != null) {
+			event = new AgentInfluence(influenceTime, 0, influence);
+			event.setSource(new Address(getID(), influence.getEmitter().getTurtleId()));
+		} else {
+			event = new SynchronizeBody(influenceTime, 0);
+		}
 		if (this.environmentAgent != null) {
-			AgentInfluence event = new AgentInfluence(influenceTime, 0, influence);
 			fireAsync(this.environmentAgent, event);
+		} else {
+			putOnNetwork(event, getCreatorID());
 		}
 	}
 

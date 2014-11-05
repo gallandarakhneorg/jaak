@@ -26,6 +26,9 @@ import org.arakhne.afc.math.discrete.object2d.Point2i
 import java.io.Serializable
 
 capacity PhysicBody {	
+	
+	/** The agent must call this function for synchronized the body with the environment */
+	def synchronizeBody
 
 	/** Move the turtle along the given direction and
 	 * change the heading orientation if necessary.
@@ -164,5 +167,5 @@ capacity PhysicBody {
 	 * @return the instant speed of the turtle in cells per second.
 	 */
 	def getSpeed : float
-
+	
 }

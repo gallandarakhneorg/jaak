@@ -52,15 +52,15 @@ public final class AntColonyConstants {
 	
 	/** Number of ant colonies.
 	 */
-	public static final int ANT_COLONY_COUNT = 4;
+	public static final int ANT_COLONY_COUNT = 1;
 	
 	/** Number of patrollers in a new colony.
 	 */
-	public static final int ANT_COLONY_PATROLLER_POPULATION = 10;	
+	public static final int ANT_COLONY_PATROLLER_POPULATION = 0;	
 
 	/** Number of foragers in a new colony.
 	 */
-	public static final int ANT_COLONY_FORAGER_POPULATION = 50;	
+	public static final int ANT_COLONY_FORAGER_POPULATION = 1;	
 
 	private AntColonyConstants() {
 		//

@@ -131,7 +131,7 @@ public abstract class InfluenceSolver<T extends TurtleBody> {
 
 		if (influence instanceof MotionInfluence) {
 			MotionInfluenceStatus mis = motionStatus;
-			TurtleBody emitter = influence.getEmitter();
+			TurtleBody emitter = (TurtleBody) influence.getEmitter();
 			assert (emitter != null);
 			Point2i position = emitter.getPosition();
 			assert (position != null);
@@ -197,7 +197,7 @@ public abstract class InfluenceSolver<T extends TurtleBody> {
 			}
 			putBackMotionInfluenceStatus(emitter, mis);
 		} else if (influence instanceof PickUpInfluence) {
-			TurtleBody emitter = influence.getEmitter();
+			TurtleBody emitter = (TurtleBody) influence.getEmitter();
 			assert (emitter != null);
 			Point2i position = emitter.getPosition();
 			assert (position != null);
@@ -209,7 +209,7 @@ public abstract class InfluenceSolver<T extends TurtleBody> {
 				putBackPickingAction(emitter, new PickedObject(pickedUp));
 			}
 		} else if (influence instanceof DropDownInfluence) {
-			TurtleBody emitter = influence.getEmitter();
+			TurtleBody emitter = (TurtleBody) influence.getEmitter();
 			assert (emitter != null);
 			Point2i position = emitter.getPosition();
 			assert (position != null);
@@ -225,7 +225,7 @@ public abstract class InfluenceSolver<T extends TurtleBody> {
 			}
 		} else if (influence instanceof SemanticChangeInfluence) {
 			SemanticChangeInfluence sci = (SemanticChangeInfluence) influence;
-			TurtleBody emitter = influence.getEmitter();
+			TurtleBody emitter = (TurtleBody) influence.getEmitter();
 			assert (emitter != null);
 			Serializable semantic = sci.getSemantic();
 			emitter.setSemantic(semantic);

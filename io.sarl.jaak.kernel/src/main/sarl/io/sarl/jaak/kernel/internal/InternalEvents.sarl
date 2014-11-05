@@ -87,3 +87,17 @@ event AgentInfluence extends AbstractStampedEvent {
 		this.influence = influence
 	}
 }
+
+/** Notify the simulation engine that an 
+ * agent want to be synchronized.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+event SynchronizeBody extends AbstractStampedEvent {
+	new(ct : float, lsd : float) {
+		super(ct, lsd)
+	}
+}

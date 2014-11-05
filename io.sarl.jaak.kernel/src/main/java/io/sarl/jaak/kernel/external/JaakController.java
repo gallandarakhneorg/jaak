@@ -41,4 +41,16 @@ public interface JaakController {
 	 */
 	void stopSimulation();
 
+	/** Replies the timeout for one simulation step.
+	 * 
+	 * @return the timeout for one simulation step in milliseconds.
+	 */
+	long getSimulationStepTimeOut();
+
+	/** Set the timeout for one simulation step.
+	 * 
+	 * @param timeout - the timeout for one simulation step in milliseconds.
+	 */
+	void setSimulationStepTimeOut(long timeout);
+
 }

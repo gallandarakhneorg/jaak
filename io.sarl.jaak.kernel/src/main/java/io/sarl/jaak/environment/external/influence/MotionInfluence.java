@@ -20,6 +20,7 @@
 package io.sarl.jaak.environment.external.influence;
 
 import io.sarl.jaak.environment.external.body.TurtleBody;
+import io.sarl.jaak.environment.external.body.TurtleObject;
 import io.sarl.jaak.environment.external.perception.EnvironmentalObject;
 import io.sarl.jaak.environment.external.perception.JaakObject;
 
@@ -45,7 +46,7 @@ public class MotionInfluence extends Influence {
 	 * is the number of cells to traverse.
 	 * @param angularMotion is the rotational motion to apply.
 	 */
-	public MotionInfluence(TurtleBody emitter, Vector2f linearMotion, float angularMotion) {
+	public MotionInfluence(TurtleObject emitter, Vector2f linearMotion, float angularMotion) {
 		super(emitter);
 		assert (linearMotion != null);
 		assert (emitter != null);
@@ -58,7 +59,7 @@ public class MotionInfluence extends Influence {
 	 * @param emitter is the identifier of the influence emitter.
 	 * @param angularMotion is the rotational motion to apply.
 	 */
-	public MotionInfluence(TurtleBody emitter, float angularMotion) {
+	public MotionInfluence(TurtleObject emitter, float angularMotion) {
 		super(emitter);
 		assert (emitter != null);
 		this.moveObject = emitter;
@@ -72,7 +73,7 @@ public class MotionInfluence extends Influence {
 	 * describes the motion direction and the length of the vector
 	 * is the number of cells to traverse.
 	 */
-	public MotionInfluence(TurtleBody emitter, Vector2f linearMotion) {
+	public MotionInfluence(TurtleObject emitter, Vector2f linearMotion) {
 		super(emitter);
 		assert (linearMotion != null);
 		assert (emitter != null);

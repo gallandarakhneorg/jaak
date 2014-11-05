@@ -19,7 +19,7 @@
  */
 package io.sarl.jaak.environment.external.influence;
 
-import io.sarl.jaak.environment.external.body.TurtleBody;
+import io.sarl.jaak.environment.external.body.TurtleObject;
 
 /** This class defines an influence from turtle to environment.
  *
@@ -30,12 +30,12 @@ import io.sarl.jaak.environment.external.body.TurtleBody;
  */
 public abstract class Influence {
 
-	private TurtleBody emitter;
+	private TurtleObject emitter;
 
 	/**
 	 * @param emitter is the emitter of the influence.
 	 */
-	public Influence(TurtleBody emitter) {
+	public Influence(TurtleObject emitter) {
 		this.emitter = emitter;
 	}
 
@@ -43,7 +43,7 @@ public abstract class Influence {
 	 *
 	 * @return the influence emitter.
 	 */
-	public TurtleBody getEmitter() {
+	public TurtleObject getEmitter() {
 		return this.emitter;
 	}
 
@@ -51,7 +51,7 @@ public abstract class Influence {
 	 *
 	 * @param emitter - the influence emitter.
 	 */
-	public void setEmitter(TurtleBody  emitter) {
+	public void setEmitter(TurtleObject  emitter) {
 		this.emitter = emitter;
 	}
 

@@ -60,6 +60,10 @@ skill PhysicBodySkill implements PhysicBody {
 		binder = null
 	}
 
+	def synchronizeBody {
+		physicSpace.influence(binder.currentTime, null)
+	}
+
 	def move(direction : Vector2f, changeHeading : boolean) {
 		physicSpace.influence(binder.currentTime, new MotionInfluence(binder.body, direction))
 		if (changeHeading) {

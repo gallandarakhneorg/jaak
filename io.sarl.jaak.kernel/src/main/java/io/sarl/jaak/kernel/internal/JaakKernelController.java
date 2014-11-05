@@ -38,16 +38,33 @@ import java.lang.ref.WeakReference;
  */
 class JaakKernelController implements JaakController {
 
-	private State state = State.NEVER_STARTED;
+	private State state = State.NOT_INITIALIZED;
 
 	private WeakReference<EventSpace> space;
 	private WeakReference<TimeManager> timeManager;
 	private Address address;
+	private long simulationStepTimeout = 60000;
 
 	/**
 	 */
 	public JaakKernelController() {
 		//
+	}
+	
+	private void ensureInitialized() {
+		State s;
+		synchronized(this) {
+			s = this.state;
+		}
+		if (s == State.NOT_INITIALIZED) {
+			do {
+				Thread.yield();
+				synchronized(this) {
+					s = this.state;
+				}
+			}
+			while (s != State.NEVER_STARTED);
+		}
 	}
 
 	/** Set the communication space used by the controller.
@@ -60,6 +77,7 @@ class JaakKernelController implements JaakController {
 		this.space = (space == null) ? null : new WeakReference<>(space);
 		this.timeManager = (timeManager == null) ? null : new WeakReference<>(timeManager);
 		this.address = address;
+		this.state = State.NEVER_STARTED;
 	}
 
 	private EventSpace getSpace() {
@@ -86,24 +104,27 @@ class JaakKernelController implements JaakController {
 	}
 
 	@Override
-	public synchronized void startSimulation() {
-		if (this.state == State.NEVER_STARTED) {
-			EventSpace s = getSpace();
-			TimeManager tm = getTimeManager();
-			if (s != null && tm != null) {
-				this.state = State.RUNNING;
-				SimulationStarted startEvent = new SimulationStarted(
-						tm.getCurrentTime(),
-						tm.getLastStepDuration());
-				startEvent.setSource(this.address);
-				s.emit(startEvent);
-			}
-		} else if (this.state == State.PAUSED) {
-			EventSpace s = getSpace();
-			TimeManager tm = getTimeManager();
-			if (s != null && tm != null) {
-				this.state = State.RUNNING;
-				wakeSimulator();
+	public void startSimulation() {
+		ensureInitialized();
+		synchronized(this) {
+			if (this.state == State.NEVER_STARTED) {
+				EventSpace s = getSpace();
+				TimeManager tm = getTimeManager();
+				if (s != null && tm != null) {
+					this.state = State.RUNNING;
+					SimulationStarted startEvent = new SimulationStarted(
+							tm.getCurrentTime(),
+							tm.getLastStepDuration());
+					startEvent.setSource(this.address);
+					s.emit(startEvent);
+				}
+			} else if (this.state == State.PAUSED) {
+				EventSpace s = getSpace();
+				TimeManager tm = getTimeManager();
+				if (s != null && tm != null) {
+					this.state = State.RUNNING;
+					wakeSimulator();
+				}
 			}
 		}
 	}
@@ -131,6 +152,18 @@ class JaakKernelController implements JaakController {
 		}
 	}
 
+	@Override
+	public synchronized long getSimulationStepTimeOut() {
+		return this.simulationStepTimeout;
+	}
+
+	@Override
+	public synchronized void setSimulationStepTimeOut(long timeout) {
+		if (timeout > 0) {
+			this.simulationStepTimeout = timeout;
+		}
+	}
+
 	/**
 	 * @author $Author: sgalland$
 	 * @version $FullVersion$
@@ -138,6 +171,7 @@ class JaakKernelController implements JaakController {
 	 * @mavenartifactid $ArtifactId$
 	 */
 	private enum State {
+		NOT_INITIALIZED,
 		NEVER_STARTED,
 		RUNNING,
 		PAUSED,

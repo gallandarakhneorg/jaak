@@ -19,7 +19,7 @@
  */
 package io.sarl.jaak.environment.external.influence;
 
-import io.sarl.jaak.environment.external.body.TurtleBody;
+import io.sarl.jaak.environment.external.body.TurtleObject;
 import io.sarl.jaak.environment.external.perception.EnvironmentalObject;
 
 /** This class defines an influence to drop off an object
@@ -38,7 +38,7 @@ public class DropDownInfluence extends Influence {
 	 * @param emitter is the emitter of the influence.
 	 * @param object is the environmental object to drop off.
 	 */
-	public DropDownInfluence(TurtleBody emitter, EnvironmentalObject object) {
+	public DropDownInfluence(TurtleObject emitter, EnvironmentalObject object) {
 		super(emitter);
 		this.object = object;
 	}

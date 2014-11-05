@@ -157,6 +157,7 @@ behavior Forager extends AbstractAntBehavior {
 			}
 			dropOff(new ColonyPheromone(AntColonyConstants::MAX_PHEROMONE_AMOUNT));
 		}
+		synchronizeBody
 	}
 	
 	on Perception [state == ForagerState::PICK_UP_FOOD] {
@@ -170,11 +171,13 @@ behavior Forager extends AbstractAntBehavior {
 					this.bag = food
 					dropOff(new FoodPheromone(AntColonyConstants::MAX_PHEROMONE_AMOUNT))
 					this.state = ForagerState::RETURN_TO_COLONY
+					synchronizeBody
 					return
 				}
 			}
 		}
 		this.state = ForagerState::SEARCH_FOOD
+		synchronizeBody
 	}
 
 	on Perception [state == ForagerState::RETURN_TO_COLONY] {
@@ -214,6 +217,7 @@ behavior Forager extends AbstractAntBehavior {
 		else {
 			this.state = ForagerState::SEARCH_FOOD
 		}
+		synchronizeBody
 	}
 
 }
@@ -253,6 +257,7 @@ behavior Patroller extends AbstractAntBehavior {
 		}
 		
 		dropOff(new ColonyPheromone)
+		synchronizeBody
 	}
 	
 	on Perception [state == PatrollerState::RETURN_TO_COLONY] {
@@ -280,6 +285,7 @@ behavior Patroller extends AbstractAntBehavior {
 				}
 			}
 		}
+		synchronizeBody
 	}
 	
 }

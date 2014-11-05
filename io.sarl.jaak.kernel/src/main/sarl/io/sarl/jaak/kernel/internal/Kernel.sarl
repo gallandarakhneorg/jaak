@@ -47,6 +47,7 @@ import io.sarl.jaak.environment.external.SimulationStarted
 import io.sarl.jaak.environment.external.SimulationStopped
 import io.sarl.core.Behaviors
 import io.sarl.jaak.environment.external.BodyCreated
+import io.sarl.util.Scopes
 
 /** Provide the core agent which is responsible of the Jaak environment.
  * 
@@ -59,12 +60,11 @@ agent JaakKernelAgent {
 
 	uses DefaultContextInteractions, Lifecycle, Schedules, Behaviors
 	
-	val waitingDuration = 5000
-
-	val listeners : List<JaakListener> = newArrayList
+	val environmentListeners : List<JaakListener> = newArrayList
 	val removedAgents : List<UUID> = newLinkedList
 	val addedAgents : Map<UUID, TurtleCreated> = newTreeMap(null)
 	val isWaitingInfluences = new AtomicBoolean(false)
+	var receivedInfluences : long = 0
 	val controller : JaakController = new JaakKernelController
 	var physicSpace : JaakPhysicSpace
 	var defaultAddressInPhysicSpace : Address
@@ -75,22 +75,22 @@ agent JaakKernelAgent {
 	var waitingTask : AgentTask
 	
 	def addJaakListener(listener : JaakListener) {
-		synchronized(listeners) {
-			listeners += listener
+		synchronized(environmentListeners) {
+			environmentListeners += listener
 		}
 	}
 	
 	def removeJaakListener(listener : JaakListener) {
-		synchronized(listeners) {
-			listeners += listener
+		synchronized(environmentListeners) {
+			environmentListeners -= listener
 		}
 	}
 	
 	def fireSimulationStarted() {
 		var list : JaakListener[]
-		synchronized(listeners) {
-			list = newArrayOfSize(listeners.size)
-			listeners.toArray(list)
+		synchronized(environmentListeners) {
+			list = newArrayOfSize(environmentListeners.size)
+			environmentListeners.toArray(list)
 		}
 		var evt = new JaakEvent(this,
 			physicEnvironment,
@@ -105,9 +105,9 @@ agent JaakKernelAgent {
 
 	def fireSimulationStopped() {
 		var list : JaakListener[]
-		synchronized(listeners) {
-			list = newArrayOfSize(listeners.size)
-			listeners.toArray(list)
+		synchronized(environmentListeners) {
+			list = newArrayOfSize(environmentListeners.size)
+			environmentListeners.toArray(list)
 		}
 		var evt = new JaakEvent(this,
 			physicEnvironment,
@@ -122,9 +122,9 @@ agent JaakKernelAgent {
 
 	def fireEnvironmentChange() {
 		var list : JaakListener[]
-		synchronized(listeners) {
-			list = newArrayOfSize(listeners.size)
-			listeners.toArray(list)
+		synchronized(environmentListeners) {
+			list = newArrayOfSize(environmentListeners.size)
+			environmentListeners.toArray(list)
 		}
 		var evt = new JaakEvent(this,
 			physicEnvironment,
@@ -197,6 +197,18 @@ agent JaakKernelAgent {
 		}
 	}
 	
+	on SynchronizeBody [occurrence.isValid2] {
+		receivedInfluences++
+		if (receivedInfluences >= physicEnvironment.turtleCount) {
+			isWaitingInfluences.set(false)
+			if (waitingTask !== null) {
+				waitingTask.cancel
+				waitingTask = null
+			}
+			(controller as JaakKernelController).wakeSimulator
+		}
+	}
+	
 	on SimulationStarted [occurrence.fromMe] {
 		runPreAgentExecution
 	}
@@ -213,6 +225,12 @@ agent JaakKernelAgent {
 	def isValid(evt : AbstractStampedEvent) : boolean {
 		physicEnvironment !== null
 		&& evt.source.spaceId == physicSpace.ID
+		&& isWaitingInfluences.get
+		&& timeManager.currentTime <= evt.currentTime
+	}
+	
+	def isValid2(evt : AbstractStampedEvent) : boolean {
+		physicEnvironment !== null
 		&& isWaitingInfluences.get
 		&& timeManager.currentTime <= evt.currentTime
 	}
@@ -239,7 +257,8 @@ agent JaakKernelAgent {
 		            emit(new BodyCreated(
 		            	this.timeManager.currentTime,
 		            	this.timeManager.lastStepDuration,
-		            	body))
+		            	body),
+		            	Scopes::addresses(new Address(defaultSpace.ID, id)))
 	            }
 			}
 
@@ -279,7 +298,8 @@ agent JaakKernelAgent {
 			            emit(new BodyCreated(
 			            	this.timeManager.currentTime,
 			            	this.timeManager.lastStepDuration,
-			            	body))
+			            	body),
+			            	Scopes::addresses(new Address(defaultSpace.ID, p.key)))
 					}
 				}
 			}
@@ -290,9 +310,14 @@ agent JaakKernelAgent {
 			waitingTask.cancel
 			waitingTask = null
 		}
-		waitingTask = in(waitingDuration) [
+		waitingTask = in(controller.simulationStepTimeOut) [
+			if (waitingTask !== null) {
+				waitingTask.cancel
+				waitingTask = null
+			}
 			(controller as JaakKernelController).wakeSimulator
 		]
+		receivedInfluences = 0
 		isWaitingInfluences.set(true)
 		//
 		physicEnvironment.apply [
@@ -311,6 +336,7 @@ agent JaakKernelAgent {
 		isWaitingInfluences.set(false)
 		physicEnvironment.runPostTurtles
 		timeManager.increment
+		fireEnvironmentChange
 	}
 	
 	/* Create an instance of the time manager that must be used by

@@ -20,7 +20,7 @@
 package io.sarl.jaak.kernel.internal;
 
 import io.sarl.jaak.environment.external.Perception;
-import io.sarl.jaak.environment.external.body.TurtleBody;
+import io.sarl.jaak.environment.external.body.TurtleObject;
 import io.sarl.lang.core.Event;
 import io.sarl.lang.core.EventListener;
 
@@ -36,7 +36,7 @@ import java.util.UUID;
 public class SkillBinder implements EventListener {
 
 	private final EventListener owner;
-	private TurtleBody body;
+	private TurtleObject body;
 	private float currentTime;
 	private float currentStepSize;
 
@@ -59,7 +59,7 @@ public class SkillBinder implements EventListener {
 	 *
 	 * @return the body.
 	 */
-	public TurtleBody getBody() {
+	public TurtleObject getBody() {
 		return this.body;
 	}
 

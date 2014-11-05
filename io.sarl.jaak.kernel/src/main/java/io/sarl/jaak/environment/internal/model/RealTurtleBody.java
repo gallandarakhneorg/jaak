@@ -71,7 +71,7 @@ public final class RealTurtleBody implements TurtleBody, Comparable<RealTurtleBo
 	private Vector2f headingVector;
 	private float speed;
 	private boolean isPerceptionEnable = true;
-
+	
 	/**
 	 * @param turtle is the identifier of the turtle which is owning this body.
 	 * @param frustum is the perception frustum to be used by this body, or <code>null</code>
@@ -301,7 +301,7 @@ public final class RealTurtleBody implements TurtleBody, Comparable<RealTurtleBo
 	}
 
 	@Override
-	public void influence(Influence influence) {
+	public boolean influence(Influence influence) {
 		assert (influence != null);
 		fireInfluenceReception();
 		if (influence instanceof MotionInfluence) {
@@ -316,12 +316,13 @@ public final class RealTurtleBody implements TurtleBody, Comparable<RealTurtleBo
 					this.lastMotionInfluence.setAngularMotion(mi.getAngularMotion());
 				}
 			}
-		} else {
-			if (this.otherInfluences == null) {
-				this.otherInfluences = new LinkedList<>();
-			}
-			this.otherInfluences.add(influence);
+			return true;
 		}
+		if (this.otherInfluences == null) {
+			this.otherInfluences = new LinkedList<>();
+		}
+		this.otherInfluences.add(influence);
+		return false;
 	}
 
 	/**

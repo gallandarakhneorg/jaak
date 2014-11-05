@@ -19,7 +19,7 @@
  */
 package io.sarl.jaak.environment.external.influence;
 
-import io.sarl.jaak.environment.external.body.TurtleBody;
+import io.sarl.jaak.environment.external.body.TurtleObject;
 import io.sarl.jaak.environment.external.perception.EnvironmentalObject;
 
 /** This class defines an influence to pick up
@@ -38,7 +38,7 @@ public class PickUpInfluence extends Influence {
 	 * @param emitter is the identifier of the influence emitter.
 	 * @param object is the picked environmental object.
 	 */
-	public PickUpInfluence(TurtleBody emitter, EnvironmentalObject object) {
+	public PickUpInfluence(TurtleObject emitter, EnvironmentalObject object) {
 		super(emitter);
 		this.object = object;
 	}

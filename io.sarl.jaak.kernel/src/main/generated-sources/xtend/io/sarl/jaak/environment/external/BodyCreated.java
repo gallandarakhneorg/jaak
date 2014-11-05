@@ -1,6 +1,6 @@
 package io.sarl.jaak.environment.external;
 
-import io.sarl.jaak.environment.external.body.TurtleBody;
+import io.sarl.jaak.environment.external.body.TurtleObject;
 import io.sarl.jaak.kernel.internal.AbstractStampedEvent;
 import io.sarl.lang.annotation.Generated;
 
@@ -14,9 +14,9 @@ import io.sarl.lang.annotation.Generated;
  */
 @SuppressWarnings("all")
 public class BodyCreated extends AbstractStampedEvent {
-  public final TurtleBody body;
+  public final TurtleObject body;
   
-  public BodyCreated(final float ct, final float lsd, final TurtleBody body) {
+  public BodyCreated(final float ct, final float lsd, final TurtleObject body) {
     super(ct, lsd);
     this.body = body;
   }
