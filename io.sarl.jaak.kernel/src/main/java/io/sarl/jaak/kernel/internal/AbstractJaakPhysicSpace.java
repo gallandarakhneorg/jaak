@@ -134,9 +134,9 @@ abstract class AbstractJaakPhysicSpace implements JaakPhysicSpace, DistributedSp
 					"CANNOT_NOTIFY_OVER_NETWORK", scope, event, e); //$NON-NLS-1$
 		}
 	}
-	
+
 	/** Send the event to the given listener asyncronously.
-	 * 
+	 *
 	 * @param agent - the listener to notify.
 	 * @param event - the event to send.
 	 */
@@ -145,7 +145,7 @@ abstract class AbstractJaakPhysicSpace implements JaakPhysicSpace, DistributedSp
 	}
 
 	/** Implement a scope matching a single UUID.
-	 * 
+	 *
 	 * @author $Author: sgalland$
 	 * @version $FullVersion$
 	 * @mavengroupid $GroupId$

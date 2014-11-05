@@ -38,28 +38,30 @@ import java.lang.ref.WeakReference;
  */
 class JaakKernelController implements JaakController {
 
+	private static final long DEFAULT_SIMULATION_STEP_TIMEOUT = 60000;
+
 	private State state = State.NOT_INITIALIZED;
 
 	private WeakReference<EventSpace> space;
 	private WeakReference<TimeManager> timeManager;
 	private Address address;
-	private long simulationStepTimeout = 60000;
+	private long simulationStepTimeout = DEFAULT_SIMULATION_STEP_TIMEOUT;
 
 	/**
 	 */
 	public JaakKernelController() {
 		//
 	}
-	
+
 	private void ensureInitialized() {
 		State s;
-		synchronized(this) {
+		synchronized (this) {
 			s = this.state;
 		}
 		if (s == State.NOT_INITIALIZED) {
 			do {
 				Thread.yield();
-				synchronized(this) {
+				synchronized (this) {
 					s = this.state;
 				}
 			}
@@ -106,7 +108,7 @@ class JaakKernelController implements JaakController {
 	@Override
 	public void startSimulation() {
 		ensureInitialized();
-		synchronized(this) {
+		synchronized (this) {
 			if (this.state == State.NEVER_STARTED) {
 				EventSpace s = getSpace();
 				TimeManager tm = getTimeManager();

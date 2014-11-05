@@ -44,7 +44,7 @@ public interface JaakPhysicSpace extends Space {
 	/** Destroy the space.
 	 */
 	void destroy();
-	
+
 	/** Spawn the body with the given ID.
 	 *
 	 * @param binder - the binder between the skill and the space.

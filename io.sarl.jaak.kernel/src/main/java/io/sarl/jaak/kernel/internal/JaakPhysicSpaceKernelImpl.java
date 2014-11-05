@@ -65,7 +65,7 @@ class JaakPhysicSpaceKernelImpl extends JaakPhysicSpaceTurtleImpl {
 			this.sharedAttributes.remove(KEY_CREATORID);
 		}
 	}
-	
+
 	@Override
 	public void notifyPerception(Perception perception) {
 		UUID id = perception.body.getTurtleId();

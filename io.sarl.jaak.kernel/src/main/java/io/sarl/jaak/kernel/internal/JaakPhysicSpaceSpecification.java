@@ -40,10 +40,10 @@ public class JaakPhysicSpaceSpecification implements SpaceSpecification<JaakPhys
 
 	@Inject
 	private DistributedDataStructureService dataStructureService;
-	
+
 	@Inject
 	private Injector injector;
-	
+
 	/**
 	 */
 	public JaakPhysicSpaceSpecification() {

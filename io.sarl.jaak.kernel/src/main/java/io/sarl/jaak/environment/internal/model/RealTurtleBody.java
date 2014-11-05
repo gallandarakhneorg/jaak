@@ -71,7 +71,7 @@ public final class RealTurtleBody implements TurtleBody, Comparable<RealTurtleBo
 	private Vector2f headingVector;
 	private float speed;
 	private boolean isPerceptionEnable = true;
-	
+
 	/**
 	 * @param turtle is the identifier of the turtle which is owning this body.
 	 * @param frustum is the perception frustum to be used by this body, or <code>null</code>

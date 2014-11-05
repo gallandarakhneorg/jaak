@@ -50,7 +50,7 @@ class JaakPhysicSpaceTurtleImpl extends AbstractJaakPhysicSpace {
 	public void destroy() {
 		//
 	}
-	
+
 	@Override
 	public void spawnBody(EventListener binder) {
 		synchronized (this.agents) {
