@@ -42,7 +42,7 @@ public final class JaakPhysicSpaceConstants {
 	 * @return the id of the Jaak space.
 	 */
 	public static UUID getSpaceIDInContext(AgentContext context) {
-		return UUID.fromString(context.getID().toString() + "!!!JaakPhysicSpace");  //$NON-NLS-1$
+		return UUID.nameUUIDFromBytes((context.getID().toString() + "!!!JaakPhysicSpace").getBytes());  //$NON-NLS-1$
 	}
 
 }

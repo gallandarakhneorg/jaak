@@ -21,12 +21,11 @@ package io.sarl.jaak.kernel.internal;
 
 import io.janusproject.kernel.repository.UniqueAddressParticipantRepository;
 import io.janusproject.kernel.space.DistributedSpace;
+import io.janusproject.services.distributeddata.DMap;
 import io.janusproject.services.distributeddata.DistributedDataStructureService;
 import io.janusproject.services.executor.ExecutorService;
 import io.janusproject.services.logging.LogService;
 import io.janusproject.services.network.NetworkService;
-import io.sarl.jaak.environment.external.Perception;
-import io.sarl.jaak.environment.external.influence.Influence;
 import io.sarl.jaak.kernel.external.JaakPhysicSpace;
 import io.sarl.lang.core.Event;
 import io.sarl.lang.core.EventListener;
@@ -36,31 +35,37 @@ import io.sarl.lang.util.SynchronizedSet;
 import io.sarl.util.Collections3;
 
 import java.io.Serializable;
-import java.util.Map;
 import java.util.UUID;
 
 import com.google.inject.Inject;
 
-/** Implementation of the physic space for Jaak.
+/** Implementation of the physic space for Jaak that is dedicated to the turtle's skills.
  *
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
-class JaakPhysicSpaceImpl implements JaakPhysicSpace, DistributedSpace {
+abstract class AbstractJaakPhysicSpace implements JaakPhysicSpace, DistributedSpace {
 
 	/** Name of the shared attribute that is the ID of the creator of the space.
 	 */
 	public static final String KEY_CREATORID = "creatorID"; //$NON-NLS-1$
 
-	private final SpaceID id;
-	private final EventListener environmentAgent;
-	private final UniqueAddressParticipantRepository<UUID> agents;
-	private final Map<String, Serializable> sharedAttributes;
+	/** Repository of the agents in the space.
+	 */
+	protected final UniqueAddressParticipantRepository<UUID> agents;
 
+	/** Shared attributes in the space.
+	 */
+	protected final DMap<String, Serializable> sharedAttributes;
+
+	/** The logging service.
+	 */
 	@Inject
-	private LogService logger;
+	protected LogService logger;
+
+	private final SpaceID id;
 
 	@Inject
 	private ExecutorService executorService;
@@ -70,23 +75,15 @@ class JaakPhysicSpaceImpl implements JaakPhysicSpace, DistributedSpace {
 
 	/**
 	 * @param id - the identifier of the space.
-	 * @param creator - the identifier of the creator of the space, usually of a Jaak kernel agent.
 	 * @param factory - the factory to be used for creating distributed data structures.
-	 * @param environmentAgent - the reference to the agent listener which is managing the environment,
-	 * or <code>null</code> if the current instance of the space is not directly linked to the
-	 * environment agent.
 	 */
-	public JaakPhysicSpaceImpl(SpaceID id, UUID creator, DistributedDataStructureService factory,
-			EventListener environmentAgent) {
+	public AbstractJaakPhysicSpace(SpaceID id, DistributedDataStructureService factory) {
 		assert (id != null);
-		assert (creator != null);
 		this.id = id;
-		this.environmentAgent = environmentAgent;
 		this.agents = new UniqueAddressParticipantRepository<>(
-				getID().getID().toString() + "-physicspace-agents", //$NON-NLS-1$
+				getID().getID().toString() + "-jaak-physicspace-agents", //$NON-NLS-1$
 				factory);
-		this.sharedAttributes = factory.getMap(getID().getID().toString() + "-physicspace-attributes"); //$NON-NLS-1$
-		this.sharedAttributes.put(KEY_CREATORID, creator);
+		this.sharedAttributes = factory.getMap(getID().getID().toString() + "-jaak-physicspace-attributes"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -116,7 +113,7 @@ class JaakPhysicSpaceImpl implements JaakPhysicSpace, DistributedSpace {
 		synchronized (this.agents) {
 			for (EventListener agent : this.agents.getListeners()) {
 				if (scope.equals(agent.getID())) {
-					this.executorService.submit(new AsyncRunner(agent, event));
+					fireAsync(agent, event);
 					return true;
 				}
 			}
@@ -133,67 +130,28 @@ class JaakPhysicSpaceImpl implements JaakPhysicSpace, DistributedSpace {
 		try {
 			this.network.publish(new UUIDScope(scope), event);
 		} catch (Exception e) {
-			this.logger.error(JaakPhysicSpaceImpl.class,
+			this.logger.error(AbstractJaakPhysicSpace.class,
 					"CANNOT_NOTIFY_OVER_NETWORK", scope, event, e); //$NON-NLS-1$
 		}
 	}
-
-	@Override
-	public void spawnBody(EventListener binder) {
-		synchronized (this.agents) {
-			this.agents.registerParticipant(binder.getID(), binder);
-		}
+	
+	/** Send the event to the given listener asyncronously.
+	 * 
+	 * @param agent - the listener to notify.
+	 * @param event - the event to send.
+	 */
+	protected void fireAsync(EventListener agent, Event event) {
+		this.executorService.submit(new AsyncRunner(agent, event));
 	}
 
-	@Override
-	public void killBody(EventListener binder) {
-		synchronized (this.agents) {
-			this.agents.unregisterParticipant(binder);
-		}
-	}
-
-	@Override
-	public void notifyPerception(Perception perception) {
-		UUID id = perception.body.getTurtleId();
-		if (!putOnEventBus(perception, id)) {
-			putOnNetwork(perception, id);
-		}
-	}
-
-	@Override
-	public void influence(float influenceTime, Influence influence) {
-		AgentInfluence event = new AgentInfluence(influenceTime, 0, influence);
-		if (this.environmentAgent != null) {
-			this.executorService.submit(new AsyncRunner(this.environmentAgent, event));
-		} else {
-			putOnNetwork(event, getCreatorID());
-		}
-	}
-
-	@Override
-	public void eventReceived(SpaceID space, Scope<?> scope, Event event) {
-		if (scope instanceof UUIDScope) {
-			UUID id = ((UUIDScope) scope).getID();
-			if (this.environmentAgent != null && this.environmentAgent.getID().equals(id)) {
-				this.executorService.submit(new AsyncRunner(this.environmentAgent, event));
-			} else {
-				putOnEventBus(event, id);
-			}
-		} else {
-			this.logger.error(JaakPhysicSpaceImpl.class,
-					"INVALID_SCOPE", scope, event); //$NON-NLS-1$
-		}
-	}
-
-
-
-	/**
+	/** Implement a scope matching a single UUID.
+	 * 
 	 * @author $Author: sgalland$
 	 * @version $FullVersion$
 	 * @mavengroupid $GroupId$
 	 * @mavenartifactid $ArtifactId$
 	 */
-	private static class UUIDScope implements Scope<UUID> {
+	protected static class UUIDScope implements Scope<UUID> {
 
 		private static final long serialVersionUID = -2678036964365090540L;
 

@@ -37,6 +37,7 @@ agent AntColonyProblem extends JaakKernelAgent {
 		])
 		
 	on Initialize {
+		//TODO: Replace by the "super(occurrence)" syntax when introduced.
 		super._handle_Initialize_1(occurrence)
 		
 		var uiPanel = new AntPanel
@@ -44,11 +45,12 @@ agent AntColonyProblem extends JaakKernelAgent {
 		
 		var uiFrame = new AntFrame(uiPanel, WIDTH, HEIGHT, controller)
 		addJaakListener(uiFrame)
+		fireEnvironmentChange
 		uiFrame.visible = true
 		
 		controller.startSimulation
 	}
-	
+		
 	/**
 	 * Create an ant colony and the associated spawner.
 	 * 

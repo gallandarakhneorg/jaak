@@ -58,6 +58,7 @@ class JaakKernelController implements JaakController {
 	 */
 	synchronized void initialize(EventSpace space, Address address, TimeManager timeManager) {
 		this.space = (space == null) ? null : new WeakReference<>(space);
+		this.timeManager = (timeManager == null) ? null : new WeakReference<>(timeManager);
 		this.address = address;
 	}
 

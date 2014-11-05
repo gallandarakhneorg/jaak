@@ -62,9 +62,9 @@ public abstract class JaakSpawner implements BodySpawner {
 	 * @param bodyFactory is the body factory to use.
 	 * @param timeManager is the time manager used by the Jaak simulation.
 	 * @param creator - reference to the agent body creator.
-	 * @return <code>true</code> on success.
+	 * @return the spawn body, or <code>null</code>.
 	 */
-	public final boolean spawnBodyFor(
+	public final TurtleBody spawnBodyFor(
 			UUID turtleId,
 			UUID kernelAddress,
 			TurtleBodyFactory bodyFactory,
@@ -87,10 +87,10 @@ public abstract class JaakSpawner implements BodySpawner {
 			}
 			if (body != null) {
 				turtleSpawned(turtleId, body, timeManager);
-				return true;
+				return body;
 			}
 		}
-		return false;
+		return null;
 	}
 
 	/** Replies if a turtle is spawnable according to the spawning law and

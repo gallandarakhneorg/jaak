@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import io.sarl.core.AgentTask;
 import io.sarl.core.Destroy;
 import io.sarl.core.Initialize;
+import io.sarl.jaak.environment.external.BodyCreated;
 import io.sarl.jaak.environment.external.Perception;
 import io.sarl.jaak.environment.external.SimulationStarted;
 import io.sarl.jaak.environment.external.SimulationStopped;
@@ -33,7 +34,9 @@ import io.sarl.lang.annotation.Generated;
 import io.sarl.lang.core.Address;
 import io.sarl.lang.core.Agent;
 import io.sarl.lang.core.AgentContext;
+import io.sarl.lang.core.Behavior;
 import io.sarl.lang.core.Event;
+import io.sarl.lang.core.EventListener;
 import io.sarl.lang.core.EventSpace;
 import io.sarl.lang.core.Percept;
 import io.sarl.lang.core.Scope;
@@ -164,6 +167,26 @@ public class JaakKernelAgent extends Agent {
     return getSkill(io.sarl.core.Schedules.class).task(name);
   }
   
+  @Generated
+  protected EventListener asEventListener() {
+    return getSkill(io.sarl.core.Behaviors.class).asEventListener();
+  }
+  
+  @Generated
+  protected Behavior registerBehavior(final Behavior attitude) {
+    return getSkill(io.sarl.core.Behaviors.class).registerBehavior(attitude);
+  }
+  
+  @Generated
+  protected Behavior unregisterBehavior(final Behavior attitude) {
+    return getSkill(io.sarl.core.Behaviors.class).unregisterBehavior(attitude);
+  }
+  
+  @Generated
+  protected void wake(final Event evt) {
+    getSkill(io.sarl.core.Behaviors.class).wake(evt);
+  }
+  
   protected final int waitingDuration = 5000;
   
   protected final List<JaakListener> listeners = CollectionLiterals.<JaakListener>newArrayList();
@@ -272,19 +295,26 @@ public class JaakKernelAgent extends Agent {
     AgentContext _defaultContext = this.getDefaultContext();
     UUID spaceId = JaakPhysicSpaceConstants.getSpaceIDInContext(_defaultContext);
     AgentContext _defaultContext_1 = this.getDefaultContext();
-    UUID _iD = this.getID();
-    JaakPhysicSpace _orCreateSpace = _defaultContext_1.<JaakPhysicSpace>getOrCreateSpace(
-      JaakPhysicSpaceSpecification.class, spaceId, _iD);
+    EventListener _asEventListener = this.asEventListener();
+    JaakPhysicSpace _orCreateSpace = _defaultContext_1.<JaakPhysicSpace>getOrCreateSpace(JaakPhysicSpaceSpecification.class, spaceId, _asEventListener);
     this.physicSpace = _orCreateSpace;
+    boolean _and = false;
     UUID _creatorID = this.physicSpace.getCreatorID();
-    UUID _iD_1 = this.getID();
-    boolean _notEquals = (!Objects.equal(_creatorID, _iD_1));
-    if (_notEquals) {
+    boolean _tripleNotEquals = (_creatorID != null);
+    if (!_tripleNotEquals) {
+      _and = false;
+    } else {
+      UUID _creatorID_1 = this.physicSpace.getCreatorID();
+      UUID _iD = this.getID();
+      boolean _notEquals = (!Objects.equal(_creatorID_1, _iD));
+      _and = _notEquals;
+    }
+    if (_and) {
       this.killMe();
     } else {
-      SpaceID _iD_2 = this.physicSpace.getID();
-      UUID _iD_3 = this.getID();
-      Address _address = new Address(_iD_2, _iD_3);
+      SpaceID _iD_1 = this.physicSpace.getID();
+      UUID _iD_2 = this.getID();
+      Address _address = new Address(_iD_1, _iD_2);
       this.defaultAddressInPhysicSpace = _address;
       TimeManager _createTimeManager = this.createTimeManager();
       this.timeManager = _createTimeManager;
@@ -333,6 +363,8 @@ public class JaakKernelAgent extends Agent {
       this.cancel(this.waitingTask);
       this.waitingTask = null;
     }
+    this.physicSpace.destroy();
+    this.physicSpace = null;
     this.physicEnvironment = null;}
   }
   
@@ -478,13 +510,18 @@ public class JaakKernelAgent extends Agent {
         {
           UUID id = UUID.randomUUID();
           UUID _iD = this.getID();
-          boolean _spawnBodyFor = spawner.spawnBodyFor(id, _iD, factory, 
+          TurtleBody body = spawner.spawnBodyFor(id, _iD, factory, 
             this.timeManager, 
             null);
-          if (_spawnBodyFor) {
+          boolean _tripleNotEquals_1 = (body != null);
+          if (_tripleNotEquals_1) {
             Class<? extends Agent> _spawnableAgentType = this.getSpawnableAgentType(spawner);
             AgentContext _defaultContext = this.getDefaultContext();
             this.spawnInContextWithID(_spawnableAgentType, id, _defaultContext);
+            float _currentTime = this.timeManager.getCurrentTime();
+            float _lastStepDuration = this.timeManager.getLastStepDuration();
+            BodyCreated _bodyCreated = new BodyCreated(_currentTime, _lastStepDuration, body);
+            this.emit(_bodyCreated);
           }
         }
       }
@@ -525,8 +562,12 @@ public class JaakKernelAgent extends Agent {
                 JaakSpawner spawner_1 = this.spawners[_nextInt];
                 UUID _key_1 = p.getKey();
                 UUID _iD_1 = this.getID();
-                spawner_1.spawnBodyFor(_key_1, _iD_1, factory, 
+                TurtleBody body = spawner_1.spawnBodyFor(_key_1, _iD_1, factory, 
                   this.timeManager, creator);
+                float _currentTime = this.timeManager.getCurrentTime();
+                float _lastStepDuration = this.timeManager.getLastStepDuration();
+                BodyCreated _bodyCreated = new BodyCreated(_currentTime, _lastStepDuration, body);
+                this.emit(_bodyCreated);
               }
             }
           }

@@ -28,12 +28,12 @@ import io.sarl.jaak.environment.external.influence.SemanticChangeInfluence
 import io.sarl.jaak.environment.external.perception.EnvironmentalObject
 import io.sarl.jaak.environment.external.perception.Perceivable
 import io.sarl.jaak.kernel.external.JaakPhysicSpace
+import io.sarl.jaak.kernel.external.JaakPhysicSpaceConstants
 import io.sarl.jaak.kernel.internal.JaakPhysicSpaceSpecification
+import io.sarl.jaak.kernel.internal.SkillBinder
 import java.io.Serializable
-import java.util.UUID
 import org.arakhne.afc.math.continous.object2d.Vector2f
 import org.arakhne.afc.math.discrete.object2d.Point2i
-import io.sarl.jaak.kernel.internal.SkillBinder
 
 skill PhysicBodySkill implements PhysicBody {
 	
@@ -44,10 +44,9 @@ skill PhysicBodySkill implements PhysicBody {
 	var binder : SkillBinder
 	
 	def install() {
-		var spaceId = UUID::fromString(defaultContext.getID.toString + "!!!JaakPhysicSpace")
-		physicSpace = defaultContext.getOrCreateSpace(
-			typeof(JaakPhysicSpaceSpecification),
-			spaceId, owner.ID)
+		var dc = defaultContext
+		var spaceId = JaakPhysicSpaceConstants::getSpaceIDInContext(dc)
+		physicSpace = dc.getOrCreateSpace(typeof(JaakPhysicSpaceSpecification), spaceId)
 		if (physicSpace === null) {
 			throw new IllegalStateException("No physic space found")
 		}

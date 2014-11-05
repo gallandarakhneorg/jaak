@@ -3,8 +3,10 @@ Demo: Ant Colony with Jaak
 
 ## Principle of the Demo
 
-The `FactorialAgent` agent is computing the factorial
-value of its first parameter (given on the command line).
+This demo simulates ants that are foraging and pratolling.
+The demo is based on the Jaak environment model.
+A grid is used for modelling the world's structure.
+The ants are spawn in the ant colonies.
 
 ## Compiling the Demo using Maven
 
@@ -21,5 +23,5 @@ Type the following command line:
 
 > mvn exec:java
 >     -Dexec.mainClass=io.janusproject.Boot
->     -Dexec.args=io.sarl.demos.jaak.ants.AntColony
+>     -Dexec.args=io.sarl.demos.jaak.ants.AntColonyProblem
 

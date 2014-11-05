@@ -7,6 +7,7 @@ import io.sarl.jaak.demos.ants.behaviors.Forager;
 import io.sarl.jaak.demos.ants.behaviors.Patroller;
 import io.sarl.jaak.demos.ants.behaviors.PheromoneFollowingCapacity;
 import io.sarl.jaak.demos.ants.behaviors.PheromoneFollowingSkill;
+import io.sarl.jaak.environment.external.BodyCreated;
 import io.sarl.jaak.environment.external.PhysicBody;
 import io.sarl.jaak.environment.external.PhysicBodySkill;
 import io.sarl.jaak.environment.external.SimulationStopped;
@@ -107,8 +108,12 @@ public class Ant extends Agent {
     this.<PhysicBodySkill>setSkill(PhysicBody.class, body);
     PheromoneFollowingSkill _pheromoneFollowingSkill = new PheromoneFollowingSkill();
     this.<PheromoneFollowingSkill>setSkill(PheromoneFollowingCapacity.class, _pheromoneFollowingSkill);
+  }
+  
+  @Percept
+  public void _handle_BodyCreated_2(final BodyCreated occurrence) {
     Behavior beh = null;
-    Serializable _semantic = body.getSemantic();
+    Serializable _semantic = occurrence.body.getSemantic();
     if ((_semantic instanceof Patroller)) {
       Patroller _patroller = new Patroller(this);
       beh = _patroller;
@@ -122,7 +127,7 @@ public class Ant extends Agent {
   }
   
   @Percept
-  public void _handle_SimulationStopped_2(final SimulationStopped occurrence) {
+  public void _handle_SimulationStopped_3(final SimulationStopped occurrence) {
     this.killMe();
   }
 }

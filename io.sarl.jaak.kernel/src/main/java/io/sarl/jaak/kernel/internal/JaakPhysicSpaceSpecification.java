@@ -19,14 +19,14 @@
  */
 package io.sarl.jaak.kernel.internal;
 
-import java.util.UUID;
-
 import io.janusproject.services.distributeddata.DistributedDataStructureService;
 import io.sarl.jaak.kernel.external.JaakPhysicSpace;
 import io.sarl.lang.core.EventListener;
 import io.sarl.lang.core.Space;
 import io.sarl.lang.core.SpaceID;
 import io.sarl.lang.core.SpaceSpecification;
+
+import com.google.inject.Inject;
 
 /** Space that is representing the Jaak environment.
  *
@@ -37,6 +37,9 @@ import io.sarl.lang.core.SpaceSpecification;
  */
 public class JaakPhysicSpaceSpecification implements SpaceSpecification<JaakPhysicSpace> {
 
+	@Inject
+	private DistributedDataStructureService dataStructureService;
+	
 	/**
 	 */
 	public JaakPhysicSpaceSpecification() {
@@ -45,25 +48,16 @@ public class JaakPhysicSpaceSpecification implements SpaceSpecification<JaakPhys
 
 	@Override
 	public JaakPhysicSpace create(SpaceID id, Object... params) {
-		assert (params.length >= 1);
-		assert (params[0] instanceof UUID);
-		assert (params[1] instanceof DistributedDataStructureService);
-		if (params.length >= 3 && params[2] instanceof EventListener) {
-			return createSpace(id,
-					(UUID) params[0],
-					(DistributedDataStructureService) params[1],
-					(EventListener) params[2]);
+		if (params.length >= 1 && params[0] instanceof EventListener) {
+			return createSpace(id, this.dataStructureService, (EventListener) params[0]);
 		}
-		return createSpace(id,
-				(UUID) params[0],
-				(DistributedDataStructureService) params[1]);
+		return createSpace(id, this.dataStructureService);
 	}
 
 	/**
 	 * Creates a {@link Space} that respects this specification.
 	 *
 	 * @param spaceId - the {@link SpaceID} for the newly created {@link Space}
-	 * @param creatorId - the Id of the creator of the space.
 	 * @param factory - the factory to be used for creating distributed data structures.
 	 * @param environmentAgent - the reference to the agent listener which is managing the environment,
 	 * or <code>null</code> if the current instance of the space is not directly linked to the
@@ -71,21 +65,21 @@ public class JaakPhysicSpaceSpecification implements SpaceSpecification<JaakPhys
 	 * @return an instance of {@link Space}
 	 */
 	@SuppressWarnings("static-method")
-	public JaakPhysicSpace createSpace(SpaceID spaceId, UUID creatorId, DistributedDataStructureService factory,
+	public JaakPhysicSpace createSpace(SpaceID spaceId, DistributedDataStructureService factory,
 			EventListener environmentAgent) {
-		return new JaakPhysicSpaceImpl(spaceId, creatorId, factory, environmentAgent);
+		return new JaakPhysicSpaceKernelImpl(spaceId, factory, environmentAgent);
 	}
 
 	/**
 	 * Creates a {@link Space} that respects this specification.
 	 *
 	 * @param spaceId - the {@link SpaceID} for the newly created {@link Space}
-	 * @param creatorId - the Id of the creator of the space.
 	 * @param factory - the factory to be used for creating distributed data structures.
 	 * @return an instance of {@link Space}
 	 */
-	public JaakPhysicSpace createSpace(SpaceID spaceId, UUID creatorId, DistributedDataStructureService factory) {
-		return create(spaceId, creatorId, factory, null);
+	@SuppressWarnings("static-method")
+	public JaakPhysicSpace createSpace(SpaceID spaceId, DistributedDataStructureService factory) {
+		return new JaakPhysicSpaceTurtleImpl(spaceId, factory);
 	}
 
 }

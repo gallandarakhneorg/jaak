@@ -28,8 +28,8 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 @SuppressWarnings("all")
 public class AbstractAntBehavior extends Behavior {
   @Generated
-  protected void dropOff(final EnvironmentalObject arg0) {
-    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).dropOff(arg0);
+  protected void dropOff(final EnvironmentalObject object) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).dropOff(object);
   }
   
   @Generated
@@ -68,63 +68,63 @@ public class AbstractAntBehavior extends Behavior {
   }
   
   @Generated
-  protected void move(final Vector2f arg0) {
-    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).move(arg0);
+  protected void move(final Vector2f direction) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).move(direction);
   }
   
   @Generated
-  protected void move(final Vector2f arg0, final boolean arg1) {
-    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).move(arg0, arg1);
+  protected void move(final Vector2f direction, final boolean changeHeading) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).move(direction, changeHeading);
   }
   
   @Generated
-  protected void moveBackward(final int arg0) {
-    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).moveBackward(arg0);
+  protected void moveBackward(final int cells) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).moveBackward(cells);
   }
   
   @Generated
-  protected void moveForward(final int arg0) {
-    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).moveForward(arg0);
+  protected void moveForward(final int cells) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).moveForward(cells);
   }
   
   @Generated
-  protected void pickUp(final EnvironmentalObject arg0) {
-    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).pickUp(arg0);
+  protected void pickUp(final EnvironmentalObject object) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).pickUp(object);
   }
   
   @Generated
-  protected Perceivable pickUp(final Class<? extends Perceivable> arg0) {
-    return getSkill(io.sarl.jaak.environment.external.PhysicBody.class).pickUp(arg0);
+  protected Perceivable pickUp(final Class<? extends Perceivable> type) {
+    return getSkill(io.sarl.jaak.environment.external.PhysicBody.class).pickUp(type);
   }
   
   @Generated
-  protected void setHeading(final float arg0) {
-    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).setHeading(arg0);
+  protected void setHeading(final float radians) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).setHeading(radians);
   }
   
   @Generated
-  protected void setHeading(final Vector2f arg0) {
-    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).setHeading(arg0);
+  protected void setHeading(final Vector2f direction) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).setHeading(direction);
   }
   
   @Generated
-  protected void setSemantic(final Serializable arg0) {
-    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).setSemantic(arg0);
+  protected void setSemantic(final Serializable semantic) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).setSemantic(semantic);
   }
   
   @Generated
-  protected EnvironmentalObject touchUp(final Class<? extends EnvironmentalObject> arg0) {
-    return getSkill(io.sarl.jaak.environment.external.PhysicBody.class).touchUp(arg0);
+  protected EnvironmentalObject touchUp(final Class<? extends EnvironmentalObject> type) {
+    return getSkill(io.sarl.jaak.environment.external.PhysicBody.class).touchUp(type);
   }
   
   @Generated
-  protected void turnLeft(final float arg0) {
-    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).turnLeft(arg0);
+  protected void turnLeft(final float radians) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).turnLeft(radians);
   }
   
   @Generated
-  protected void turnRight(final float arg0) {
-    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).turnRight(arg0);
+  protected void turnRight(final float radians) {
+    getSkill(io.sarl.jaak.environment.external.PhysicBody.class).turnRight(radians);
   }
   
   /**

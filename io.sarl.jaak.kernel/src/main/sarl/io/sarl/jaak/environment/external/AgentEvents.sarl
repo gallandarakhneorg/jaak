@@ -36,3 +36,18 @@ event Perception extends AbstractStampedEvent {
 		this.body = body
 	}
 }
+
+/** The body for an agent is ready.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+event BodyCreated extends AbstractStampedEvent {
+	val body : TurtleBody
+	new(ct : float, lsd : float, body : TurtleBody) {
+		super(ct, lsd)
+		this.body = body
+	}
+}

@@ -10,6 +10,7 @@ import io.sarl.jaak.environment.external.influence.SemanticChangeInfluence;
 import io.sarl.jaak.environment.external.perception.EnvironmentalObject;
 import io.sarl.jaak.environment.external.perception.Perceivable;
 import io.sarl.jaak.kernel.external.JaakPhysicSpace;
+import io.sarl.jaak.kernel.external.JaakPhysicSpaceConstants;
 import io.sarl.jaak.kernel.internal.JaakPhysicSpaceSpecification;
 import io.sarl.jaak.kernel.internal.SkillBinder;
 import io.sarl.lang.annotation.DefaultValueUse;
@@ -91,16 +92,9 @@ public class PhysicBodySkill extends Skill implements PhysicBody {
   protected SkillBinder binder;
   
   public void install() {
-    AgentContext _defaultContext = this.getDefaultContext();
-    UUID _iD = _defaultContext.getID();
-    String _string = _iD.toString();
-    String _plus = (_string + "!!!JaakPhysicSpace");
-    UUID spaceId = UUID.fromString(_plus);
-    AgentContext _defaultContext_1 = this.getDefaultContext();
-    Agent _owner = this.getOwner();
-    UUID _iD_1 = _owner.getID();
-    JaakPhysicSpace _orCreateSpace = _defaultContext_1.<JaakPhysicSpace>getOrCreateSpace(
-      JaakPhysicSpaceSpecification.class, spaceId, _iD_1);
+    AgentContext dc = this.getDefaultContext();
+    UUID spaceId = JaakPhysicSpaceConstants.getSpaceIDInContext(dc);
+    JaakPhysicSpace _orCreateSpace = dc.<JaakPhysicSpace>getOrCreateSpace(JaakPhysicSpaceSpecification.class, spaceId);
     this.physicSpace = _orCreateSpace;
     boolean _tripleEquals = (this.physicSpace == null);
     if (_tripleEquals) {

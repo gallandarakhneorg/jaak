@@ -87,6 +87,7 @@ public class AntColonyProblem extends JaakKernelAgent {
     this.addJaakListener(uiPanel);
     AntFrame uiFrame = new AntFrame(uiPanel, AntColonyConstants.WIDTH, AntColonyConstants.HEIGHT, this.controller);
     this.addJaakListener(uiFrame);
+    this.fireEnvironmentChange();
     uiFrame.setVisible(true);
     this.controller.startSimulation();
   }

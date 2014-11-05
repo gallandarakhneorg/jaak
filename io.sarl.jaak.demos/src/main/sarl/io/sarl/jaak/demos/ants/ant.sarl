@@ -13,6 +13,7 @@ import io.sarl.jaak.environment.external.PhysicBody
 import io.sarl.jaak.environment.external.PhysicBodySkill
 import io.sarl.jaak.environment.external.SimulationStopped
 import io.sarl.lang.core.Behavior
+import io.sarl.jaak.environment.external.BodyCreated
 
 /** This class defines an ant.
  * <p>
@@ -46,8 +47,11 @@ agent Ant {
 		var body = new PhysicBodySkill
 		setSkill(typeof(PhysicBody), body)
 		setSkill(typeof(PheromoneFollowingCapacity), new PheromoneFollowingSkill) 
+	}
+	
+	on BodyCreated {
 		var beh : Behavior
-		if (body.semantic instanceof Patroller) {
+		if (occurrence.body.semantic instanceof Patroller) {
 			beh = new Patroller(this)
 		} else {
 			beh = new Forager(this)
