@@ -38,7 +38,7 @@ agent AntColonyProblem extends JaakKernelAgent {
 		
 	on Initialize {
 		//TODO: Replace by the "super(occurrence)" syntax when introduced.
-		super._handle_Initialize_1(occurrence)
+		super._handle_Initialize_0(occurrence)
 		
 		var uiPanel = new AntPanel
 		addJaakListener(uiPanel)
