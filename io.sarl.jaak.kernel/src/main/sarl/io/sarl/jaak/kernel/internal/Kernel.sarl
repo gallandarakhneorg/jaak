@@ -139,7 +139,7 @@ agent JaakKernelAgent {
 
 	on Initialize {
 		var spaceId = JaakPhysicSpaceConstants.getSpaceIDInContext(defaultContext)
-		physicSpace = defaultContext.getOrCreateSpace(typeof(JaakPhysicSpaceSpecification), spaceId, asEventListener)
+		physicSpace = defaultContext.getOrCreateSpaceWithSpec(typeof(JaakPhysicSpaceSpecification), spaceId, asEventListener)
 		// Ensure that the agent is the creator of the space.
 		if (physicSpace.creatorID !== null && physicSpace.creatorID != ID) {
 			killMe

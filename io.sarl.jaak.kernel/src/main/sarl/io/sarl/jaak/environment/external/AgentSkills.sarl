@@ -46,7 +46,7 @@ skill PhysicBodySkill implements PhysicBody {
 	def install() {
 		var dc = defaultContext
 		var spaceId = JaakPhysicSpaceConstants::getSpaceIDInContext(dc)
-		physicSpace = dc.getOrCreateSpace(typeof(JaakPhysicSpaceSpecification), spaceId)
+		physicSpace = dc.getOrCreateSpaceWithSpec(typeof(JaakPhysicSpaceSpecification), spaceId)
 		if (physicSpace === null) {
 			throw new IllegalStateException("No physic space found")
 		}
