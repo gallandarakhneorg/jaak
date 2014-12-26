@@ -117,7 +117,7 @@ behavior Forager extends AbstractAntBehavior {
 	var bag : Food
 	
 	def selectFood(foods : Iterable<Food>) : Food {
-		if (foods!=null && !foods.isEmpty()) {
+		if (foods !== null && !foods.isEmpty()) {
 			var foodSelection = getSkill(typeof(FoodSelectionCapacity))
 			return foodSelection.getBestFood(foods)
 		}
@@ -245,7 +245,7 @@ behavior Patroller extends AbstractAntBehavior {
 			this.deadTime = Float.NaN
 			this.state = PatrollerState::RETURN_TO_COLONY
 			var goHome = followPheromone(typeof(ColonyPheromone), body.perceivedObjects)
-			if (goHome != null) {
+			if (goHome !== null) {
 				gotoMotion(goHome.position, true)
 			}
 			else {
