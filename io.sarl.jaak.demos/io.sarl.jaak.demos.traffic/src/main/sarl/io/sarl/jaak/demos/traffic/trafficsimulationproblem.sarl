@@ -1,0 +1,232 @@
+package io.sarl.jaak.demos.traffic
+
+import io.sarl.core.Initialize
+import io.sarl.jaak.demos.traffic.environment.GroundType
+import io.sarl.jaak.demos.traffic.environment.TrafficLightGroup
+import io.sarl.jaak.demos.traffic.environment.TrafficLightManager
+import io.sarl.jaak.demos.traffic.spawn.StandardDriverSpawner
+import io.sarl.jaak.demos.traffic.spawn.UrgencyDriverSpawner
+import io.sarl.jaak.demos.traffic.ui.TrafficFrame
+import io.sarl.jaak.demos.traffic.ui.TrafficPanel
+import io.sarl.jaak.demos.traffic.util.Rectangle2iComparator
+import io.sarl.jaak.environment.model.JaakEnvironment
+import io.sarl.jaak.environment.spawner.JaakSpawner
+import io.sarl.jaak.environment.time.TimeManager
+import io.sarl.jaak.kernel.DefaultJaakTimeManager
+import io.sarl.jaak.kernel.JaakKernelAgent
+import io.sarl.lang.core.Agent
+import java.awt.Color
+import java.awt.image.BufferedImage
+import java.util.TreeMap
+import javax.imageio.ImageIO
+import org.arakhne.afc.math.discrete.object2d.Rectangle2i
+import org.arakhne.afc.math.discrete.object2d.Vector2i
+import org.arakhne.afc.vmutil.Resources
+
+import static io.sarl.jaak.demos.traffic.TrafficConstants.*
+
+/** This class defines the simulation environment for the traffic simulation problem.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+agent TrafficSimulationProblem extends JaakKernelAgent {
+
+	on Initialize {
+		//TODO: Replace by the "super(occurrence)" syntax when introduced.
+		super._handle_Initialize_0(occurrence)
+		
+		var uiPanel = new TrafficPanel
+		addJaakListener(uiPanel)
+		
+		var uiFrame = new TrafficFrame(uiPanel, WIDTH, HEIGHT, controller)
+		addJaakListener(uiFrame)
+		fireEnvironmentChange
+		uiFrame.visible = true
+	}
+	
+	/* Create an instance of the time manager that must be used by
+	 * the Jaak kernel.
+	 * 
+	 * @return the instance of time manager.
+	 */
+	def createTimeManager : TimeManager {
+		new DefaultJaakTimeManager(1)
+	}
+		
+	/**
+	 * Create an urgency driver spawner.
+	 */
+	def createUrgencySpawner(x : int, y : int, direction : Vector2i) : JaakSpawner {
+		return new UrgencyDriverSpawner(
+			TrafficConstants::URGENCY_DRIVER_BUDGET,
+			x, y,
+			direction)
+	}
+	
+	/**
+	 * Create a driver spawner.
+	 */
+	def createAgentSpawner(x : int, y : int, direction : Vector2i) : JaakSpawner {
+		return new StandardDriverSpawner(
+			TrafficConstants::STANDARD_DRIVER_BUDGET,
+			x, y,
+			direction)
+	}
+	
+	def computeDirection(x : int, y : int) : Vector2i {
+		if (x == 0) {
+			return new Vector2i(1, 0)
+		}
+		if (y == 0) {
+			return new Vector2i(0, 1)
+		}
+		if (x == physicEnvironment.width - 1) {
+			return new Vector2i(-1, 0)
+		}
+		if (y == physicEnvironment.height - 1) {
+			return new Vector2i(0, -1)
+		}
+		return null
+	}
+
+	/* Create the default spawner.
+	 * 
+	 * @return the default spawner or <code>null</code>.
+	 */
+	def createDefaultSpawner : JaakSpawner {
+		return null // Avoid default spawner
+	}
+
+	/* Create the spawners to put on the environment
+	 * at the start up of the simulation.
+	 * 
+	 * @return the start-up spawners.
+	 */
+	def createSpawners : JaakSpawner[] {
+		var mapUrl = Resources::getResource(TrafficSimulationProblem, "map.png")
+		var img = ImageIO::read(mapUrl)
+		var spawners = <JaakSpawner>newArrayList()
+		for (y : 0..<img.height) {
+			for (x : #[0, img.width - 1]) {
+				var pixel = img.getRGB(x, y)
+				var col = pixel.normalizeColor
+				switch (col.RGB) {
+				case TrafficConstants::COLOR_URGENCY_SPAWNER: {
+					spawners.add(createUrgencySpawner(x, y, computeDirection(x, y)))
+				}
+				case TrafficConstants::COLOR_AGENT_SPAWNER: {
+					spawners.add(createAgentSpawner(x, y, computeDirection(x, y)))
+				}
+			}
+			}
+		}
+		for (x : 1..<(img.width-1)) {
+			for (y : #[0, img.height - 1]) {
+				var pixel = img.getRGB(x, y)
+				var col = pixel.normalizeColor
+				switch (col.RGB) {
+				case TrafficConstants::COLOR_URGENCY_SPAWNER: {
+					spawners.add(createUrgencySpawner(x, y, computeDirection(x, y)))
+				}
+				case TrafficConstants::COLOR_AGENT_SPAWNER: {
+					spawners.add(createAgentSpawner(x, y, computeDirection(x, y)))
+				}
+			}
+			}
+		}
+		return spawners;
+	}
+	
+	/* Create an instance of the environment that must
+	 * be used by the Jaak kernel.
+	 * 
+	 * @return the instance of time manager.
+	 */
+	def createEnvironment : JaakEnvironment {
+		var mapUrl = Resources::getResource(TrafficSimulationProblem, "map.png")
+		var img = ImageIO::read(mapUrl)
+		var environment = new JaakEnvironment(img.width, img.height)
+		environment.wrapped = false
+		var actionApplier = environment.actionApplier
+	
+		var trafficLights = new TreeMap<Rectangle2i, TrafficLightGroup>(new Rectangle2iComparator)
+
+		for (x : 0..<img.width) {
+			for (y : 0..<img.height) {
+				var pixel = img.getRGB(x, y)
+				var col = pixel.normalizeColor
+				switch (col.RGB) {
+				case TrafficConstants::COLOR_ROAD,
+				case TrafficConstants::COLOR_URGENCY_SPAWNER,
+				case TrafficConstants::COLOR_AGENT_SPAWNER:
+					actionApplier.setGroundType(x, y, GroundType::ROAD)
+					
+				case TrafficConstants::COLOR_URGENCY_LOCATION:
+					actionApplier.setGroundType(x, y, GroundType::URGENCY_LOCATION)					
+										
+				case TrafficConstants::COLOR_AGENT_DESTROYER:
+					actionApplier.setGroundType(x, y, GroundType::AGENT_DESTROYER)
+				default: {
+					if (col.green === 0 && col.blue === 0) {
+						var r = detectCrossRoad(x, y, img, col.red)
+						if (r !== null) {
+							var group = trafficLights.get(r)
+							if (group === null) {
+								group = new TrafficLightGroup(r)
+								trafficLights.put(r, group)
+							}
+							var light = group.createTrafficLight(col.red)
+							actionApplier.setGroundType(x, y, GroundType::ROAD)					
+							actionApplier.putObject(x, y, light)
+						}
+					}					
+				}
+				}
+			}
+		}
+		
+		var manager = new TrafficLightManager
+		manager += trafficLights.values
+		environment.endogenousEngine = manager
+
+		manager.initialize
+
+		return environment
+	}
+	
+	def normalizeColor(p: int) : Color {
+		var c = new Color(p)
+		return new Color(c.red, c.green, c.blue, 0)
+	}
+	
+	def isGreen(img : BufferedImage, x : int, y : int) : boolean {
+		var pixel = img.getRGB(x, y)
+		var col = new Color(pixel)
+		return col.green > 0 && col.red == 0 && col.blue == 0
+	}
+	
+	def detectCrossRoad(x : int, y : int, img : BufferedImage, col : int) : Rectangle2i {
+		if (img.isGreen(x, y - 1)) {
+			return new Rectangle2i(x - 2, y, 2, 2)
+		} else if (img.isGreen(x, y + 1)) {
+			return new Rectangle2i(x + 1, y - 1, 2, 2)
+		} else if (img.isGreen(x - 1, y)) {
+			return new Rectangle2i(x, y + 1, 2, 2)
+		} else if (img.isGreen(x + 1, y)) {
+			return new Rectangle2i(x - 1, y - 2, 2, 2)
+		}
+		return null
+	}
+
+	/* Replies the type of the agents to spawn.
+	 *
+	 * @param spawner - the spawner that will create the agent.
+	 */
+	def getSpawnableAgentType(spawner : JaakSpawner) : Class<? extends Agent> {
+		return typeof(Driver)
+	}
+	
+}

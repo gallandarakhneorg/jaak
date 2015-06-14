@@ -1,0 +1,291 @@
+package io.sarl.jaak.demos.ants.behaviors
+
+import io.sarl.jaak.demos.ants.AntColonyConstants
+import io.sarl.jaak.demos.ants.environment.AntColony
+import io.sarl.jaak.demos.ants.environment.ColonyPheromone
+import io.sarl.jaak.demos.ants.environment.Food
+import io.sarl.jaak.demos.ants.environment.FoodPheromone
+import io.sarl.jaak.demos.ants.environment.Pheromone
+import io.sarl.jaak.environment.Perception
+import io.sarl.jaak.environment.PhysicBody
+import io.sarl.jaak.environment.influence.MotionInfluenceStatus
+import io.sarl.jaak.environment.perception.Perceivable
+import io.sarl.jaak.environment.perception.PickedObject
+import io.sarl.jaak.util.RandomNumber
+import org.arakhne.afc.math.MathConstants
+import org.arakhne.afc.math.continous.object2d.Vector2f
+import org.arakhne.afc.math.discrete.object2d.Point2i
+
+/** This abstract class defines a behavior for all ants.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+behavior AbstractAntBehavior {
+
+	uses PhysicBody
+
+	/** Select and reply a pheromone.
+	 * 
+	 * @param pheromoneType is the type of pheromone to follow
+	 * @return the pheromone to reach.
+	 */
+	def followPheromone(pheromoneType : Class<? extends Pheromone>, perception : Iterable<? extends Perceivable>) : Pheromone  {
+		if (!perception.empty) {
+			var followPheromoneSkill = getSkill(typeof(PheromoneFollowingCapacity))
+			return followPheromoneSkill.followPheromone(
+				position,
+				perception.filter(typeof(Pheromone))
+			)
+		}
+		return null;
+	}
+	
+	/** Move randomly.
+	 */
+	def randomMotion {
+		var dAngle = (RandomNumber.nextFloat() - RandomNumber.nextFloat()) * MathConstants.DEMI_PI
+		if (dAngle>0) {
+			turnLeft(dAngle)
+		} else {
+			turnRight(-dAngle)
+		}
+		moveForward(1)
+	}
+
+	/** Turn back.
+	 */
+	def randomTurnBack {
+		var dAngle = (RandomNumber.nextFloat()-RandomNumber.nextFloat()) * MathConstants.DEMI_PI
+		if (dAngle>0) {
+			turnLeft(MathConstants.DEMI_PI + dAngle)
+		} else {
+			turnRight(MathConstants.DEMI_PI - dAngle)
+		}
+		moveForward(1);
+	}
+	
+	/** Random patrol.
+	 */
+	def randomPatrol(status : MotionInfluenceStatus) {
+		if (status == MotionInfluenceStatus::NO_MOTION) {
+			randomTurnBack
+		}
+		else {
+			randomMotion
+		}
+	}
+	
+	/** Go to the given target position.
+	 * 
+	 * @param target is the point to reach.
+	 * @param enableRandom indicates if the random behavior should be used when
+	 * the given point was already reached.
+	 * @return <code>true</code> if the ant does not move according to this function,
+	 * <code>false</code> if the ant is moving.
+	 */
+	def gotoMotion(target : Point2i, enableRandom : boolean) : boolean {
+		var dx = target.x() - x
+		var dy = target.y() - y
+		if (dx != 0 || dy != 0) {
+			var motion = new Vector2f(dx, dy)
+			motion.normalize()
+			move(motion, true)
+			return false
+		}
+		if (enableRandom) {
+			randomMotion
+			return false
+		}
+		return true
+	}
+		
+}
+
+/** This class defines a forager role.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+behavior Forager extends AbstractAntBehavior {
+
+	var state = ForagerState::SEARCH_FOOD
+	var bag : Food
+	
+	def selectFood(foods : Iterable<Food>) : Food {
+		if (foods !== null && !foods.isEmpty()) {
+			var foodSelection = getSkill(typeof(FoodSelectionCapacity))
+			return foodSelection.getBestFood(foods)
+		}
+		return null
+	}
+		
+	on Perception [state == ForagerState::SEARCH_FOOD] {
+		var body = occurrence.body
+		var selectedFood = selectFood(body.perceivedObjects.filter(typeof(Food)))
+		if (selectedFood !== null) {
+			// food found
+			if (body.lastMotionInfluenceStatus == MotionInfluenceStatus::NO_MOTION) {
+				randomPatrol(body.lastMotionInfluenceStatus)
+				dropOff(new ColonyPheromone(AntColonyConstants::MAX_PHEROMONE_AMOUNT))
+			}
+			else if (gotoMotion(selectedFood.position, false)) {
+				pickUp(new Food(5))
+				this.state = ForagerState::PICK_UP_FOOD
+			}
+			else {
+				dropOff(new ColonyPheromone(AntColonyConstants::MAX_PHEROMONE_AMOUNT))
+			}
+		}
+		else {
+			if (body.lastMotionInfluenceStatus == MotionInfluenceStatus::NO_MOTION) {
+				randomPatrol(body.lastMotionInfluenceStatus)
+			}
+			else {
+				var selected = followPheromone(typeof(FoodPheromone), body.perceivedObjects)
+				if (selected !== null) {
+					gotoMotion(selected.position, true)
+				}
+				else {
+					// no food, random search
+					randomPatrol(body.lastMotionInfluenceStatus)
+				}
+			}
+			dropOff(new ColonyPheromone(AntColonyConstants::MAX_PHEROMONE_AMOUNT));
+		}
+		synchronizeBody
+	}
+	
+	on Perception [state == ForagerState::PICK_UP_FOOD] {
+		var body = occurrence.body
+		var pickedObject
+			= body.perception.findFirst[it instanceof PickedObject]
+		if (pickedObject instanceof PickedObject) {
+			var food = pickedObject.pickedUpObject
+			if (food instanceof Food) {
+				if (!food.disappeared) {
+					this.bag = food
+					dropOff(new FoodPheromone(AntColonyConstants::MAX_PHEROMONE_AMOUNT))
+					this.state = ForagerState::RETURN_TO_COLONY
+					synchronizeBody
+					return
+				}
+			}
+		}
+		this.state = ForagerState::SEARCH_FOOD
+		synchronizeBody
+	}
+
+	on Perception [state == ForagerState::RETURN_TO_COLONY] {
+		var body = occurrence.body
+		var bag = this.bag;
+		if (bag !== null && !bag.disappeared) {
+			if (body.lastMotionInfluenceStatus == MotionInfluenceStatus::NO_MOTION) {
+				randomPatrol(body.lastMotionInfluenceStatus)
+				dropOff(new FoodPheromone(AntColonyConstants::MAX_PHEROMONE_AMOUNT))
+			}
+			else {
+				var colony = body.perceivedObjects.filter[
+					it instanceof AntColony
+				]
+				if (colony instanceof AntColony) {
+					if (gotoMotion(colony.position, false)) {
+						// Never drop the food because ut will cause the ants to stay on colony's cell
+						this.bag = null
+						this.state = ForagerState::SEARCH_FOOD
+					}
+					else {
+						dropOff(new FoodPheromone(AntColonyConstants.MAX_PHEROMONE_AMOUNT))
+					}
+				}
+				else {
+					var selected = followPheromone(typeof(ColonyPheromone), body.perceivedObjects)
+					if (selected !== null) {
+						gotoMotion(selected.position, true)
+					}
+					else {
+						randomMotion
+					}
+					dropOff(new FoodPheromone(AntColonyConstants::MAX_PHEROMONE_AMOUNT))
+				}
+			}
+		}
+		else {
+			this.state = ForagerState::SEARCH_FOOD
+		}
+		synchronizeBody
+	}
+
+}
+
+/** This class defines a patroller role.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+behavior Patroller extends AbstractAntBehavior {
+
+	var state = PatrollerState::PATROL
+	var deadTime = Float.NaN
+	
+	on Perception [state == PatrollerState::PATROL] {
+		var body = occurrence.body
+		if (this.deadTime.isNaN) {
+			this.deadTime = occurrence.currentTime
+				+ (AntColonyConstants::MAX_PHEROMONE_AMOUNT / ColonyPheromone::EVAPORATION) / 3
+			randomPatrol(body.lastMotionInfluenceStatus)
+		}
+		else if (occurrence.currentTime >= this.deadTime) {
+			this.deadTime = Float.NaN
+			this.state = PatrollerState::RETURN_TO_COLONY
+			var goHome = followPheromone(typeof(ColonyPheromone), body.perceivedObjects)
+			if (goHome !== null) {
+				gotoMotion(goHome.position, true)
+			}
+			else {
+				randomPatrol(body.lastMotionInfluenceStatus)
+			}
+		}
+		else {
+			randomPatrol(body.lastMotionInfluenceStatus)
+		}
+		
+		dropOff(new ColonyPheromone)
+		synchronizeBody
+	}
+	
+	on Perception [state == PatrollerState::RETURN_TO_COLONY] {
+		var body = occurrence.body
+		var colony = body.perceivedObjects.findFirst[
+			it instanceof AntColony
+		]
+		if (colony instanceof AntColony) {
+			if (body.lastMotionInfluenceStatus.failure
+				|| gotoMotion(colony.position, false)) {
+				this.state = PatrollerState::PATROL
+			}
+		}
+		else {
+			if (body.lastMotionInfluenceStatus.failure) {
+				randomPatrol(body.lastMotionInfluenceStatus)
+			}
+			else {
+				var selected = followPheromone(typeof(ColonyPheromone), body.perceivedObjects)
+				if (selected !== null) {
+					gotoMotion(selected.position, true)
+				}
+				else {
+					randomPatrol(body.lastMotionInfluenceStatus)
+				}
+			}
+		}
+		synchronizeBody
+	}
+	
+}

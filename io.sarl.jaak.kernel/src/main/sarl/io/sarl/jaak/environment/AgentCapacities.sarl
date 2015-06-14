@@ -1,0 +1,203 @@
+/*
+ * $Id$
+ *
+ * Jaak environment model is an open-source multiagent library.
+ * More details on http://www.sarl.io
+ *
+ * Copyright (C) 2014 Stéphane GALLAND.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.sarl.jaak.environment
+
+import io.sarl.jaak.environment.perception.EnvironmentalObject
+import io.sarl.jaak.environment.perception.Perceivable
+import java.io.Serializable
+import org.arakhne.afc.math.continous.object2d.Vector2f
+import org.arakhne.afc.math.discrete.object2d.Point2i
+import org.arakhne.afc.math.discrete.object2d.Vector2i
+
+capacity PhysicBody {	
+	
+	/** The agent must call this function for synchronized the body with the environment */
+	def synchronizeBody
+
+	/** Move the turtle along the given direction and
+	 * change the heading orientation if necessary.
+	 * The norm of the <var>direction</var> is the number
+	 * of cells to traverse.
+	 * 
+	 * @param direction is the motion direction.
+	 * @param changeHeading is <code>true</code> to force
+	 * the head to see at the same direction as the motion,
+	 * otherwise <code>false</code>.
+	 */
+	def move(direction : Vector2f, changeHeading : boolean = false)
+	
+	/** Move the turtle along the given direction and
+	 * change the heading orientation if necessary.
+	 * The norm of the <var>direction</var> is the number
+	 * of cells to traverse.
+	 * 
+	 * @param direction is the motion direction.
+	 * @param changeHeading is <code>true</code> to force
+	 * the head to see at the same direction as the motion,
+	 * otherwise <code>false</code>.
+	 */
+	def move(direction : Vector2i, changeHeading : boolean)
+
+	/** Move the turtle along the given direction and
+	 * change the heading orientation if necessary.
+	 * The norm of the <var>direction</var> is the number
+	 * of cells to traverse.
+	 * 
+	 * @param direction is the motion direction.
+	 * @param changeHeading is <code>true</code> to force
+	 * the head to see at the same direction as the motion,
+	 * otherwise <code>false</code>.
+	 */
+	def move(direction : Vector2i)
+
+	/** Move the turtle straight ahead about the given number 
+	 * of cells.
+	 * 
+	 * @param cells is the count of cells to traverse.
+	 */
+	def moveForward(cells : int)
+	
+	/** Move the turtle backward about the given number 
+	 * of cells.
+	 * 
+	 * @param cells is the count of cells to traverse.
+	 */
+	def moveBackward(cells : int)
+
+	/** Turn the head on the left of the turtle about the given
+	 * number of radians.
+	 * 
+	 * @param radians is the rotation angle.
+	 */
+	def turnLeft(radians : float)
+
+	/** Turn the head on the right of the turtle about the given
+	 * number of radians.
+	 * 
+	 * @param radians is the rotation angle.
+	 */
+	def turnRight(radians : float)
+
+	/** Set the orientation of the turtle head 
+	 * to the given angle according to the trigonometric
+	 * circle.
+	 * 
+	 * @param radians is the orientation angle.
+	 */
+	def setHeading(radians : float)
+	
+	/** Set the orientation of the turtle head 
+	 * to the given direction.
+	 * 
+	 * @param direction is the new direction of the head.
+	 */
+	def setHeading(direction : Vector2f)
+	
+	/** Set the orientation of the turtle head 
+	 * to the given direction.
+	 * 
+	 * @param direction is the new direction of the head.
+	 */
+	def setHeading(direction : Vector2i)
+
+	/** Put an object on the current cell of the environment.
+	 * 
+	 * @param object is the object to drop off.
+	 */
+	def dropOff(object : EnvironmentalObject)
+
+	/** Remove an object from the current environment cell.
+	 * <p>
+	 * Caution: the object is not immediately removed from the environment
+	 * according to the influence mechanism.
+	 * 
+	 * @param <T> is the type of the object to pick up.
+	 * @param type is the type of the object to pick up.
+	 * @return the picked up object.
+	 */
+	//TODO: def pickUp(type : Class<T>) : T with T extends Perceivable
+	def pickUp(type : Class<? extends Perceivable>) : Perceivable
+
+	/** Remove an object from the current environment cell.
+	 * <p>
+	 * Caution: the object is not immediately removed from the environment
+	 * according to the influence mechanism.
+	 * 
+	 * @param object is the object to remove from the cell.
+	 */
+	def pickUp(object : EnvironmentalObject)
+
+	/** Get an object from the current environment cell but do not
+	 * remove it from the cell.
+	 * 
+	 * @param <T> is the type of the object to touch up.
+	 * @param type is the type of the object to touch up.
+	 * @return the touched up object.
+	 */
+	//TODO: def touchUp(type : Class<T>) : T with T extends EnvironmentalObject
+	def touchUp(type : Class<? extends EnvironmentalObject>) : EnvironmentalObject
+
+	/** Set the semantic associated to the body.
+	 * 
+	 * @param semantic is the semantic of the body.
+	 */
+	def setSemantic(semantic : Serializable)
+
+	/** Replies the position of the body in the environment. */
+	def getPosition : Point2i
+	
+	/** Replies the orientation of the turtle head
+	 * in radians according to a trigonometric circle.
+	 * 
+	 * @return the orientation of the head in radians.
+	 */
+	def getHeadingAngle : float
+	
+	/** Replies the orientation of the turtle head.
+	 * 
+	 * @return the orientation of the head in radians.
+	 */
+	def getHeadingVector: Vector2f
+
+	/** Replies x-coordinate of the position of the body.
+	 * 
+	 * @return the x-coordinate of the body.
+	 */
+	def getX : int
+	
+	/** Replies y-coordinate of the position of the body.
+	 * 
+	 * @return the y-coordinate of the body.
+	 */
+	def getY : int
+	
+	/** Replies the semantic associated to the body.
+	 * 
+	 * @param semantic is the semantic of the body.
+	 */
+	def getSemantic : Serializable
+
+	/** Replies the instant speed of the turtle.
+	 * 
+	 * @return the instant speed of the turtle in cells per second.
+	 */
+	def getSpeed : float
+	
+}

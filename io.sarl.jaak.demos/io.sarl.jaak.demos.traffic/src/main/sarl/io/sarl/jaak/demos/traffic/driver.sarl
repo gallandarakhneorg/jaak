@@ -1,0 +1,69 @@
+package io.sarl.jaak.demos.traffic
+
+import io.sarl.core.Behaviors
+import io.sarl.core.Destroy
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+import io.sarl.jaak.demos.traffic.behaviors.DrivingCapacity
+import io.sarl.jaak.demos.traffic.behaviors.DrivingSkill
+import io.sarl.jaak.demos.traffic.behaviors.StandardDriver
+import io.sarl.jaak.environment.BodyCreated
+import io.sarl.jaak.environment.PhysicBody
+import io.sarl.jaak.environment.PhysicBodySkill
+import io.sarl.jaak.environment.SimulationStopped
+import io.sarl.lang.core.Behavior
+
+/** This class defines an ant.
+ * <p>
+ * The most important characteristic of an ant in this context 
+ * is related to its individual and unpredictable tendency 
+ * to choose a certain route among the many available. Each instance of 
+ * the class Ant must represent an individual agent with singular 
+ * characteristics. This can be implemented by using a mathematical 
+ * function. As described above the pheromone level over a route is 
+ * measured by an integer number. The agent will use a method that 
+ * evaluates its tendency of choosing a route based on the 
+ * pheromone intensity. A good variability of the behavior of 
+ * the agents can be expressed as a sinusoidal function 
+ * with at least three coefficients: T(PL) = Alpha * sin(Beta * PL + Gamma).
+ * <p>
+ * The input PL is the pheromone level over a route. Alfa, Beta and 
+ * Gamma will be properties of the Ant class initialized as random 
+ * float numbers within the interval [-5..5]. These properties will 
+ * make possible to have different individuals in the population.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+agent Driver {
+
+	uses Behaviors, Lifecycle
+
+	on Initialize {
+		var body = new PhysicBodySkill
+		setSkill(typeof(DrivingCapacity), new DrivingSkill) 
+		setSkill(typeof(PhysicBody), body)
+	}
+	
+	on Destroy {
+		<PhysicBodySkill>clearSkill(typeof(PhysicBody));
+		<DrivingSkill>clearSkill(typeof(DrivingCapacity))
+	}
+	
+	on BodyCreated {
+		var beh : Behavior
+//		if (occurrence.body.semantic == UrgencyDriver) {
+//			beh = new UrgencyDriver(this)
+//		} else {
+			beh = new StandardDriver(this)
+//		}
+		registerBehavior(beh)
+	}
+	
+	on SimulationStopped {
+		killMe
+	}
+	
+}

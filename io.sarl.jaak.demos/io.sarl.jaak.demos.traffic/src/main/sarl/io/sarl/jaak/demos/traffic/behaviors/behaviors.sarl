@@ -1,0 +1,83 @@
+package io.sarl.jaak.demos.traffic.behaviors
+
+import io.sarl.core.Lifecycle
+import io.sarl.jaak.demos.traffic.environment.GroundType
+import io.sarl.jaak.demos.traffic.environment.TrafficLight
+import io.sarl.jaak.demos.traffic.environment.TrafficLightState
+import io.sarl.jaak.environment.Perception
+import io.sarl.jaak.environment.PhysicBody
+import org.arakhne.afc.math.discrete.object2d.Point2i
+import org.arakhne.afc.math.discrete.object2d.Vector2i
+
+/** This abstract class defines a behavior for all drivers.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+behavior AbstractDriverBehavior {
+
+	uses PhysicBody
+	
+	def fromTo(from : Point2i, to : Point2i) : Vector2i {
+		var v = new Vector2i
+		v.sub(to, from)
+		return v;
+	}
+			
+}
+
+/** This class defines a standard driver.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+behavior StandardDriver extends AbstractDriverBehavior {
+
+	uses DrivingCapacity, Lifecycle
+	
+	var previousOrientation : Vector2i
+
+	on Perception {
+		var groundType = occurrence.body.currentGroundType
+		if (groundType == GroundType::AGENT_DESTROYER) {
+			killMe
+		}
+		var direction = Vector2i::toOrientationVector(occurrence.body.headingAngle)
+		var trafficLight = occurrence.body.getPerception(typeof(TrafficLight)).head
+		if (trafficLight === null
+			|| fromTo(occurrence.body.position, trafficLight.position) != direction
+			|| trafficLight.state === TrafficLightState::PASSAGE_ALLOWED) {
+			var motion = drive(
+				occurrence.body.position,
+				direction,
+				previousOrientation,
+				occurrence.body.perception,
+				occurrence.body.groundPerception)
+			if (motion !== null) {
+				move(motion, true)
+				this.previousOrientation = direction
+			}
+		}
+		synchronizeBody
+	}
+	
+}
+
+/** This class defines an urgency vehicle driver.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+behavior UrgencyDriver extends AbstractDriverBehavior {
+
+	on Perception {
+		synchronizeBody
+	}
+	
+}

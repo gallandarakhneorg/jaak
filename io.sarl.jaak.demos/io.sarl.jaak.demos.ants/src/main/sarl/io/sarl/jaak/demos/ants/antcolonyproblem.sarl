@@ -1,0 +1,136 @@
+package io.sarl.jaak.demos.ants
+
+import io.sarl.core.Initialize
+import io.sarl.jaak.demos.ants.environment.AntColony
+import io.sarl.jaak.demos.ants.environment.Food
+import io.sarl.jaak.demos.ants.spawn.AntColonySpawner
+import io.sarl.jaak.demos.ants.ui.AntFrame
+import io.sarl.jaak.demos.ants.ui.AntPanel
+import io.sarl.jaak.environment.model.JaakEnvironment
+import io.sarl.jaak.environment.spawner.JaakSpawner
+import io.sarl.jaak.kernel.JaakKernelAgent
+import io.sarl.jaak.util.RandomNumber
+import io.sarl.lang.core.Agent
+import java.util.Set
+import org.arakhne.afc.math.discrete.object2d.Point2i
+
+import static io.sarl.jaak.demos.ants.AntColonyConstants.*
+import io.sarl.jaak.environment.spawner.JaakWorldSpawner
+
+/** This class defines the simulation environment for the ant colony problem.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+agent AntColonyProblem extends JaakKernelAgent {
+
+	var isWrappedEnvironment = true
+
+	val positions : Set<Point2i> = newTreeSet([o1,o2|
+			if (o1===o2) return 0;
+			if (o1===null) return Integer.MIN_VALUE
+			if (o2===null) return Integer.MAX_VALUE
+			var cmp = o1.x() - o2.x()
+			if (cmp != 0) return cmp
+			return o1.y() - o2.y()
+		])
+		
+	on Initialize {
+		//TODO: Replace by the "super(occurrence)" syntax when introduced.
+		super._handle_Initialize_0(occurrence)
+		
+		var uiPanel = new AntPanel
+		addJaakListener(uiPanel)
+		
+		var uiFrame = new AntFrame(uiPanel, WIDTH, HEIGHT, controller)
+		addJaakListener(uiFrame)
+		fireEnvironmentChange
+		uiFrame.visible = true
+		
+		controller.startSimulation
+	}
+		
+	/**
+	 * Create an ant colony and the associated spawner.
+	 * 
+	 * @param colonyId is the identifier of the colony to create.
+	 * @return an instance of the spawner.
+	 */
+	def createColony(colonyId : int) : JaakSpawner {
+		var actionApplier = physicEnvironment.actionApplier
+		var position = new Point2i(
+				RandomNumber::nextInt(physicEnvironment.width),
+				RandomNumber::nextInt(physicEnvironment.height))
+		while (positions.contains(position)) {
+			position.set(
+				RandomNumber::nextInt(physicEnvironment.width),
+				RandomNumber::nextInt(physicEnvironment.height))
+		}
+		positions += position
+		var antColonyObject = new AntColony(colonyId)
+		actionApplier.putObject(position.x(), position.y(), antColonyObject)
+		return new AntColonySpawner(
+			ANT_COLONY_PATROLLER_POPULATION,
+			ANT_COLONY_FORAGER_POPULATION,
+			position.x(), position.y())
+	}
+	
+	/* Create the default spawner.
+	 * 
+	 * @return the default spawner or <code>null</code>.
+	 */
+	def createDefaultSpawner : JaakSpawner {
+		return new JaakWorldSpawner(physicEnvironment)
+	}
+	
+	/* Create the spawners to put on the environment
+	 * at the start up of the simulation.
+	 * 
+	 * @return the start-up spawners.
+	 */
+	def createSpawners : JaakSpawner[] {
+		var spawners = <JaakSpawner>newArrayOfSize(ANT_COLONY_COUNT)
+		for(var i=0; i<spawners.length; i++) {
+			spawners.set(i, createColony(i+1))
+		}
+		return spawners;
+	}
+	
+	/* Create an instance of the environment that must
+	 * be used by the Jaak kernel.
+	 * 
+	 * @return the instance of time manager.
+	 */
+	def createEnvironment : JaakEnvironment {
+		var environment = new JaakEnvironment(WIDTH, HEIGHT)
+		environment.wrapped = isWrappedEnvironment
+		var actionApplier = environment.actionApplier;
+	
+		for(var i=0; i<FOOD_SOURCES; i++) {
+			var p = new Point2i(
+					RandomNumber::nextInt(environment.width),
+					RandomNumber::nextInt(environment.height))
+			while (positions.contains(p)) {
+				p.set(
+						RandomNumber::nextInt(environment.width),
+						RandomNumber::nextInt(environment.height))
+			}
+			positions += p
+			var food = new Food(Math.max(10,RandomNumber::nextInt(MAX_FOOD_PER_SOURCE)))
+			actionApplier.putObject(p.x(), p.y(), food)
+		}
+		
+		return environment
+	}
+
+	/* Replies the type of the agents to spawn.
+	 *
+	 * @param spawner - the spawner that will create the agent.
+	 */
+	def getSpawnableAgentType(spawner : JaakSpawner) : Class<? extends Agent> {
+		typeof(Ant)
+	}
+	
+}

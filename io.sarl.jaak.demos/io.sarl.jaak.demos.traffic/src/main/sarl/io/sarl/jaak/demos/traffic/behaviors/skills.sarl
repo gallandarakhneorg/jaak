@@ -1,0 +1,113 @@
+package io.sarl.jaak.demos.traffic.behaviors
+
+import io.sarl.jaak.demos.traffic.environment.GroundType
+import io.sarl.jaak.environment.perception.Perceivable
+import java.io.Serializable
+import java.util.List
+import java.util.Map
+import org.arakhne.afc.math.discrete.object2d.Point2i
+import org.arakhne.afc.math.discrete.object2d.Vector2i
+import java.util.Random
+
+/** The skill for driving.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+skill DrivingSkill implements DrivingCapacity {
+	
+	var random = new Random
+	
+	def isRoad(s : Serializable) : boolean {
+		return s == GroundType::ROAD || s == GroundType::URGENCY_LOCATION
+			|| s == GroundType::AGENT_DESTROYER
+	}
+	
+	def detectDirections(orientation : Vector2i, previousOrientation : Vector2i,
+		ground : Map<Vector2i, Serializable>) : List<Vector2i> {
+		var availableDirections = newArrayList
+		
+		var farForward = orientation.clone
+		farForward.scale(2)
+
+		var left = orientation.clone
+		left.perpendicularize
+		
+		var right = left.clone
+		right.negate
+		right.scale(2)
+		
+		var backLeft = left.clone
+		backLeft.add(-orientation.x(), -orientation.y())
+
+		var frontRight = right.clone
+		frontRight.add(orientation.x(), orientation.y())
+		
+		var lr = ground.get(left).road
+		var rr = ground.get(right).road
+		var fw = ground.get(farForward).road
+		var w = ground.get(orientation).road
+		
+		// Turn left
+		if (lr && !ground.get(backLeft).road) {
+			left.normalize
+			if (previousOrientation === null
+				|| left.x() != -previousOrientation.x()
+				|| left.y() != -previousOrientation.y()) {
+				availableDirections += left
+			}
+		}
+		
+		// Turn right
+		if (rr && !ground.get(frontRight).road) {
+			right.normalize
+			if (previousOrientation === null
+				|| right.x() != -previousOrientation.x()
+				|| right.y() != -previousOrientation.y()) {
+				availableDirections += right
+			}
+		}
+		
+		// Go forward
+		if (availableDirections.empty
+			&& ((lr && fw)
+			|| (!lr && w))) {
+			availableDirections += orientation.clone
+		}
+		
+		return availableDirections
+	}
+	
+	def drive(
+		position : Point2i,
+		orientation : Vector2i,
+	 	previousOrientation : Vector2i,
+		perception : Iterable<? extends Perceivable>,
+		ground : Map<Vector2i, Serializable>) : Vector2i {
+		
+		var directions = detectDirections(orientation, previousOrientation, ground)
+		
+		var motion : Vector2i = null
+		
+		switch (directions.size) {
+			case 0: {
+			}
+			case 1: {
+				motion = directions.get(0)
+			}
+			default: {
+				var n = random.nextInt(directions.size)
+				motion = directions.get(n)
+			}
+		}
+		
+		if (motion !== null && motion.lengthSquared == 0) {
+			motion = null;
+		}
+
+		return motion
+	}
+	
+}

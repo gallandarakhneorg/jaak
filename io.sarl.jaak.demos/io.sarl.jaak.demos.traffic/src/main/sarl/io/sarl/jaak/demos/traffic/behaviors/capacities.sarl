@@ -1,0 +1,34 @@
+package io.sarl.jaak.demos.traffic.behaviors
+
+import io.sarl.jaak.environment.perception.Perceivable
+import java.io.Serializable
+import java.util.Map
+import org.arakhne.afc.math.discrete.object2d.Point2i
+import org.arakhne.afc.math.discrete.object2d.Vector2i
+
+/** This interface defines the capacity to drive.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+capacity DrivingCapacity {
+	
+	/** Select and replies a pheromone to follow.
+	 * 
+	 * @param position is the current position of vehicle.
+	 * @param orientation is the orientation of the vehicle (at t-1).
+	 * @param previousOrientation is the orientation of the vehicle in the past (at t-2).
+	 * @param perpcetion are the objects in the field of view of the vehicle.
+	 * @param ground are the types of the ground in the field of view.
+	 * @return the driving direction.
+	 */
+	def drive(
+		position : Point2i,
+		orientation : Vector2i,
+		previousOrientation : Vector2i,
+		perception : Iterable<? extends Perceivable>,
+		ground : Map<Vector2i, Serializable>) : Vector2i
+	
+}
