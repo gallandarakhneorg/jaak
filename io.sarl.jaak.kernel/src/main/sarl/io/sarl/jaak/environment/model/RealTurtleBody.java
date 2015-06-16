@@ -30,7 +30,6 @@ import io.sarl.jaak.environment.perception.EnvironmentalObject;
 import io.sarl.jaak.environment.perception.Perceivable;
 import io.sarl.jaak.environment.perception.PerceivedTurtle;
 import io.sarl.jaak.environment.perception.PickedObject;
-import io.sarl.jaak.util.MultiCollection;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -46,6 +45,7 @@ import org.arakhne.afc.math.MathUtil;
 import org.arakhne.afc.math.continous.object2d.Vector2f;
 import org.arakhne.afc.math.discrete.object2d.Point2i;
 import org.arakhne.afc.math.discrete.object2d.Vector2i;
+import org.arakhne.afc.util.MultiCollection;
 
 /** This class defines an implementation of turtle body.
  *

@@ -23,7 +23,6 @@ import io.janusproject.kernel.repository.UniqueAddressParticipantRepository;
 import io.janusproject.kernel.space.DistributedSpace;
 import io.janusproject.services.distributeddata.DMap;
 import io.janusproject.services.distributeddata.DistributedDataStructureService;
-import io.janusproject.services.executor.ExecutorService;
 import io.janusproject.services.logging.LogService;
 import io.janusproject.services.network.NetworkService;
 import io.sarl.lang.core.Event;
@@ -65,9 +64,6 @@ abstract class AbstractJaakPhysicSpace implements JaakPhysicSpace, DistributedSp
 	protected LogService logger;
 
 	private final SpaceID id;
-
-	@Inject
-	private ExecutorService executorService;
 
 	@Inject
 	private NetworkService network;
@@ -112,8 +108,7 @@ abstract class AbstractJaakPhysicSpace implements JaakPhysicSpace, DistributedSp
 		synchronized (this.agents) {
 			for (EventListener agent : this.agents.getListeners()) {
 				if (scope.equals(agent.getID())) {
-					fireAsync(agent, event);
-					return true;
+					return fireEvent(agent, event);
 				}
 			}
 			return false;
@@ -134,13 +129,20 @@ abstract class AbstractJaakPhysicSpace implements JaakPhysicSpace, DistributedSp
 		}
 	}
 
-	/** Send the event to the given listener asyncronously.
+	/** Send the event to the given listener.
+	 * The event is sent synchronously, but may
+	 * be submitted to the receiver in an
+	 * asynchronous thread by the underlying event bus.
 	 *
 	 * @param agent - the listener to notify.
 	 * @param event - the event to send.
+	 * @return <code>true</code> if the event was sent. <code>false</code>
+	 * is the event was not sent.
 	 */
-	protected void fireAsync(EventListener agent, Event event) {
-		this.executorService.submit(new AsyncRunner(agent, event));
+	protected boolean fireEvent(EventListener agent, Event event) {
+		assert (agent != null && event != null);
+		agent.receiveEvent(event);
+		return true;
 	}
 
 	/** Implement a scope matching a single UUID.
@@ -174,38 +176,6 @@ abstract class AbstractJaakPhysicSpace implements JaakPhysicSpace, DistributedSp
 		@Override
 		public boolean matches(UUID element) {
 			return this.id.equals(element);
-		}
-
-	}
-
-	/**
-	 * @author $Author: sgalland$
-	 * @version $FullVersion$
-	 * @mavengroupid $GroupId$
-	 * @mavenartifactid $ArtifactId$
-	 */
-	private static class AsyncRunner implements Runnable {
-
-		private final EventListener agent;
-		private final Event event;
-
-		/**
-		 * @param agent
-		 * @param event
-		 */
-		public AsyncRunner(EventListener agent, Event event) {
-			this.agent = agent;
-			this.event = event;
-		}
-
-		@Override
-		public void run() {
-			this.agent.receiveEvent(this.event);
-		}
-
-		@Override
-		public String toString() {
-			return "[agent=" + this.agent + "; event=" + this.event + "]"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 		}
 
 	}

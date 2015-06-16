@@ -37,14 +37,16 @@ import java.lang.ref.WeakReference;
  */
 class JaakKernelController implements JaakController {
 
-	private static final long DEFAULT_SIMULATION_STEP_TIMEOUT = 10000;
+	private static final int DEFAULT_WAITING_DURATION = 0;
+	private static final int DEFAULT_TIMEOUT = 5000;
 
 	private State state = State.NOT_INITIALIZED;
 
 	private WeakReference<EventSpace> space;
 	private WeakReference<TimeManager> timeManager;
 	private Address address;
-	private long simulationStepTimeout = DEFAULT_SIMULATION_STEP_TIMEOUT;
+	private int timeout = DEFAULT_TIMEOUT;
+	private int waitingDuration = DEFAULT_WAITING_DURATION;
 
 	/**
 	 */
@@ -152,16 +154,32 @@ class JaakKernelController implements JaakController {
 			}
 		}
 	}
-
+	
 	@Override
-	public synchronized long getSimulationStepTimeOut() {
-		return this.simulationStepTimeout;
+	public int getSimulationStepTimeOut() {
+		return this.timeout;
 	}
 
 	@Override
-	public synchronized void setSimulationStepTimeOut(long timeout) {
-		if (timeout > 0) {
-			this.simulationStepTimeout = timeout;
+	public void setSimulationStepTimeOut(int duration) {
+		if (duration > 0) {
+			this.timeout = duration;
+		} else {
+			this.timeout = 0;
+		}
+	}
+	
+	@Override
+	public int getWaitingDuration() {
+		return this.waitingDuration;
+	}
+	
+	@Override
+	public void setWaitingDuration(int duration) {
+		if (duration > 0) {
+			this.waitingDuration = duration;
+		} else {
+			this.waitingDuration = 0;
 		}
 	}
 

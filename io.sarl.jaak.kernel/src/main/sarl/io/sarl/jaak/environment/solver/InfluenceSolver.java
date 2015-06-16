@@ -162,11 +162,13 @@ public abstract class InfluenceSolver<T extends TurtleBody> {
 						newPosition.set(position);
 						dx = 0;
 						dy = 0;
+						mis = MotionInfluenceStatus.NO_MOTION;
 					}
 				} else {
 					newPosition.set(position);
 					dx = 0;
 					dy = 0;
+					mis = MotionInfluenceStatus.NO_MOTION;
 				}
 
 				TimeManager tm = getTimeManager();

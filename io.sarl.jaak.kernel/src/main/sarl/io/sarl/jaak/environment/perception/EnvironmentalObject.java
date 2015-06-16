@@ -41,7 +41,12 @@ public class EnvironmentalObject extends AbstractPerceivable implements JaakObje
 	 */
 	public EnvironmentalObject(Serializable semantic) {
 		super();
-		this.semantic = semantic;
+		setSemantic(semantic);
+	}
+	
+	@Override
+	protected EnvironmentalObject clone() {
+		return (EnvironmentalObject) super.clone();
 	}
 
 	/** Replies an identifier for this object.
@@ -57,16 +62,6 @@ public class EnvironmentalObject extends AbstractPerceivable implements JaakObje
 		buf.append("-o-o-o-"); //$NON-NLS-1$
 		buf.append(Integer.toHexString(System.identityHashCode(this)));
 		return buf.toString();
-	}
-
-	/** Set the position of this object.
-	 *
-	 * @param x is the new position of the object.
-	 * @param y is the new position of the object.
-	 */
-	void setPosition(int x, int y) {
-		this.position.setX(x);
-		this.position.setY(y);
 	}
 
 	/**

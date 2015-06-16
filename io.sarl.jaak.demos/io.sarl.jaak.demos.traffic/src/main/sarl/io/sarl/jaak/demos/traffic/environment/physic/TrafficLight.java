@@ -1,4 +1,4 @@
-package io.sarl.jaak.demos.traffic.environment;
+package io.sarl.jaak.demos.traffic.environment.physic;
 
 import io.sarl.jaak.environment.perception.EnvironmentalObject;
 
@@ -35,12 +35,7 @@ public class TrafficLight extends EnvironmentalObject implements Cloneable {
 
 	@Override
 	public TrafficLight clone() {
-		try {
-			return (TrafficLight)super.clone();
-		}
-		catch (CloneNotSupportedException e) {
-			throw new RuntimeException(e);
-		}
+		return (TrafficLight)super.clone();
 	}
 
 	/** Replies the state of the traffic light.

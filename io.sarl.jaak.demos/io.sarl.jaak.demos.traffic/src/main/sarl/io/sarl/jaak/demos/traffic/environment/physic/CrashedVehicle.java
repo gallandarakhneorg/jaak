@@ -1,4 +1,4 @@
-package io.sarl.jaak.demos.traffic.environment;
+package io.sarl.jaak.demos.traffic.environment.physic;
 
 import io.sarl.jaak.environment.perception.EnvironmentalObject;
 
@@ -19,12 +19,7 @@ public class CrashedVehicle extends EnvironmentalObject implements Cloneable {
 
 	@Override
 	public CrashedVehicle clone() {
-		try {
-			return (CrashedVehicle)super.clone();
-		}
-		catch (CloneNotSupportedException e) {
-			throw new RuntimeException(e);
-		}
+		return (CrashedVehicle) super.clone();
 	}
 
 }

@@ -19,7 +19,6 @@
  */
 package io.sarl.jaak.kernel
 
-import io.sarl.core.AgentTask
 import io.sarl.core.Behaviors
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Destroy
@@ -65,8 +64,8 @@ agent JaakKernelAgent {
 	var physicEnvironment : JaakEnvironment
 	var timeManager : TimeManager
 	var spawners : JaakSpawner[]
-	var defaultSpawner : JaakSpawner 
-	var waitingTask : AgentTask
+	var defaultSpawner : JaakSpawner
+	var awaitingSpawnedAgents = <UUID>newLinkedList 
 	
 	def addJaakListener(listener : JaakListener) {
 		synchronized(environmentListeners) {
@@ -141,8 +140,7 @@ agent JaakKernelAgent {
 			// Create the physic environment
 			defaultAddressInPhysicSpace = new Address(physicSpace.ID, ID)
 			timeManager = createTimeManager
-			physicEnvironment = createEnvironment
-			physicEnvironment.setTimeManager(timeManager)
+			physicEnvironment = createEnvironment(timeManager)
 			defaultSpawner = createDefaultSpawner
 			var p = createSpawners
 			if (p === null || p.empty) {
@@ -164,25 +162,33 @@ agent JaakKernelAgent {
 	
 	on Destroy [physicEnvironment !== null] {
 		isWaitingInfluences.set(false)
-		if (waitingTask !== null) {
-			waitingTask.cancel
-			waitingTask = null
-		}
 		physicSpace.destroy
 		physicSpace = null
 		physicEnvironment = null
 	}
 	
-	on TurtleCreated [occurrence.isValid2] {
-		synchronized(addedAgents) {
-			addedAgents.put(
-				occurrence.source.UUID,
-				occurrence
-			)
+	on TurtleCreated [occurrence.isValid3] {
+		var b : boolean
+		var e : boolean
+		synchronized(awaitingSpawnedAgents) {
+			b = awaitingSpawnedAgents.remove(occurrence.source.UUID)
+			e = awaitingSpawnedAgents.empty
+		}
+		if (!b) {
+			synchronized(addedAgents) {
+				addedAgents.put(
+					occurrence.source.UUID,
+					occurrence
+				)
+			}
+		} else if (e) {
+			synchronized(this) {
+				terminatePreAgentExecution
+			}
 		}
 	}
 	
-	on TurtleDestroyed [occurrence.isValid2] {
+	on TurtleDestroyed [occurrence.isValid3] {
 		synchronized(removedAgents) {
 			removedAgents.add(occurrence.source.UUID)
 		}
@@ -207,11 +213,15 @@ agent JaakKernelAgent {
 			receivedInfluences++
 			if (receivedInfluences >= physicEnvironment.turtleCount) {
 				isWaitingInfluences.set(false)
-				if (waitingTask !== null) {
-					waitingTask.cancel
-					waitingTask = null
+				val ctrl = controller as JaakKernelController
+				var duration = ctrl.waitingDuration
+				if (duration > 0) {
+					in(duration) [
+						ctrl.wakeSimulator
+					]
+				} else {
+					ctrl.wakeSimulator
 				}
-				(controller as JaakKernelController).wakeSimulator
 			}
 		}
 	}
@@ -243,107 +253,140 @@ agent JaakKernelAgent {
 		&& isWaitingInfluences.get
 		&& timeManager.currentTime <= evt.currentTime
 	}
+	
+	def isValid3(evt : AbstractStampedEvent) : boolean {
+		physicEnvironment !== null
+	}
 
 	/* Run the tasks before the agent executions.
 	 */
 	def runPreAgentExecution {
-		if (spawners !== null) {
-			var factory = physicEnvironment.turtleBodyFactory
+		if (physicEnvironment !== null) {
+			synchronized(awaitingSpawnedAgents) {
+				awaitingSpawnedAgents.clear
 			
-			for(spawner : spawners) {
-				var id = UUID::randomUUID
-				var body = spawner.spawnBodyFor(
-	            		  id,
-	            		  ID,
-	            		  factory,
-	            		  this.timeManager,
-	            		  null)
-				if (body !== null) {
-	            	spawnInContextWithID(
-	            		getSpawnableAgentType(spawner),
-	            		id, 
-	            		defaultContext)
-		            emit(new BodyCreated(
-		            	this.timeManager.currentTime,
-		            	this.timeManager.lastStepDuration,
-		            	body),
-		            	Scopes::addresses(new Address(defaultSpace.ID, id)))
-	            }
-			}
-
-			synchronized(removedAgents) {
-				var iterator = this.removedAgents.iterator
-				while (iterator.hasNext) {
-					var adr = iterator.next
-					iterator.remove
-					physicEnvironment.removeBodyFor(adr)
-				}
-			}
-
-			synchronized(addedAgents) {
-				var iterator = this.addedAgents.entrySet.iterator
-				var creator : AgentBodyCreator = new AgentBodyCreator
-				while (iterator.hasNext) {
-					var p = iterator.next
-					iterator.remove
-					if (physicEnvironment.getBodyFor(p.key) === null) {
-						creator.set(p.value) 					
-						if (creator.isPositionForced(physicEnvironment)) {
-							defaultSpawner.spawnBodyFor(
-				            		  p.key,
-				            		  ID,
-				            		  factory,
-				            		  this.timeManager,
-				            		  creator)
-						} else {
-							var spawner = this.spawners.get(
-								RandomNumber.nextInt(this.spawners.length)
-							)
-							var body = spawner.spawnBodyFor(
-				            		  p.key,
-				            		  ID,
-				            		  factory,
-				            		  this.timeManager,
-				            		  creator)
+				if (spawners !== null) {
+					var factory = physicEnvironment.turtleBodyFactory
+					
+					for(spawner : spawners) {
+						var id = UUID::randomUUID
+						var body = spawner.spawnBodyFor(
+			            		  id,
+			            		  ID,
+			            		  factory,
+			            		  this.timeManager,
+			            		  null)
+						if (body !== null) {
+			            	spawnInContextWithID(
+			            		getSpawnableAgentType(spawner),
+			            		id, 
+			            		defaultContext)
 				            emit(new BodyCreated(
 				            	this.timeManager.currentTime,
 				            	this.timeManager.lastStepDuration,
-				            	body),
-				            	Scopes::addresses(new Address(defaultSpace.ID, p.key)))
+				            	body,
+				            	physicEnvironment.width,
+				            	physicEnvironment.height),
+				            	Scopes::addresses(new Address(defaultSpace.ID, id)))
+				            awaitingSpawnedAgents += id
+			            }
+					}
+		
+					synchronized(removedAgents) {
+						var iterator = this.removedAgents.iterator
+						while (iterator.hasNext) {
+							var adr = iterator.next
+							iterator.remove
+							physicEnvironment.removeBodyFor(adr)
+						}
+					}
+		
+					synchronized(addedAgents) {
+						var iterator = this.addedAgents.entrySet.iterator
+						var creator : AgentBodyCreator = new AgentBodyCreator
+						while (iterator.hasNext) {
+							var p = iterator.next
+							iterator.remove
+							if (physicEnvironment.getBodyFor(p.key) === null) {
+								creator.set(p.value) 					
+								if (creator.isPositionForced(physicEnvironment)) {
+									defaultSpawner.spawnBodyFor(
+						            		  p.key,
+						            		  ID,
+						            		  factory,
+						            		  this.timeManager,
+						            		  creator)
+								} else {
+									var spawner = this.spawners.get(
+										RandomNumber.nextInt(this.spawners.length)
+									)
+									var body = spawner.spawnBodyFor(
+						            		  p.key,
+						            		  ID,
+						            		  factory,
+						            		  this.timeManager,
+						            		  creator)
+						            emit(new BodyCreated(
+						            	this.timeManager.currentTime,
+						            	this.timeManager.lastStepDuration,
+						            	body,
+						            	physicEnvironment.width,
+						            	physicEnvironment.height),
+						            	Scopes::addresses(new Address(defaultSpace.ID, p.key)))
+								}
+							}
 						}
 					}
 				}
+				
+				if (awaitingSpawnedAgents.empty) {
+					terminatePreAgentExecution
+				}
 			}
 		}
+	}
+	
+	/** Replies if the simulator should stop when no more agent is simulated.
+	 *
+	 * @param t the current simulation time.
+	 * @return <code>true</code> if the simulator could stop; otherwise <code>false</code>.
+	 */
+	def canStopSimulatorWhenNoMoreAgent(t : float) : boolean {
+		return false
+	}
+	
+	def terminatePreAgentExecution {
 		physicEnvironment.runPreTurtles
 		//		
-		if (waitingTask !== null) {
-			waitingTask.cancel
-			waitingTask = null
-		}
 		// Wait for agents only if a turtle is known
 		receivedInfluences = 0
 		isWaitingInfluences.set(true)
 		if (physicEnvironment.turtleCount > 0) {
-			waitingTask = in(controller.simulationStepTimeOut) [
-				if (waitingTask !== null) {
-					waitingTask.cancel
-					waitingTask = null
-				}
-				(controller as JaakKernelController).wakeSimulator
-			]
-			// TODO: Not the right place for sending perceptions => new agents are blocking since they have received the perceptions too earlier
+			var timeout = controller.simulationStepTimeOut
+			if (timeout > 0) {
+				val time = timeManager.currentTime
+				in(timeout) [
+					if (isWaitingInfluences.get && timeManager.currentTime == time) {
+						// Timeout => wake the simulator
+						(controller as JaakKernelController).wakeSimulator
+					}
+				]
+			}
 			physicEnvironment.apply [
 				var evt = new Perception(
 					timeManager.currentTime,
 					timeManager.lastStepDuration, 
 					it)
 				evt.source = defaultAddressInPhysicSpace
-				physicSpace.notifyPerception(evt)
+				physicSpace?.notifyPerception(evt)
 			]
-		} else {
+		} else if (!canStopSimulatorWhenNoMoreAgent(timeManager.currentTime)) {
 			// Have no turtle => proceed to next step of the life cycle
 			(controller as JaakKernelController).wakeSimulator
+		} else {
+			fireEnvironmentChange
+			fireSimulationStopped
+			killMe
 		}
 	}
 
@@ -381,9 +424,10 @@ agent JaakKernelAgent {
 	/* Create an instance of the environment that must
 	 * be used by the Jaak kernel.
 	 * 
+	 * @param tm - the time manager to associated to the environment.
 	 * @return the instance of time manager.
 	 */
-	def createEnvironment : JaakEnvironment {
+	def createEnvironment(tm : TimeManager) : JaakEnvironment {
 		throw new UnsupportedOperationException("must be overridden")
 	}
 

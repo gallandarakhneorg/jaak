@@ -41,16 +41,28 @@ public interface JaakController {
 	 */
 	void stopSimulation();
 
-	/** Replies the timeout for one simulation step.
+	/** Replies the time out that must be considered for waiting for action's influences.
 	 *
-	 * @return the timeout for one simulation step in milliseconds.
+	 * @return the time out in milliseconds.
 	 */
-	long getSimulationStepTimeOut();
+	int getSimulationStepTimeOut();
 
-	/** Set the timeout for one simulation step.
+	/** Set the waiting during at each simulation step.
 	 *
-	 * @param timeout - the timeout for one simulation step in milliseconds.
+	 * @param duration - the time out in milliseconds at each simulation step.
 	 */
-	void setSimulationStepTimeOut(long timeout);
+	void setSimulationStepTimeOut(int duration);
+
+	/** Replies the time during which the simulator is frozen at each simulation step.
+	 *
+	 * @return the duration out in milliseconds.
+	 */
+	int getWaitingDuration();
+
+	/** Set the time during which the simulator is frozen at each simulation step.
+	 *
+	 * @param duration - the duration in milliseconds at each simulation step.
+	 */
+	void setWaitingDuration(int duration);
 
 }

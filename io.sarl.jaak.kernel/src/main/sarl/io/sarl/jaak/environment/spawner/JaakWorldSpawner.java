@@ -24,7 +24,6 @@ import io.sarl.jaak.environment.body.TurtleBody;
 import io.sarl.jaak.environment.time.TimeManager;
 import io.sarl.jaak.util.RandomNumber;
 
-import java.lang.ref.WeakReference;
 import java.util.UUID;
 
 import org.arakhne.afc.math.MathConstants;
@@ -41,20 +40,18 @@ import org.arakhne.afc.math.discrete.object2d.Shape2i;
  */
 public class JaakWorldSpawner extends JaakSpawner {
 
-	private final WeakReference<EnvironmentArea> environment;
-
 	/**
 	 * @param environment is the environment in which the spawning may proceed.
 	 */
 	public JaakWorldSpawner(EnvironmentArea environment) {
-		this.environment = new WeakReference<>(environment);
+		super(environment);
 	}
 
 	/** {@inheritDoc}
 	 */
 	@Override
 	public Point2i computeCurrentSpawningPosition(Point2i desiredPosition) {
-		EnvironmentArea area = this.environment.get();
+		EnvironmentArea area = getEnvironmentArea();
 		assert (area != null);
 		if (desiredPosition != null
 				&& desiredPosition.x() >= area.getX()
@@ -72,7 +69,7 @@ public class JaakWorldSpawner extends JaakSpawner {
 	 */
 	@Override
 	public Point2i getReferenceSpawningPosition() {
-		EnvironmentArea area = this.environment.get();
+		EnvironmentArea area = getEnvironmentArea();
 		assert (area != null);
 		return new Point2i(area.getX(), area.getY());
 	}
@@ -81,7 +78,7 @@ public class JaakWorldSpawner extends JaakSpawner {
 	 */
 	@Override
 	public Shape2i toShape() {
-		EnvironmentArea area = this.environment.get();
+		EnvironmentArea area = getEnvironmentArea();
 		assert (area != null);
 		return new Rectangle2i(area.getX(), area.getY(), area.getWidth(), area.getHeight());
 	}

@@ -6,12 +6,20 @@ import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import io.sarl.jaak.demos.traffic.behaviors.DrivingCapacity
 import io.sarl.jaak.demos.traffic.behaviors.DrivingSkill
+import io.sarl.jaak.demos.traffic.behaviors.GPSCapacity
+import io.sarl.jaak.demos.traffic.behaviors.GPSSkill
 import io.sarl.jaak.demos.traffic.behaviors.StandardDriver
+import io.sarl.jaak.demos.traffic.behaviors.UrgencyDriver
+import io.sarl.jaak.demos.traffic.environment.physic.MapUtil
 import io.sarl.jaak.environment.BodyCreated
+import io.sarl.jaak.environment.Perception
 import io.sarl.jaak.environment.PhysicBody
 import io.sarl.jaak.environment.PhysicBodySkill
 import io.sarl.jaak.environment.SimulationStopped
 import io.sarl.lang.core.Behavior
+import java.util.List
+import org.arakhne.afc.math.continous.object2d.Vector2f
+import org.arakhne.afc.math.discrete.object2d.Point2i
 
 /** This class defines an ant.
  * <p>
@@ -41,29 +49,78 @@ agent Driver {
 
 	uses Behaviors, Lifecycle
 
+	var tmpBehavior : PerceptionCatcher
+
 	on Initialize {
-		var body = new PhysicBodySkill
-		setSkill(typeof(DrivingCapacity), new DrivingSkill) 
-		setSkill(typeof(PhysicBody), body)
+		synchronized(this) {
+			var body = new PhysicBodySkill
+			setSkill(typeof(DrivingCapacity), new DrivingSkill) 
+			setSkill(typeof(GPSCapacity), new GPSSkill)
+			setSkill(typeof(PhysicBody), body)
+			tmpBehavior = new PerceptionCatcher(this)
+			registerBehavior(tmpBehavior)
+		}
 	}
 	
 	on Destroy {
 		<PhysicBodySkill>clearSkill(typeof(PhysicBody));
+		<GPSSkill>clearSkill(typeof(GPSCapacity));
 		<DrivingSkill>clearSkill(typeof(DrivingCapacity))
 	}
 	
+	def random(l : List<Point2i>) : Point2i {
+		l.get((Math.random * l.size) as int)
+	}
+	
 	on BodyCreated {
-		var beh : Behavior
-//		if (occurrence.body.semantic == UrgencyDriver) {
-//			beh = new UrgencyDriver(this)
-//		} else {
-			beh = new StandardDriver(this)
-//		}
-		registerBehavior(beh)
+		synchronized(this) {
+			var beh : Behavior
+			if (occurrence.body.semantic == UrgencyDriver) {
+				beh = new UrgencyDriver(this, MapUtil::getCrashPositions.random)
+			} else {
+				var v = new Vector2f(occurrence.worldWidth / 2, occurrence.worldHeight / 2)
+				v.sub(occurrence.body.position.x(), occurrence.body.position.y());
+				v.normalize
+				var angle = v.orientationAngle + ((Math.random - Math.random) * Math.PI) as float
+				v = Vector2f::toOrientationVector(angle)
+				v.scale(10 * Math.max(occurrence.worldWidth, occurrence.worldHeight))
+				var target = new Point2i(occurrence.body.position)
+				target.add(v)
+				target = MapUtil::normalizePoint(target)
+				beh = new StandardDriver(this, target)
+			}
+			var b = tmpBehavior
+			tmpBehavior = null
+			if (b !== null) {
+				unregisterBehavior(b)
+			}
+			registerBehavior(beh)
+			if (b !== null) {
+				for (evt : b.perceptions) {
+					wake(evt)
+				}
+			}
+		}
 	}
 	
 	on SimulationStopped {
-		killMe
+		synchronized(this) {
+			killMe
+		}
 	}
+	
+}
+
+behavior PerceptionCatcher {
+	
+	val perception = <Perception>newLinkedList
+
+	on Perception {
+		perception += occurrence
+	}
+	
+	def getPerceptions : Iterable<Perception> {
+		return perception
+	} 
 	
 }

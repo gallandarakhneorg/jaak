@@ -203,7 +203,9 @@ public class PathBasedInfluenceSolver extends AbstractJaakEnvironmentInfluenceSo
 				motionInfluence.setLinearMotion(
 						pathElement.position.getX() - bodyPosition.getX(),
 						pathElement.position.getY() - bodyPosition.getY());
-				if (motion.lengthSquared() <= motionInfluence.getLinearMotion().lengthSquared()) {
+				if (motion.lengthSquared() == 0) {
+					motionInfluenceStatus = MotionInfluenceStatus.NO_MOTION;
+				} else if (motion.lengthSquared() >= motionInfluence.getLinearMotion().lengthSquared()) {
 					motionInfluenceStatus = MotionInfluenceStatus.COMPLETE_MOTION;
 				} else {
 					motionInfluenceStatus = MotionInfluenceStatus.PARTIAL_MOTION;

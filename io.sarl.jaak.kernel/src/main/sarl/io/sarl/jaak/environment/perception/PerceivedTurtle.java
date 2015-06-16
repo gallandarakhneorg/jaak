@@ -55,10 +55,15 @@ public class PerceivedTurtle extends AbstractPerceivable {
 		assert (observer != null);
 		assert (observed != null);
 		this.turtle = perceivedTurtle;
-		this.position.set(observed);
+		setPosition(observed);
 		this.speed = observedSpeed;
 		this.angle = observedOrientation;
-		this.semantic = semantic;
+		setSemantic(semantic);
+	}
+	
+	@Override
+	protected PerceivedTurtle clone() {
+		return (PerceivedTurtle) super.clone();
 	}
 
 	/** Replies the identifier of this perceived object.

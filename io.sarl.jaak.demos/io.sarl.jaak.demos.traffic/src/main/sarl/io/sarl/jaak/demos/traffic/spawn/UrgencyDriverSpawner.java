@@ -1,6 +1,7 @@
 package io.sarl.jaak.demos.traffic.spawn;
 
 import io.sarl.jaak.demos.traffic.behaviors.UrgencyDriver;
+import io.sarl.jaak.environment.EnvironmentArea;
 import io.sarl.jaak.environment.body.TurtleBody;
 import io.sarl.jaak.environment.spawner.JaakPointSpawner;
 import io.sarl.jaak.environment.time.TimeManager;
@@ -23,13 +24,14 @@ public class UrgencyDriverSpawner extends JaakPointSpawner {
 	private int budget;
 
 	/**
+	 * @param environment is the environment in which the spawning may proceed.
 	 * @param urgencyDriverBudget is the maximal count of urgency drivers to spawn.
 	 * @param x is the spawning position.
 	 * @param y is the spawning position.
 	 * @param direction the direction of spawning.
 	 */
-	public UrgencyDriverSpawner(int urgencyDriverBudget, int x, int y, Vector2i direction) {
-		super(x,y);
+	public UrgencyDriverSpawner(EnvironmentArea environment, int urgencyDriverBudget, int x, int y, Vector2i direction) {
+		super(environment, x, y);
 		this.direction = direction;
 		this.budget = urgencyDriverBudget;
 	}

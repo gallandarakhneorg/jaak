@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.sarl.jaak.demos.traffic.environment;
+package io.sarl.jaak.demos.traffic.environment.physic;
 
 import io.sarl.jaak.environment.body.TurtleObject;
 import io.sarl.jaak.environment.influence.ObjectChangeInfluence;

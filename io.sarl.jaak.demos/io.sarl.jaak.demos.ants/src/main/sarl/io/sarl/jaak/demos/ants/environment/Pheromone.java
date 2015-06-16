@@ -59,12 +59,7 @@ public abstract class Pheromone extends FloatSubstance implements AutonomousEndo
 	 */
 	@Override
 	public Pheromone clone() {
-		try {
-			return (Pheromone)super.clone();
-		}
-		catch (CloneNotSupportedException e) {
-			throw new RuntimeException(e);
-		}
+		return (Pheromone)super.clone();
 	}
 	
 	/** Replies the amount of pheromone which is evaporating during one second.
@@ -92,7 +87,7 @@ public abstract class Pheromone extends FloatSubstance implements AutonomousEndo
 			float oldValue = floatValue();
 			decrement(s.floatValue());
 			Pheromone p = clone();
-			p.value = Math.abs(floatValue() - oldValue);
+			p.setValue(Math.abs(floatValue() - oldValue));
 			return p;
 		}
 		return null;
@@ -107,7 +102,7 @@ public abstract class Pheromone extends FloatSubstance implements AutonomousEndo
 			float oldValue = floatValue();
 			increment(s.floatValue());
 			Pheromone p = clone();
-			p.value = Math.abs(floatValue() - oldValue);
+			p.setValue(Math.abs(floatValue() - oldValue));
 			return p;
 		}
 		return null;
@@ -119,8 +114,8 @@ public abstract class Pheromone extends FloatSubstance implements AutonomousEndo
 	@Override
 	protected void increment(float a) {
 		super.increment(a);
-		if (this.value>AntColonyConstants.MAX_PHEROMONE_AMOUNT)
-			this.value = AntColonyConstants.MAX_PHEROMONE_AMOUNT;
+		if (this.floatValue() > AntColonyConstants.MAX_PHEROMONE_AMOUNT)
+			this.setValue(AntColonyConstants.MAX_PHEROMONE_AMOUNT);
 	}
 
 	/**

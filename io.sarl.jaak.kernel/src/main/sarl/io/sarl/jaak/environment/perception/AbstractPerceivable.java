@@ -19,11 +19,12 @@
  */
 package io.sarl.jaak.environment.perception;
 
-import io.sarl.jaak.environment.body.TurtleBody;
+import io.sarl.jaak.environment.body.TurtleObject;
 
 import java.io.Serializable;
 
 import org.arakhne.afc.math.discrete.object2d.Point2i;
+import org.arakhne.afc.math.discrete.object2d.Vector2i;
 
 /** This class defines a perceived turtle.
  *
@@ -38,16 +39,52 @@ public abstract class AbstractPerceivable implements Perceivable, Serializable {
 
 	/** Position of the perceived object.
 	 */
-	final Point2i position = new Point2i();
+	private Point2i position = new Point2i();
 
 	/** Is the semantic associated to this perceived object.
 	 */
-	Serializable semantic;
+	private Serializable semantic;
 
 	/**
 	 */
 	public AbstractPerceivable() {
 		//
+	}
+	
+	@Override
+	protected AbstractPerceivable clone() {
+		try {
+			AbstractPerceivable c = (AbstractPerceivable) super.clone();
+			c.position = this.position.clone();
+			return c;
+		} catch (CloneNotSupportedException e) {
+			throw new Error(e);
+		}
+	}
+	
+	/** Change the position of the object.
+	 *
+	 * @param position the new position.
+	 */
+	protected void setPosition(Point2i position) {
+		this.position.set(position);
+	}
+
+	/** Change the position of the object.
+	 *
+	 * @param x the new position.
+	 * @param y the new position.
+	 */
+	protected void setPosition(float x, float y) {
+		this.position.set(x, y);
+	}
+
+	/** Change the semantic of the object.
+	 *
+	 * @param semantic the new semantic.
+	 */
+	protected void setSemantic(Serializable semantic) {
+		this.semantic = semantic;
 	}
 
 	/**
@@ -61,13 +98,13 @@ public abstract class AbstractPerceivable implements Perceivable, Serializable {
 	/** {@inheritDoc}
 	 */
 	@Override
-	public Point2i getRelativePosition(TurtleBody body) {
+	public Vector2i getRelativePosition(TurtleObject body) {
 		Point2i p = this.position;
 		if (body == null) {
-			return p;
+			return null;
 		}
 		Point2i bp = body.getPosition();
-		return new Point2i(bp.x() - p.x(), bp.y() - p.y());
+		return new Vector2i(bp.x() - p.x(), bp.y() - p.y());
 	}
 
 	/**

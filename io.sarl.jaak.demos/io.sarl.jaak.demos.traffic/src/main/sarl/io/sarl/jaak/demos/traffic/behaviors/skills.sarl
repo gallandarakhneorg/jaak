@@ -1,13 +1,17 @@
 package io.sarl.jaak.demos.traffic.behaviors
 
-import io.sarl.jaak.demos.traffic.environment.GroundType
+import io.sarl.jaak.demos.traffic.environment.physic.Astar
+import io.sarl.jaak.demos.traffic.environment.physic.MapUtil
+import io.sarl.jaak.demos.traffic.environment.physic.Path
+import io.sarl.jaak.demos.traffic.environment.physic.TrafficLight
+import io.sarl.jaak.demos.traffic.environment.physic.TrafficLightState
+import io.sarl.jaak.environment.body.TurtleObject
 import io.sarl.jaak.environment.perception.Perceivable
 import java.io.Serializable
-import java.util.List
 import java.util.Map
+import java.util.Random
 import org.arakhne.afc.math.discrete.object2d.Point2i
 import org.arakhne.afc.math.discrete.object2d.Vector2i
-import java.util.Random
 
 /** The skill for driving.
  * 
@@ -20,74 +24,14 @@ skill DrivingSkill implements DrivingCapacity {
 	
 	var random = new Random
 	
-	def isRoad(s : Serializable) : boolean {
-		return s == GroundType::ROAD || s == GroundType::URGENCY_LOCATION
-			|| s == GroundType::AGENT_DESTROYER
-	}
-	
-	def detectDirections(orientation : Vector2i, previousOrientation : Vector2i,
-		ground : Map<Vector2i, Serializable>) : List<Vector2i> {
-		var availableDirections = newArrayList
-		
-		var farForward = orientation.clone
-		farForward.scale(2)
-
-		var left = orientation.clone
-		left.perpendicularize
-		
-		var right = left.clone
-		right.negate
-		right.scale(2)
-		
-		var backLeft = left.clone
-		backLeft.add(-orientation.x(), -orientation.y())
-
-		var frontRight = right.clone
-		frontRight.add(orientation.x(), orientation.y())
-		
-		var lr = ground.get(left).road
-		var rr = ground.get(right).road
-		var fw = ground.get(farForward).road
-		var w = ground.get(orientation).road
-		
-		// Turn left
-		if (lr && !ground.get(backLeft).road) {
-			left.normalize
-			if (previousOrientation === null
-				|| left.x() != -previousOrientation.x()
-				|| left.y() != -previousOrientation.y()) {
-				availableDirections += left
-			}
-		}
-		
-		// Turn right
-		if (rr && !ground.get(frontRight).road) {
-			right.normalize
-			if (previousOrientation === null
-				|| right.x() != -previousOrientation.x()
-				|| right.y() != -previousOrientation.y()) {
-				availableDirections += right
-			}
-		}
-		
-		// Go forward
-		if (availableDirections.empty
-			&& ((lr && fw)
-			|| (!lr && w))) {
-			availableDirections += orientation.clone
-		}
-		
-		return availableDirections
-	}
-	
-	def drive(
+	def driveRandomly(
 		position : Point2i,
 		orientation : Vector2i,
 	 	previousOrientation : Vector2i,
 		perception : Iterable<? extends Perceivable>,
 		ground : Map<Vector2i, Serializable>) : Vector2i {
 		
-		var directions = detectDirections(orientation, previousOrientation, ground)
+		var directions = MapUtil::detectDirections(position, orientation, previousOrientation, ground)
 		
 		var motion : Vector2i = null
 		
@@ -110,4 +54,75 @@ skill DrivingSkill implements DrivingCapacity {
 		return motion
 	}
 	
+	def followPath(
+		path : Path,
+		position : Point2i,
+		orientation : Vector2i,
+		previousOrientation : Vector2i,
+		perception : Iterable<? extends Perceivable>,
+		ground : Map<Vector2i, Serializable>) : Vector2i {
+		if (position.distanceL1(path.get(0)) > 1) {
+			return null
+		}
+
+		var expectedDirection = new Vector2i
+		expectedDirection.sub(path.get(0), position)
+		
+		return expectedDirection;
+	}
+	
+	def isVehicleStop(body : TurtleObject) : boolean {
+		var direction = Vector2i::toOrientationVector(body.headingAngle)
+		for (trafficLight : body.getPerception(typeof(TrafficLight))) {
+			if ((fromTo(body.position, trafficLight.position) == direction)
+				&& (trafficLight.state !== TrafficLightState::PASSAGE_ALLOWED)) {
+				return true
+			}
+		}
+		return false
+	}
+
+	def fromTo(from : Point2i, to : Point2i) : Vector2i {
+		var v = new Vector2i
+		v.sub(to, from)
+		return v;
+	}
+
+}
+
+skill GPSSkill implements GPSCapacity {
+
+	def findPath(from : Point2i, to : Point2i, vehicleDirection : Vector2i) : Path {
+		return Astar::find(from, to, vehicleDirection)
+	}
+	
+	def updatePath(path : Path, from : Point2i, to : Point2i, vehicleDirection : Vector2i) : Path {
+		var retPath = path
+		if (retPath === null) {
+			// Ensure a path is available
+			retPath = findPath(from, to, vehicleDirection)
+		}
+		
+		// Update the path for removing the current position
+		if (retPath !== null) {
+			retPath.removePosition(from);
+			if (!retPath.empty && from.distanceL1(retPath.get(0)) > 1) {
+				retPath = findPath(from, to, vehicleDirection)
+			}
+		}
+		return retPath
+	}
+	
+}
+
+/** This skill defines the capacity to log simulation information from an agent.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+skill SimulationAgentLoggerSkill implements SimulationAgentLoggerCapacity {
+
+
 }

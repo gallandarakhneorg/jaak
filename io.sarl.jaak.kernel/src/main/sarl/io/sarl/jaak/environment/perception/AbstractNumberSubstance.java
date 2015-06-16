@@ -40,6 +40,11 @@ public abstract class AbstractNumberSubstance extends Substance {
 		super(semantic);
 	}
 
+	@Override
+	protected AbstractNumberSubstance clone() {
+		return (AbstractNumberSubstance) super.clone();
+	}
+	
 	/**
 	 * Add the given amount a to the current substance.
 	 *

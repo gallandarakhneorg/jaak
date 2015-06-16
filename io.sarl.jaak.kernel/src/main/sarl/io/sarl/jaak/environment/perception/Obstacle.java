@@ -50,6 +50,11 @@ public class Obstacle extends EnvironmentalObject {
 		this(OBSTACLE_SEMANTIC);
 	}
 
+	@Override
+	protected Obstacle clone() {
+		return (Obstacle) super.clone();
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

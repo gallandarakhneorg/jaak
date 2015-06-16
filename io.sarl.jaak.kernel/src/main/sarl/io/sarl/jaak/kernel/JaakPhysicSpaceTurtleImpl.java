@@ -78,8 +78,9 @@ class JaakPhysicSpaceTurtleImpl extends AbstractJaakPhysicSpace {
 	}
 
 	@Override
-	public void influence(float influenceTime, Influence influence) {
+	public void influence(float influenceTime, UUID emitter, Influence influence) {
 		AgentInfluence event = new AgentInfluence(influenceTime, 0, influence);
+		event.setSource(new Address(getID(), emitter));
 		putOnNetwork(event, getCreatorID());
 	}
 

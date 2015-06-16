@@ -29,7 +29,6 @@ import io.sarl.jaak.environment.perception.EnvironmentalObject
 import io.sarl.jaak.environment.perception.Perceivable
 import io.sarl.jaak.kernel.JaakPhysicSpace
 import io.sarl.jaak.kernel.JaakPhysicSpaceConstants
-import io.sarl.jaak.kernel.JaakPhysicSpaceSpecification
 import io.sarl.jaak.kernel.SkillBinder
 import java.io.Serializable
 import org.arakhne.afc.math.continous.object2d.Vector2f
@@ -49,7 +48,7 @@ skill PhysicBodySkill implements PhysicBody {
 	def install() {
 		var dc = defaultContext
 		var spaceId = JaakPhysicSpaceConstants::getSpaceIDInContext(dc)
-		physicSpace = dc.getOrCreateSpaceWithSpec(typeof(JaakPhysicSpaceSpecification), spaceId)
+		physicSpace = dc.getSpace(spaceId)
 		if (physicSpace === null) {
 			throw new IllegalStateException("No physic space found")
 		}
@@ -79,10 +78,10 @@ skill PhysicBodySkill implements PhysicBody {
 
 	def synchronizeBody {
 		if (bufferedMotionInfluence !== null) {
-			physicSpace.influence(binder.currentTime, bufferedMotionInfluence)
+			physicSpace.influence(binder.currentTime, binder.ID, bufferedMotionInfluence)
 			bufferedMotionInfluence = null
 		}
-		physicSpace.influence(binder.currentTime, null)
+		physicSpace.influence(binder.currentTime, binder.ID, null)
 	}
 
 	def move(direction : Vector2f, changeHeading : boolean) {
@@ -142,7 +141,7 @@ skill PhysicBodySkill implements PhysicBody {
 	}
 
 	def dropOff(object : EnvironmentalObject) {
-		physicSpace.influence(binder.currentTime, new DropDownInfluence(binder.body, object))
+		physicSpace.influence(binder.currentTime, binder.ID, new DropDownInfluence(binder.body, object))
 	}
 
 	//TODO: def pickUp(type : Class<T>) : T with T extends Perceivable
@@ -150,7 +149,7 @@ skill PhysicBodySkill implements PhysicBody {
 		var body = binder.body
 		for(obj : body.perceivedObjects) {
 			if (type.isInstance(obj) && body.position == obj.position) {
-				physicSpace.influence(binder.currentTime, new PickUpInfluence(body, obj));
+				physicSpace.influence(binder.currentTime, binder.ID, new PickUpInfluence(body, obj));
 				return type.cast(obj);
 			}
 		}
@@ -158,7 +157,7 @@ skill PhysicBodySkill implements PhysicBody {
 	}
 
 	def pickUp(object : EnvironmentalObject) {
-		physicSpace.influence(binder.currentTime, new PickUpInfluence(binder.body, object))
+		physicSpace.influence(binder.currentTime, binder.ID, new PickUpInfluence(binder.body, object))
 	}
 
 	//TODO: def touchUp(type : Class<T>) : T with T extends EnvironmentalObject
@@ -172,7 +171,7 @@ skill PhysicBodySkill implements PhysicBody {
 	}
 
 	def setSemantic(semantic : Serializable) {
-		physicSpace.influence(binder.currentTime, new SemanticChangeInfluence(semantic))
+		physicSpace.influence(binder.currentTime, binder.ID, new SemanticChangeInfluence(semantic))
 	}
 
 	def getPosition : Point2i {

@@ -30,50 +30,34 @@ package io.sarl.jaak.demos.traffic;
  */
 public final class TrafficConstants {
 
-	/** Width of the traffic environment.
-	 */
-	public static final int WIDTH = 200;
-
-	/** Height of the traffic environment.
-	 */
-	public static final int HEIGHT = 150;
-
 	/** Budget of driver agents for a specific spawner.
 	 */
-	public static final int STANDARD_DRIVER_BUDGET = 1;
+	public static final int STANDARD_DRIVER_BUDGET = 25;
 
 	/** Budget of urgency driver agents for a specific spawner.
 	 */
-	public static final int URGENCY_DRIVER_BUDGET = 0;
+	public static final int URGENCY_DRIVER_BUDGET = 1;
+
+	/** Time at which the crash occurs.
+	 */
+	public static final int CRASH_TIME = 50;
 
 	/** Duration of the green phase.
 	 */
-	public static final float GREEN_PHASE_DURATION = 60;
+	public static final float GREEN_PHASE_DURATION = 40;
 
 	/** Duration of the orange phase.
 	 */
-	public static final float ORANGE_PHASE_DURATION = 5;
+	public static final float ORANGE_PHASE_DURATION = 4;
 
-	/** Color for the roads.
+	/** Radius of the siren sound.
 	 */
-	public static final int COLOR_ROAD = 0x000000;
+	public static final int SIREN_RADIUS = 15;
 	
-	/** Color where urgency vehicles are spawned.
+	/** Decrease the sound intensity of the given amount at each simulation step.
 	 */
-	public static final int COLOR_URGENCY_SPAWNER = 0xffffff;
-
-	/** Color for the roads where an urgency event is located.
-	 */
-	public static final int COLOR_URGENCY_LOCATION = 0xffff00;
-
-	/** Color where agent destroyers are located.
-	 */
-	public static final int COLOR_AGENT_DESTROYER = 0x00007f;
-
-	/** Color where agent spawners are located.
-	 */
-	public static final int COLOR_AGENT_SPAWNER = 0x0000ff;
-
+	public static final int SOUND_DECREASE = 3;
+	
 	private TrafficConstants() {
 		//
 	}

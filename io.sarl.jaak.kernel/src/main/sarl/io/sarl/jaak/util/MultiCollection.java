@@ -39,7 +39,9 @@ import java.util.NoSuchElementException;
  * @version $FullVersion$
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
+ * @deprecated please use {@link org.arakhne.afc.util.MultiCollection}
  */
+@Deprecated
 public class MultiCollection<E>
 implements Collection<E> {
 

@@ -19,6 +19,8 @@
  */
 package io.sarl.jaak.environment.spawner;
 
+import io.sarl.jaak.environment.EnvironmentArea;
+
 import org.arakhne.afc.math.discrete.object2d.Point2i;
 import org.arakhne.afc.math.discrete.object2d.Rectangle2i;
 import org.arakhne.afc.math.discrete.object2d.Shape2i;
@@ -35,18 +37,20 @@ public abstract class JaakPointSpawner extends JaakSpawner {
 	private final Point2i position;
 
 	/**
+	 * @param environment is the environment in which the spawning may proceed.
 	 * @param x is the position of the spawner.
 	 * @param y is the position of the spawner.
 	 */
-	public JaakPointSpawner(int x, int y) {
+	public JaakPointSpawner(EnvironmentArea environment, int x, int y) {
+		super(environment);
 		this.position = new Point2i(x, y);
 	}
 
 	/** {@inheritDoc}
 	 */
 	@Override
-	public Point2i computeCurrentSpawningPosition(Point2i desiredPosition) {
-		return this.position;
+	protected Point2i computeCurrentSpawningPosition(Point2i desiredPosition) {
+		return this.position.clone();
 	}
 
 	/** {@inheritDoc}

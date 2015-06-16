@@ -26,12 +26,7 @@ public class Food extends FloatSubstance implements Cloneable {
 	 */
 	@Override
 	public Food clone() {
-		try {
-			return (Food)super.clone();
-		}
-		catch (CloneNotSupportedException e) {
-			throw new RuntimeException(e);
-		}
+		return (Food)super.clone();
 	}
 
 	/**
@@ -43,7 +38,7 @@ public class Food extends FloatSubstance implements Cloneable {
 			float oldValue = floatValue();
 			decrement(s.floatValue());
 			Food c = clone();
-			c.value = Math.abs(floatValue() - oldValue);
+			c.setValue(Math.abs(floatValue() - oldValue));
 			return c;
 		}
 		return null;

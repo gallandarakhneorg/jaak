@@ -53,6 +53,11 @@ public abstract class Substance extends EnvironmentalObject {
 		super(semantic);
 	}
 
+	@Override
+	protected Substance clone() {
+		return (Substance) super.clone();
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */

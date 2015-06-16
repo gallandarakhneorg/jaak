@@ -383,10 +383,14 @@ class JaakGrid implements GridModel, ActionApplier {
 			if (object instanceof Substance) {
 				EnvironmentalObject currentObject = cell.getEnvironmentObjects().get(id);
 				if (currentObject instanceof Substance) {
+					Substance currentSubstance = (Substance) currentObject;
 					Substance newObject = (Substance) object;
-					change = this.objectManipulator.combine((Substance) currentObject, newObject, true);
+					change = this.objectManipulator.combine(currentSubstance, newObject, true);
 					if (change != null) {
 						this.objectManipulator.setPosition(object, x, y);
+					}
+					if (currentSubstance.isDisappeared()) {
+						removeObject(x, y, currentObject);
 					}
 					return change;
 				}
@@ -394,7 +398,7 @@ class JaakGrid implements GridModel, ActionApplier {
 				cell.createBurrow();
 			}
 
-
+			
 			if (object instanceof Obstacle) {
 				cell.createObstacle((Obstacle) object);
 			} else {
@@ -425,12 +429,12 @@ class JaakGrid implements GridModel, ActionApplier {
 		EnvironmentalObject change = null;
 		GridCell cell = getCell(x, y, false);
 		if (cell != null) {
-			String id = object.getEnvironmentalObjectIdentifier();
 			Obstacle obs = cell.getObstacle();
 			if (obs != null && obs != object) {
 				return null;
 			}
 
+			String id = object.getEnvironmentalObjectIdentifier();
 			if (object instanceof Substance) {
 				Substance oldSubstance = (Substance) object;
 

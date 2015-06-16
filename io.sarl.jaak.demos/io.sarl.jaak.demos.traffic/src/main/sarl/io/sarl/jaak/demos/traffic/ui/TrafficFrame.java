@@ -59,7 +59,7 @@ public class TrafficFrame extends JFrame implements JaakListener {
 			}
 		});
 		
-		setPreferredSize(new Dimension(50 + TrafficPanel.CELL_SIZE * width, 50 + TrafficPanel.CELL_SIZE * height));
+		setPreferredSize(new Dimension(50 + TrafficPanel.CELL_SIZE * width, 100 + TrafficPanel.CELL_SIZE * height));
 
 		pack();
 	}
@@ -107,6 +107,7 @@ public class TrafficFrame extends JFrame implements JaakListener {
 	@Override
 	public void simulationStopped(JaakEvent event) {
 		setTitle(Locale.getString(TrafficFrame.class, "TITLE_0")); //$NON-NLS-1$
+		setVisible(false);
 	}
 
 	@Override

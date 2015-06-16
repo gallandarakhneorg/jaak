@@ -34,7 +34,9 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
  * @version $FullVersion$
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
+ * @deprecated Replace by the Bresenham class in the Arakhne Foundation Classes.
  */
+@Deprecated
 public final class Bresenham {
 
 	private static final int SIDES = 4;

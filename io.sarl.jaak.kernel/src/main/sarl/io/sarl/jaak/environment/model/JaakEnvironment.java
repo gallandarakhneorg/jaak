@@ -34,13 +34,12 @@ import io.sarl.jaak.environment.solver.ActionApplier;
 import io.sarl.jaak.environment.solver.InfluenceSolver;
 import io.sarl.jaak.environment.solver.PathBasedInfluenceSolver;
 import io.sarl.jaak.environment.time.TimeManager;
-import io.sarl.jaak.util.MultiCollection;
 import io.sarl.jaak.util.RandomNumber;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,7 +51,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.arakhne.afc.math.continous.object2d.Vector2f;
 import org.arakhne.afc.math.discrete.object2d.Point2i;
+import org.arakhne.afc.math.discrete.object2d.Tuple2iComparator;
 import org.arakhne.afc.math.discrete.object2d.Vector2i;
+import org.arakhne.afc.util.ListUtil;
+import org.arakhne.afc.util.MultiCollection;
 
 /** This class defines the Jaak environment model.
  * <p>
@@ -351,7 +353,15 @@ public class JaakEnvironment implements EnvironmentArea {
 	 * @param solver is the solver of influence conflicts to use.
 	 */
 	public void setInfluenceSolver(InfluenceSolver<RealTurtleBody> solver) {
+		if (this.solver != null) {
+			this.solver.setGridModel(null);
+			this.solver.setTimeManager(null);
+		}
 		this.solver = solver;
+		if (this.solver != null) {
+			this.solver.setGridModel(this.grid);
+			this.solver.setTimeManager(this.timeManager);
+		}
 	}
 
 	/** Replies a free cell near a random position.
@@ -502,18 +512,46 @@ public class JaakEnvironment implements EnvironmentArea {
 		TurtleBody turtleBody;
 		Iterator<Point2i> iterator;
 		List<PerceivedTurtle> bodies;
-		MultiCollection<EnvironmentalObject> objects;
-		Map<Vector2i, Serializable> groundPerceptions = new HashMap<>();
+		List<EnvironmentalObject> objects;
+		Map<Vector2i, Serializable> groundPerceptions;
 		int x;
 		int y;
 		for (RealTurtleBody body : this.bodies.values()) {
+			final Point2i bodyPosition = body.getPosition();
 			bodies = new ArrayList<>();
-			objects = new MultiCollection<>();
+			objects = new ArrayList<>();
+			groundPerceptions = new TreeMap<>(new Tuple2iComparator());
 			if (body.isPerceptionEnable()) {
 				frustum = body.getPerceptionFrustum();
 				if (frustum != null) {
 					iterator = frustum.getPerceivedCells(body.getPosition(), body.getHeadingAngle(), this);
 					if (iterator != null) {
+						// Create a comparator based on the distance to the perceiver:
+						// closer is an other body, sooner it is in the list.
+						Comparator<PerceivedTurtle> bodyComparator = new Comparator<PerceivedTurtle>() {
+							@Override
+							public int compare(PerceivedTurtle o1, PerceivedTurtle o2) {
+								float d1 = bodyPosition.distanceSquared(o1.getPosition());
+								float d2 = bodyPosition.distanceSquared(o2.getPosition());
+								int cmp = Float.compare(d1, d2);
+								if (cmp != 0) {
+									return cmp;
+								}
+								return o1.getIdentity().compareTo(o2.getIdentity());
+							}
+						};
+						Comparator<EnvironmentalObject> objectComparator = new Comparator<EnvironmentalObject>() {
+							@Override
+							public int compare(EnvironmentalObject o1, EnvironmentalObject o2) {
+								float d1 = bodyPosition.distanceSquared(o1.getPosition());
+								float d2 = bodyPosition.distanceSquared(o2.getPosition());
+								int cmp = Float.compare(d1, d2);
+								if (cmp != 0) {
+									return cmp;
+								}
+								return o1.getEnvironmentalObjectIdentifier().compareTo(o2.getEnvironmentalObjectIdentifier());
+							}
+						};
 						while (iterator.hasNext()) {
 							position = iterator.next();
 							if (this.grid.validatePosition(isWrapped(), true, position) != ValidationResult.DISCARDED) {
@@ -521,15 +559,26 @@ public class JaakEnvironment implements EnvironmentArea {
 								y = position.y();
 								turtleBody = this.grid.getTurtle(x, y);
 								if (turtleBody != null && turtleBody != body) {
-									bodies.add(new PerceivedTurtle(
+									PerceivedTurtle perceivedTurtle = new PerceivedTurtle(
 											turtleBody.getTurtleId(),
 											new Point2i(position),
 											turtleBody.getPosition(),
 											turtleBody.getSpeed(),
 											turtleBody.getHeadingAngle(),
-											turtleBody.getSemantic()));
+											turtleBody.getSemantic());
+									ListUtil.add(
+											bodies,
+											bodyComparator,
+											perceivedTurtle,
+											false, false);
 								}
-								objects.addCollection(this.grid.getObjects(x, y));
+								for (EnvironmentalObject obj : this.grid.getObjects(x, y)) {
+									ListUtil.add(
+											objects,
+											objectComparator,
+											obj,
+											false, false);
+								}
 								Serializable semantic = this.grid.getGroundType(x, y);
 								if (semantic != null) {
 									Vector2i relativePosition = new Vector2i();

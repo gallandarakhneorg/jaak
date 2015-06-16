@@ -107,6 +107,8 @@ public interface TurtleObject extends JaakObject {
 	<T extends Perceivable> Collection<T> getPerception(Class<T> type);
 
 	/** Replies the first perception of the body of a given type.
+	 * The replied value depends on the order of the perceived elements,
+	 * that is defined in the environment model.
 	 *
 	 * @param <T> is the type of the objects to perceived.
 	 * @param type is the type of the objects to perceived.

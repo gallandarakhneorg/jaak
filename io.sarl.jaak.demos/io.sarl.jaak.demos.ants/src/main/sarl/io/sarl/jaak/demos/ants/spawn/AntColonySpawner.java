@@ -2,6 +2,7 @@ package io.sarl.jaak.demos.ants.spawn;
 
 import io.sarl.jaak.demos.ants.behaviors.Forager;
 import io.sarl.jaak.demos.ants.behaviors.Patroller;
+import io.sarl.jaak.environment.EnvironmentArea;
 import io.sarl.jaak.environment.body.TurtleBody;
 import io.sarl.jaak.environment.spawner.JaakPointSpawner;
 import io.sarl.jaak.environment.time.TimeManager;
@@ -24,13 +25,14 @@ public class AntColonySpawner extends JaakPointSpawner {
 	private int foragerBudget;
 
 	/**
+	 * @param environment is the environment in which the spawning may proceed.
 	 * @param patrollerBudget is the maximal count of patroller ants to spawn.
 	 * @param foragerBudget is the maximal count of forager ants to spawn.
 	 * @param x is the spawning position.
 	 * @param y is the spawning position.
 	 */
-	public AntColonySpawner(int patrollerBudget, int foragerBudget, int x, int y) {
-		super(x,y);
+	public AntColonySpawner(EnvironmentArea environment, int patrollerBudget, int foragerBudget, int x, int y) {
+		super(environment, x,y);
 		this.patrollerBudget = patrollerBudget;
 		this.foragerBudget = foragerBudget;
 	}

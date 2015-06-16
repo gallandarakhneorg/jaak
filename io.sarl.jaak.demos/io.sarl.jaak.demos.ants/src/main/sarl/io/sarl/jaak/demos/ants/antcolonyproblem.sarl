@@ -16,6 +16,7 @@ import org.arakhne.afc.math.discrete.object2d.Point2i
 
 import static io.sarl.jaak.demos.ants.AntColonyConstants.*
 import io.sarl.jaak.environment.spawner.JaakWorldSpawner
+import io.sarl.jaak.environment.time.TimeManager
 
 /** This class defines the simulation environment for the ant colony problem.
  * 
@@ -72,6 +73,7 @@ agent AntColonyProblem extends JaakKernelAgent {
 		var antColonyObject = new AntColony(colonyId)
 		actionApplier.putObject(position.x(), position.y(), antColonyObject)
 		return new AntColonySpawner(
+			physicEnvironment,
 			ANT_COLONY_PATROLLER_POPULATION,
 			ANT_COLONY_FORAGER_POPULATION,
 			position.x(), position.y())
@@ -103,8 +105,9 @@ agent AntColonyProblem extends JaakKernelAgent {
 	 * 
 	 * @return the instance of time manager.
 	 */
-	def createEnvironment : JaakEnvironment {
+	def createEnvironment(tm : TimeManager) : JaakEnvironment {
 		var environment = new JaakEnvironment(WIDTH, HEIGHT)
+		environment.timeManager = tm
 		environment.wrapped = isWrappedEnvironment
 		var actionApplier = environment.actionApplier;
 	

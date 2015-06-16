@@ -19,9 +19,10 @@
  */
 package io.sarl.jaak.environment.perception;
 
-import io.sarl.jaak.environment.body.TurtleBody;
+import io.sarl.jaak.environment.body.TurtleObject;
 
 import org.arakhne.afc.math.discrete.object2d.Point2i;
+import org.arakhne.afc.math.discrete.object2d.Vector2i;
 
 /** This interface defines a situated object which is perceivable
  * inside the Jaak environment.
@@ -44,7 +45,7 @@ public interface Perceivable {
 	 * @param body - the body for which the relative position should be computed.
 	 * @return the relative position of this perceived object to the given body.
 	 */
-	Point2i getRelativePosition(TurtleBody body);
+	Vector2i getRelativePosition(TurtleObject body);
 
 	/** Replies if this perceived object is a turtle.
 	 *

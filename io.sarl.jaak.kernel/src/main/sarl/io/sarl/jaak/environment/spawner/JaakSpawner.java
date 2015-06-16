@@ -19,6 +19,7 @@
  */
 package io.sarl.jaak.environment.spawner;
 
+import io.sarl.jaak.environment.EnvironmentArea;
 import io.sarl.jaak.environment.body.BodySpawner;
 import io.sarl.jaak.environment.body.TurtleBody;
 import io.sarl.jaak.environment.body.TurtleBodyFactory;
@@ -26,6 +27,7 @@ import io.sarl.jaak.environment.frustum.TurtleFrustum;
 import io.sarl.jaak.environment.time.TimeManager;
 
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.util.UUID;
 
 import org.arakhne.afc.math.discrete.object2d.Point2i;
@@ -45,12 +47,23 @@ public abstract class JaakSpawner implements BodySpawner {
 	 */
 	public static final int FREE_POSITION_COMPUTATION_RETRIES = 10;
 
+	private final WeakReference<EnvironmentArea> environment;
+	
 	/**
+	 * @param environment is the environment in which the spawning may proceed.
 	 */
-	public JaakSpawner() {
-		//
+	public JaakSpawner(EnvironmentArea environment) {
+		this.environment = new WeakReference<>(environment);
 	}
 
+	/** Replies the environment on which the spawned create the entities.
+	 *
+	 * @return the environment.
+	 */
+	protected EnvironmentArea getEnvironmentArea() {
+		return this.environment.get();
+	}
+	
 	/** Spawn only a turtle body in environment and bind it with the
 	 * turtle with the given identifier.
 	 * <p>

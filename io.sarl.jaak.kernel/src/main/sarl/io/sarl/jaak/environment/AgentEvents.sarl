@@ -46,8 +46,12 @@ event Perception extends AbstractStampedEvent {
  */
 event BodyCreated extends AbstractStampedEvent {
 	val body : TurtleObject
-	new(ct : float, lsd : float, body : TurtleObject) {
+	val worldWidth : int
+	val worldHeight : int
+	new(ct : float, lsd : float, body : TurtleObject, worldWidth : int, worldHeight : int) {
 		super(ct, lsd)
 		this.body = body
+		this.worldWidth = worldWidth
+		this.worldHeight = worldHeight
 	}
 }

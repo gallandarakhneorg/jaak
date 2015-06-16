@@ -82,7 +82,7 @@ class JaakPhysicSpaceKernelImpl extends JaakPhysicSpaceTurtleImpl {
 		TurtleCreated event = new TurtleCreated(spawningTime, 0);
 		event.setSource(new Address(getID(), bodyId));
 		if (this.environmentAgent != null) {
-			fireAsync(this.environmentAgent, event);
+			fireEvent(this.environmentAgent, event);
 		} else {
 			putOnNetwork(event, getCreatorID());
 		}
@@ -96,23 +96,24 @@ class JaakPhysicSpaceKernelImpl extends JaakPhysicSpaceTurtleImpl {
 		TurtleDestroyed event = new TurtleDestroyed(killingTime, 0);
 		event.setSource(new Address(getID(), bodyId));
 		if (this.environmentAgent != null) {
-			fireAsync(this.environmentAgent, event);
+			fireEvent(this.environmentAgent, event);
 		} else {
 			putOnNetwork(event, getCreatorID());
 		}
 	}
 	
 	@Override
-	public void influence(float influenceTime, Influence influence) {
+	public void influence(float influenceTime, UUID bodyId, Influence influence) {
+		assert (bodyId != null);
 		Event event;
 		if (influence != null) {
 			event = new AgentInfluence(influenceTime, 0, influence);
-			event.setSource(new Address(getID(), influence.getEmitter().getTurtleId()));
 		} else {
 			event = new SynchronizeBody(influenceTime, 0);
 		}
+		event.setSource(new Address(getID(), bodyId));
 		if (this.environmentAgent != null) {
-			fireAsync(this.environmentAgent, event);
+			fireEvent(this.environmentAgent, event);
 		} else {
 			putOnNetwork(event, getCreatorID());
 		}
@@ -123,7 +124,7 @@ class JaakPhysicSpaceKernelImpl extends JaakPhysicSpaceTurtleImpl {
 		if (scope instanceof UUIDScope) {
 			UUID id = ((UUIDScope) scope).getID();
 			if (this.environmentAgent != null && this.environmentAgent.getID().equals(id)) {
-				fireAsync(this.environmentAgent, event);
+				fireEvent(this.environmentAgent, event);
 				return;
 			}
 		}

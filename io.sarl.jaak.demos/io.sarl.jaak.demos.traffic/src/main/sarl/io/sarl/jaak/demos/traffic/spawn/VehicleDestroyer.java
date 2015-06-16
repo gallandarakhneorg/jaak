@@ -21,12 +21,7 @@ public class VehicleDestroyer extends EnvironmentalObject implements Cloneable {
 
 	@Override
 	public VehicleDestroyer clone() {
-		try {
-			return (VehicleDestroyer)super.clone();
-		}
-		catch (CloneNotSupportedException e) {
-			throw new RuntimeException(e);
-		}
+		return (VehicleDestroyer) super.clone();
 	}
 
 }

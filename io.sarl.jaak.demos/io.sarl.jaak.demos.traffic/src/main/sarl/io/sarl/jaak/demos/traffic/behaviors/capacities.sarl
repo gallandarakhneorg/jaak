@@ -1,5 +1,7 @@
 package io.sarl.jaak.demos.traffic.behaviors
 
+import io.sarl.jaak.demos.traffic.environment.physic.Path
+import io.sarl.jaak.environment.body.TurtleObject
 import io.sarl.jaak.environment.perception.Perceivable
 import java.io.Serializable
 import java.util.Map
@@ -15,7 +17,7 @@ import org.arakhne.afc.math.discrete.object2d.Vector2i
  */
 capacity DrivingCapacity {
 	
-	/** Select and replies a pheromone to follow.
+	/** Drive by selecting a random direction.
 	 * 
 	 * @param position is the current position of vehicle.
 	 * @param orientation is the orientation of the vehicle (at t-1).
@@ -24,11 +26,63 @@ capacity DrivingCapacity {
 	 * @param ground are the types of the ground in the field of view.
 	 * @return the driving direction.
 	 */
-	def drive(
+	def driveRandomly(
 		position : Point2i,
 		orientation : Vector2i,
 		previousOrientation : Vector2i,
 		perception : Iterable<? extends Perceivable>,
 		ground : Map<Vector2i, Serializable>) : Vector2i
+	
+	/** Drive by following a path.
+	 * 
+	 * @param path is the path to follow.
+	 * @param position is the current position of vehicle.
+	 * @param orientation is the orientation of the vehicle (at t-1).
+	 * @param previousOrientation is the orientation of the vehicle in the past (at t-2).
+	 * @param perpcetion are the objects in the field of view of the vehicle.
+	 * @param ground are the types of the ground in the field of view.
+	 * @return the driving direction.
+	 */
+	def followPath(
+		path : Path,
+		position : Point2i,
+		orientation : Vector2i,
+		previousOrientation : Vector2i,
+		perception : Iterable<? extends Perceivable>,
+		ground : Map<Vector2i, Serializable>) : Vector2i
+
+	/** Test if the vehicle should stop according to the given parameters. 
+	 * 
+	 * @param body the vehicle
+	 * @return <code>true</code> if the vehicle should stop, otherwise <code>false</code>.
+	 */
+	def isVehicleStop(body : TurtleObject) : boolean
+
+}
+
+/** This interface defines the GPS capacity.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+capacity GPSCapacity {
+	
+	def findPath(from : Point2i, to : Point2i, vehicleDirection : Vector2i) : Path
+	
+	def updatePath(path : Path, from : Point2i, to : Point2i, vehicleDirection : Vector2i) : Path
+
+}
+
+/** This interface defines the capacity to log simulation information from an agent.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+capacity SimulationAgentLoggerCapacity {
+
 	
 }

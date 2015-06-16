@@ -36,6 +36,7 @@
 		<sarl.version>1.0.0-SNAPSHOT</sarl.version>
 		<janus.version>2.1.0.0-SNAPSHOT</janus.version>
 		<guice.version>4.0-beta4</guice.version>
+		<afc.version>12.0</afc.version>
 	</properties>
 
 	<!-- ======================================= -->
@@ -74,6 +75,12 @@
 			</dependency>
 
 			<dependency>
+				<groupId>org.arakhne.afc.core</groupId>
+				<artifactId>util</artifactId>
+				<version>${afc.version}</version>
+			</dependency>
+
+			<dependency>
 				<groupId>io.sarl.maven</groupId>
 				<artifactId>io.sarl.maven.sdk</artifactId>
 				<version>${sarl.version}</version>
@@ -107,7 +114,7 @@
 			<dependency>
 				<groupId>org.arakhne.afc.core</groupId>
 				<artifactId>math</artifactId>
-				<version>12.0</version>
+				<version>${afc.version}</version>
 			</dependency>
 
 			<!-- Testing -->
@@ -267,8 +274,8 @@
 	<!-- ==== Repositories for the devel version === -->
 	<!-- ======================================= -->
 
-	<!-- THE REPOSITORIES ARE ONLY NEEDED TO ACCESS TO THE
-	     SNAPSHOT VERSIONS OF SARL AND JANUS -->
+	<!-- THE REPOSITORIES ARE ONLY NEEDED TO ACCESS TO THE SNAPSHOT VERSIONS 
+		OF SARL AND JANUS -->
 	<repositories>
 		<repository>
 			<id>io.sarl.maven</id>

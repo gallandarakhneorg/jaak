@@ -1,4 +1,4 @@
-package io.sarl.jaak.demos.traffic.environment;
+package io.sarl.jaak.demos.traffic.environment.physic;
 
 import io.sarl.jaak.demos.traffic.TrafficConstants;
 import io.sarl.jaak.environment.endogenous.AutonomousEndogenousProcess;

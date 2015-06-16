@@ -1,4 +1,4 @@
-package io.sarl.jaak.demos.traffic.environment;
+package io.sarl.jaak.demos.traffic.environment.physic;
 
 
 /** Traffic light state.

@@ -19,6 +19,7 @@
  */
 package io.sarl.jaak.environment.spawner;
 
+import io.sarl.jaak.environment.EnvironmentArea;
 import io.sarl.jaak.util.RandomNumber;
 
 import org.arakhne.afc.math.discrete.object2d.Point2i;
@@ -40,12 +41,14 @@ public abstract class JaakAreaSpawner extends JaakSpawner {
 	private final int h;
 
 	/**
+	 * @param environment is the environment in which the spawning may proceed.
 	 * @param x is the position of the spawner.
 	 * @param y is the position of the spawner.
 	 * @param width is the width of the spawner.
 	 * @param height is the width of the spawner.
 	 */
-	public JaakAreaSpawner(int x, int y, int width, int height) {
+	public JaakAreaSpawner(EnvironmentArea environment, int x, int y, int width, int height) {
+		super(environment);
 		this.x = x;
 		this.y = y;
 		this.w = width;
@@ -55,7 +58,7 @@ public abstract class JaakAreaSpawner extends JaakSpawner {
 	/** {@inheritDoc}
 	 */
 	@Override
-	public Point2i computeCurrentSpawningPosition(Point2i desiredPosition) {
+	protected Point2i computeCurrentSpawningPosition(Point2i desiredPosition) {
 		if (desiredPosition != null
 				&& desiredPosition.x() >= this.x
 				&& desiredPosition.y() >= this.y

@@ -54,6 +54,11 @@ public class Burrow extends EnvironmentalObject {
 	public Burrow() {
 		this(BURROW_SEMANTIC);
 	}
+	
+	@Override
+	protected Burrow clone() {
+		return (Burrow) super.clone();
+	}
 
 	/** {@inheritDoc}
 	 */

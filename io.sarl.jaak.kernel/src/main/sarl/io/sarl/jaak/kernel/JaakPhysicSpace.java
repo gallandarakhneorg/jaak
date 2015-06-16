@@ -69,8 +69,9 @@ public interface JaakPhysicSpace extends Space {
 	/** Emit an influence for the given agent.
 	 *
 	 * @param influenceTime - the time at which the influence is applied.
+	 * @param bodyId - the identifier of the body that is sending the influence.
 	 * @param influence - the influence to emit.
 	 */
-	void influence(float influenceTime, Influence influence);
+	void influence(float influenceTime, UUID bodyId, Influence influence);
 
 }

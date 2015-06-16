@@ -19,11 +19,12 @@
  */
 package io.sarl.jaak.environment.perception;
 
-import io.sarl.jaak.environment.body.TurtleBody;
+import io.sarl.jaak.environment.body.TurtleObject;
 
 import java.io.Serializable;
 
 import org.arakhne.afc.math.discrete.object2d.Point2i;
+import org.arakhne.afc.math.discrete.object2d.Vector2i;
 
 /** This class defines a object which was picked up from the cell
  * according to a previous picking-up influence.
@@ -37,13 +38,24 @@ public class PickedObject implements Perceivable, Serializable {
 
 	private static final long serialVersionUID = -5408636984133012977L;
 
-	private final EnvironmentalObject pickedObject;
+	private EnvironmentalObject pickedObject;
 
 	/**
 	 * @param pickedUpObject is the picked-up object.
 	 */
 	public PickedObject(EnvironmentalObject pickedUpObject) {
 		this.pickedObject = pickedUpObject;
+	}
+	
+	@Override
+	protected PickedObject clone() {
+		try {
+			PickedObject o = (PickedObject) super.clone();
+			o.pickedObject = this.pickedObject.clone();
+			return o;
+		} catch (CloneNotSupportedException e) {
+			throw new Error(e);
+		}
 	}
 
 	/** Replies the picked-up object.
@@ -82,13 +94,13 @@ public class PickedObject implements Perceivable, Serializable {
 	/** {@inheritDoc}
 	 */
 	@Override
-	public Point2i getRelativePosition(TurtleBody body) {
+	public Vector2i getRelativePosition(TurtleObject body) {
 		Point2i p = this.pickedObject.getPosition();
 		if (body == null) {
-			return p;
+			return null;
 		}
 		Point2i bp = body.getPosition();
-		return new Point2i(bp.x() - p.x(), bp.y() - p.y());
+		return new Vector2i(bp.x() - p.x(), bp.y() - p.y());
 	}
 
 	/**

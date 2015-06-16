@@ -1,32 +1,17 @@
 package io.sarl.jaak.demos.traffic.behaviors
 
 import io.sarl.core.Lifecycle
-import io.sarl.jaak.demos.traffic.environment.GroundType
-import io.sarl.jaak.demos.traffic.environment.TrafficLight
-import io.sarl.jaak.demos.traffic.environment.TrafficLightState
+import io.sarl.jaak.demos.traffic.TrafficConstants
+import io.sarl.jaak.demos.traffic.environment.physic.GroundType
+import io.sarl.jaak.demos.traffic.environment.physic.Path
+import io.sarl.jaak.demos.traffic.environment.physic.Siren
 import io.sarl.jaak.environment.Perception
 import io.sarl.jaak.environment.PhysicBody
+import io.sarl.lang.core.Agent
 import org.arakhne.afc.math.discrete.object2d.Point2i
 import org.arakhne.afc.math.discrete.object2d.Vector2i
-
-/** This abstract class defines a behavior for all drivers.
- * 
- * @author $Author: sgalland$
- * @version $FullVersion$
- * @mavengroupid $GroupId$
- * @mavenartifactid $ArtifactId$
- */
-behavior AbstractDriverBehavior {
-
-	uses PhysicBody
-	
-	def fromTo(from : Point2i, to : Point2i) : Vector2i {
-		var v = new Vector2i
-		v.sub(to, from)
-		return v;
-	}
-			
-}
+import org.arakhne.afc.math.continous.object2d.Vector2f
+import java.util.UUID
 
 /** This class defines a standard driver.
  * 
@@ -35,31 +20,70 @@ behavior AbstractDriverBehavior {
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
-behavior StandardDriver extends AbstractDriverBehavior {
+behavior StandardDriver {
 
-	uses DrivingCapacity, Lifecycle
+	uses DrivingCapacity, Lifecycle, PhysicBody, GPSCapacity
 	
 	var previousOrientation : Vector2i
 
+	val target : Point2i
+	
+	var path : Path
+
+	new (owner : Agent, target : Point2i) {
+		super(owner);
+		this.target = target
+	}
+
 	on Perception {
-		var groundType = occurrence.body.currentGroundType
-		if (groundType == GroundType::AGENT_DESTROYER) {
-			killMe
-		}
-		var direction = Vector2i::toOrientationVector(occurrence.body.headingAngle)
-		var trafficLight = occurrence.body.getPerception(typeof(TrafficLight)).head
-		if (trafficLight === null
-			|| fromTo(occurrence.body.position, trafficLight.position) != direction
-			|| trafficLight.state === TrafficLightState::PASSAGE_ALLOWED) {
-			var motion = drive(
-				occurrence.body.position,
-				direction,
-				previousOrientation,
-				occurrence.body.perception,
-				occurrence.body.groundPerception)
-			if (motion !== null) {
-				move(motion, true)
-				this.previousOrientation = direction
+		synchronized(owner) {
+			var groundType = occurrence.body.currentGroundType
+			if (groundType === GroundType::AGENT_DESTROYER) {
+				killMe
+			}
+
+			var direction = Vector2i::toOrientationVector(occurrence.body.headingAngle)
+	
+			path = updatePath(path, occurrence.body.position, target, direction)
+
+			var siren = occurrence.body.getFirstPerception(typeof(Siren))
+			
+			var stopForUrgencyVehicle = false
+			
+			if (siren != null) {
+				var sirenPosition = siren.soundSourcePosition
+				var sirenDirection = new Vector2i
+				sirenDirection.sub(sirenPosition, occurrence.body.position)
+				var angle = occurrence.body.headingVector.angle(sirenDirection)
+				if (angle >= 3*Math::PI/4) {
+					System.out.println("STOP " + sirenPosition)
+					stopForUrgencyVehicle = true
+				}
+			}
+			
+			if (!stopForUrgencyVehicle && !occurrence.body.vehicleStop) {
+				var motion : Vector2i = null
+				if (path !== null && !path.empty) {
+					motion = followPath(
+						path,
+						occurrence.body.position,
+						direction,
+						previousOrientation,
+						occurrence.body.perception,
+						occurrence.body.groundPerception)
+				}
+				if (motion === null) {
+					motion = driveRandomly(
+						occurrence.body.position,
+						direction,
+						previousOrientation,
+						occurrence.body.perception,
+						occurrence.body.groundPerception)
+				}
+				if (motion !== null && motion.lengthSquared > 0) {
+					move(motion, true)
+					this.previousOrientation = direction
+				}
 			}
 		}
 		synchronizeBody
@@ -74,9 +98,52 @@ behavior StandardDriver extends AbstractDriverBehavior {
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
-behavior UrgencyDriver extends AbstractDriverBehavior {
+behavior UrgencyDriver {
+
+	uses DrivingCapacity, Lifecycle, PhysicBody, GPSCapacity
+
+	var previousOrientation : Vector2i
+
+	val target : Point2i
+	
+	var path : Path
+
+	new (owner : Agent, target : Point2i) {
+		super(owner);
+		this.target = target
+	}
 
 	on Perception {
+		if (occurrence.currentTime >= TrafficConstants::CRASH_TIME) {
+			synchronized(owner) {
+				var groundType = occurrence.body.currentGroundType
+				if (groundType === GroundType::URGENCY_LOCATION) {
+					killMe
+				}
+	
+				var direction = Vector2i::toOrientationVector(occurrence.body.headingAngle)
+		
+				path = updatePath(path, occurrence.body.position, target, direction)
+				
+				var motion : Vector2i = null
+				if (path !== null && !path.empty) {
+					motion = followPath(
+						path,
+						occurrence.body.position,
+						direction,
+						previousOrientation,
+						occurrence.body.perception,
+						occurrence.body.groundPerception)
+				}
+				
+				if (motion !== null && motion.lengthSquared > 0) {
+					move(motion, true)
+					this.previousOrientation = direction
+				}
+
+				dropOff(new Siren())
+			}
+		}
 		synchronizeBody
 	}
 	
