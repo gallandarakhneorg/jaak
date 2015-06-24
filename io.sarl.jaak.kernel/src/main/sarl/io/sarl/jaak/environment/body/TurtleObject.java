@@ -28,6 +28,7 @@ import io.sarl.jaak.environment.perception.PerceivedTurtle;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -106,7 +107,7 @@ public interface TurtleObject extends JaakObject {
 	 */
 	<T extends Perceivable> Collection<T> getPerception(Class<T> type);
 
-	/** Replies the first perception of the body of a given type.
+	/** Replies the first perception of a given type.
 	 * The replied value depends on the order of the perceived elements,
 	 * that is defined in the environment model.
 	 *
@@ -115,18 +116,34 @@ public interface TurtleObject extends JaakObject {
 	 * @return the collection of perceived objects.
 	 */
 	<T extends Perceivable> T getFirstPerception(Class<T> type);
+	
+	/** Replies the first perception of a given type that is located at
+	 * the current position.
+	 *
+	 * @param <T> is the type of the objects to perceived.
+	 * @param type is the type of the objects to perceived.
+	 * @return the collection of perceived objects.
+	 */
+	<T extends Perceivable> T getFirstPerceptionAtCurrentPosition(Class<T> type);
 
 	/** Replies the all the environmental objects perceived by the body.
 	 *
 	 * @return the collection of perceived environmental objects.
 	 */
-	Collection<EnvironmentalObject> getPerceivedObjects();
+	List<EnvironmentalObject> getPerceivedObjects();
+
+	/** Replies the all the environmental objects perceived by the body at
+	 * its current position.
+	 *
+	 * @return the collection of perceived environmental objects.
+	 */
+	Iterable<EnvironmentalObject> getPerceivedObjectsAtCurrentPosition();
 
 	/** Replies the all the turtles perceived by the body.
 	 *
 	 * @return the collection of perceived turtles.
 	 */
-	Collection<PerceivedTurtle> getPerceivedTurtles();
+	List<PerceivedTurtle> getPerceivedTurtles();
 
 	/** Replies if this body has perceived something.
 	 *

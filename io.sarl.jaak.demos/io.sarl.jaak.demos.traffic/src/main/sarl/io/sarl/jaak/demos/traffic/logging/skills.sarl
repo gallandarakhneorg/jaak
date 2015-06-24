@@ -1,0 +1,84 @@
+package io.sarl.jaak.demos.traffic.logging
+
+import io.sarl.jaak.demos.traffic.environment.physic.Path
+import java.io.File
+import java.io.FileWriter
+import java.io.PrintWriter
+import org.arakhne.afc.math.discrete.object2d.Point2i
+
+/** This skill defines the capacity to log simulation information from an agent.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+skill SimulationAgentLoggerSkill implements SimulationAgentLoggerCapacity {
+
+	var logFile : File
+	
+	var t : float = 0
+	var path : Path
+	var urgencySirenPosition : Point2i
+	var isStopDecidedWhenUrgency : boolean
+
+	def install {
+		var logFolder = SimulationLogger::logger.loggingFolder
+		var agentFolder = new File(logFolder, "agents")
+		agentFolder.mkdirs
+		this.logFile = new File(agentFolder, "a_" + owner.ID + ".csv")
+		var writer = new PrintWriter(this.logFile)
+		writer.println("t\tSiren?\tSiren Position\tStop?\tPath")
+		writer.close
+	}
+	
+	def logPath(path : Path, t : float) {
+		if (t < this.t) {
+			throw new IllegalStateException
+		}
+		this.t = t
+		this.path = path
+	}
+	
+	def logUrgencySirenSignal(position : Point2i, isStopDecided : boolean, t : float) {
+		if (t < this.t) {
+			throw new IllegalStateException
+		}
+		this.urgencySirenPosition = position
+		this.isStopDecidedWhenUrgency = isStopDecided
+	}
+
+	def synchronizeLogs {
+		var fwriter = new FileWriter(this.logFile, true)
+		var writer = new PrintWriter(fwriter)
+		writer.print(this.t)
+		writer.print("\t")
+		writer.print(if (this.urgencySirenPosition !== null) 1 else 0)
+		writer.print("\t")
+		if (this.urgencySirenPosition !== null) {
+			writer.print(this.urgencySirenPosition.x())
+			writer.print(" ")
+			writer.print(this.urgencySirenPosition.y())
+		}
+		writer.print("\t")
+		writer.print(if (this.isStopDecidedWhenUrgency) 1 else 0)
+		writer.print("\t")
+		if (this.path !== null) {
+			var isFirst = true
+			for (p : path) {
+				if (isFirst) {
+					isFirst = false
+				} else {
+					writer.print(";")
+				}
+				writer.print(p.x())
+				writer.print(" ")
+				writer.print(p.y())
+			}
+		}
+		writer.print("\n")
+		writer.flush
+		writer.close
+	}
+		
+}

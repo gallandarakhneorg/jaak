@@ -38,9 +38,7 @@ public class TrafficLightManager extends ArrayList<TrafficLightGroup> implements
 	public Collection<Influence> computeInfluences(GridModel grid, TimeManager timeManager) {
 		Collection<Influence> influences = new LinkedList<>();
 		for (TrafficLightGroup group : this) {
-			Influence i = group.runAutonomousEndogenousProcess(
-					timeManager.getCurrentTime(),
-					timeManager.getLastStepDuration());
+			Influence i = group.runBehavior(grid, timeManager);
 			if (i != null) {
 				influences.add(i);
 			}

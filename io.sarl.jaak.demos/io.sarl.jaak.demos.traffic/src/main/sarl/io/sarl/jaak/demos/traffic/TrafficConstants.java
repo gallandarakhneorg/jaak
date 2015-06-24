@@ -20,6 +20,9 @@
  */
 package io.sarl.jaak.demos.traffic;
 
+import io.sarl.jaak.demos.traffic.environment.physic.ReactiveTrafficLightGroup;
+import io.sarl.jaak.demos.traffic.environment.physic.TrafficLightGroup;
+
 
 /** Constants for the traffic application.
  * 
@@ -30,6 +33,10 @@ package io.sarl.jaak.demos.traffic;
  */
 public final class TrafficConstants {
 
+	/** Type of the group of traffic lights that must be used in the simulator.
+	 */
+	public static final Class<? extends TrafficLightGroup> TRAFFIC_LIGHT_GROUP_TYPE = ReactiveTrafficLightGroup.class;
+	
 	/** Budget of driver agents for a specific spawner.
 	 */
 	public static final int STANDARD_DRIVER_BUDGET = 25;
@@ -40,7 +47,7 @@ public final class TrafficConstants {
 
 	/** Time at which the crash occurs.
 	 */
-	public static final int CRASH_TIME = 50;
+	public static final int CRASH_TIME = 200;
 
 	/** Duration of the green phase.
 	 */
@@ -56,7 +63,7 @@ public final class TrafficConstants {
 	
 	/** Decrease the sound intensity of the given amount at each simulation step.
 	 */
-	public static final int SOUND_DECREASE = 3;
+	public static final int SOUND_DECREASE = 2;
 	
 	private TrafficConstants() {
 		//

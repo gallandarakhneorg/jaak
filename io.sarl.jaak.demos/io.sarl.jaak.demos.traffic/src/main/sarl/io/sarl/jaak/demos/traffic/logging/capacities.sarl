@@ -1,0 +1,21 @@
+package io.sarl.jaak.demos.traffic.logging
+
+import io.sarl.jaak.demos.traffic.environment.physic.Path
+import org.arakhne.afc.math.discrete.object2d.Point2i
+
+/** This interface defines the capacity to log simulation information from an agent.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+capacity SimulationAgentLoggerCapacity {
+
+	def logPath(path : Path, t : float)
+
+	def logUrgencySirenSignal(position : Point2i, isStopDecided : boolean, t : float)
+	
+	def synchronizeLogs
+
+}

@@ -45,6 +45,14 @@ public class TrafficLightInfluence extends ObjectChangeInfluence<TrafficLight> {
 		super((TurtleObject) null);
 		this.changes = changes;
 	}
+	
+	/** Replies if this influence contains changes.
+	 *
+	 * @return <code>true</code> if the influence contains a change. <code>false</code> otherwise.
+	 */
+	boolean containsChange() {
+		return !this.changes.isEmpty();
+	}
 
 	@Override
 	public boolean changeObjects(GridModel model) {

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.nio.channels.IllegalSelectorException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -38,7 +39,40 @@ import org.arakhne.afc.vmutil.FileSystem;
  */
 public class SimulationLogger implements JaakListener {
 
+	private static SimulationLogger LOGGER;
+	
+	/** Replies the simulation logger.
+	 *
+	 * @return the simulation logger.
+	 */
+	public static SimulationLogger getLogger() {
+		synchronized(SimulationLogger.class) {
+			if (LOGGER == null) {
+				throw new IllegalSelectorException();
+			}
+			return LOGGER;
+		}
+	}
+	
+	/** Create the simulation logger.
+	 *
+	 * @param printer the UI printer linked to this simulation logger.
+	 * @return the simulation logger.
+	 */
+	public static SimulationLogger createLogger(JPanel printer) {
+		synchronized(SimulationLogger.class) {
+			if (LOGGER == null) {
+				LOGGER = new SimulationLogger(printer);
+			}
+			return LOGGER;
+		}
+	}
+
 	private final File logFolder;
+	private final File vehicleMapFolder;
+	private final File countMapFolder;
+	private final File densityMapFolder;
+	private final File zoneFolder;
 
 	private WeakReference<EnvironmentArea> environmentArea;
 
@@ -49,14 +83,30 @@ public class SimulationLogger implements JaakListener {
 	/**
 	 * @param printer the object that is able to output an image of the environment.
 	 */
-	public SimulationLogger(JPanel printer) {
+	private SimulationLogger(JPanel printer) {
 		try {
 			this.logFolder = FileSystem.createTempDirectory("trafficSimulation", null);
-			System.out.println(this.logFolder);
+			System.out.println("Logging into: " + this.logFolder);
 		} catch (IOException e) {
 			throw new IOError(e);
 		}
 		this.printer = printer;
+		this.vehicleMapFolder = new File(this.logFolder, "vehicleMap");
+		this.vehicleMapFolder.mkdirs();
+		this.countMapFolder = new File(this.logFolder, "countMap");
+		this.countMapFolder.mkdirs();
+		this.densityMapFolder = new File(this.logFolder, "densityMap");
+		this.densityMapFolder.mkdirs();
+		this.zoneFolder = new File(this.logFolder, "zones");
+		this.zoneFolder.mkdirs();
+	}
+	
+	/** Replies the folder in which the logging data are written.
+	 *
+	 * @return the logging folder.
+	 */
+	public File getLoggingFolder() {
+		return this.logFolder;
 	}
 
 	private void setEnvironmentArea(EnvironmentArea area) {
@@ -89,7 +139,7 @@ public class SimulationLogger implements JaakListener {
 					Graphics2D g = (Graphics2D) img.getGraphics();
 					this.printer.paint(g);
 					g.dispose();
-					ImageIO.write(img, "png", new File(this.logFolder, "vehicles_" + time + ".png"));
+					ImageIO.write(img, "png", new File(this.vehicleMapFolder, "t" + time + ".png"));
 				}
 	
 				if (this.zones == null) {
@@ -160,7 +210,7 @@ public class SimulationLogger implements JaakListener {
 				vehicleDensityGraphics.setColor(Color.WHITE);
 				vehicleDensityGraphics.fillRect(-1, -1, width + 2, height + 2);
 				
-				try (PrintWriter printWriter = new PrintWriter(new File(this.logFolder, "zones_" + time + ".csv"))) {
+				try (PrintWriter printWriter = new PrintWriter(new File(this.zoneFolder, "zones_" + time + ".csv"))) {
 					printWriter.append("MIN_X\tMIN_Y\tMAX_X\tMAX_Y\tType\t# vehicles\tdensity\n");
 					for (Entry<Rectangle2i, ZoneData> data : densities.entrySet()) {
 						Rectangle2i r = data.getKey();
@@ -192,8 +242,8 @@ public class SimulationLogger implements JaakListener {
 				vehicleCountGraphics.dispose();
 				vehicleDensityGraphics.dispose();
 				
-				ImageIO.write(vehicleCount, "png", new File(this.logFolder, "counts_" + time + ".png"));
-				ImageIO.write(vehicleDensity, "png", new File(this.logFolder, "density_" + time + ".png"));
+				ImageIO.write(vehicleCount, "png", new File(this.countMapFolder, "t" + time + ".png"));
+				ImageIO.write(vehicleDensity, "png", new File(this.densityMapFolder, "t" + time + ".png"));
 			} catch (IOException e) {
 				throw new Error(e);
 			}

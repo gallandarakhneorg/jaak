@@ -75,14 +75,3 @@ capacity GPSCapacity {
 
 }
 
-/** This interface defines the capacity to log simulation information from an agent.
- * 
- * @author $Author: sgalland$
- * @version $FullVersion$
- * @mavengroupid $GroupId$
- * @mavenartifactid $ArtifactId$
- */
-capacity SimulationAgentLoggerCapacity {
-
-	
-}

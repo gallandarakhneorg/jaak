@@ -114,15 +114,3 @@ skill GPSSkill implements GPSCapacity {
 	}
 	
 }
-
-/** This skill defines the capacity to log simulation information from an agent.
- * 
- * @author $Author: sgalland$
- * @version $FullVersion$
- * @mavengroupid $GroupId$
- * @mavenartifactid $ArtifactId$
- */
-skill SimulationAgentLoggerSkill implements SimulationAgentLoggerCapacity {
-
-
-}

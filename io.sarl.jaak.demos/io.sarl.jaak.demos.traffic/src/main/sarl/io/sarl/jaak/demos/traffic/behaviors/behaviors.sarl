@@ -5,13 +5,13 @@ import io.sarl.jaak.demos.traffic.TrafficConstants
 import io.sarl.jaak.demos.traffic.environment.physic.GroundType
 import io.sarl.jaak.demos.traffic.environment.physic.Path
 import io.sarl.jaak.demos.traffic.environment.physic.Siren
+import io.sarl.jaak.demos.traffic.logging.SimulationAgentLoggerCapacity
 import io.sarl.jaak.environment.Perception
 import io.sarl.jaak.environment.PhysicBody
 import io.sarl.lang.core.Agent
+import java.io.Serializable
 import org.arakhne.afc.math.discrete.object2d.Point2i
 import org.arakhne.afc.math.discrete.object2d.Vector2i
-import org.arakhne.afc.math.continous.object2d.Vector2f
-import java.util.UUID
 
 /** This class defines a standard driver.
  * 
@@ -22,7 +22,7 @@ import java.util.UUID
  */
 behavior StandardDriver {
 
-	uses DrivingCapacity, Lifecycle, PhysicBody, GPSCapacity
+	uses DrivingCapacity, Lifecycle, PhysicBody, GPSCapacity, SimulationAgentLoggerCapacity
 	
 	var previousOrientation : Vector2i
 
@@ -34,6 +34,19 @@ behavior StandardDriver {
 		super(owner);
 		this.target = target
 	}
+	
+	def stopWhenUrgency(sirenPosition : Point2i, groundType : Serializable, direction : Vector2i) : boolean {
+		// Do not stop on cross road.
+		if (groundType !== GroundType::CROSS_ROAD) {
+			var sirenDirection = new Vector2i
+			sirenDirection.sub(sirenPosition, position)
+			var dot = direction.dot(sirenDirection)
+			if (dot >= 0) {
+				return true
+			}
+		}
+		return false
+	}
 
 	on Perception {
 		synchronized(owner) {
@@ -42,23 +55,19 @@ behavior StandardDriver {
 				killMe
 			}
 
-			var direction = Vector2i::toOrientationVector(occurrence.body.headingAngle)
+			var direction = Vector2i::toOrientationVector(headingAngle)
 	
-			path = updatePath(path, occurrence.body.position, target, direction)
+			path = updatePath(path, position, target, direction)
+			logPath(path, occurrence.currentTime)
 
-			var siren = occurrence.body.getFirstPerception(typeof(Siren))
+			var siren = occurrence.body.getFirstPerceptionAtCurrentPosition(typeof(Siren))
 			
 			var stopForUrgencyVehicle = false
 			
 			if (siren != null) {
 				var sirenPosition = siren.soundSourcePosition
-				var sirenDirection = new Vector2i
-				sirenDirection.sub(sirenPosition, occurrence.body.position)
-				var angle = occurrence.body.headingVector.angle(sirenDirection)
-				if (angle >= 3*Math::PI/4) {
-					System.out.println("STOP " + sirenPosition)
-					stopForUrgencyVehicle = true
-				}
+				stopForUrgencyVehicle = stopWhenUrgency(sirenPosition, occurrence.body.currentGroundType, direction)
+				logUrgencySirenSignal(sirenPosition, stopForUrgencyVehicle, occurrence.currentTime)
 			}
 			
 			if (!stopForUrgencyVehicle && !occurrence.body.vehicleStop) {
@@ -66,7 +75,7 @@ behavior StandardDriver {
 				if (path !== null && !path.empty) {
 					motion = followPath(
 						path,
-						occurrence.body.position,
+						position,
 						direction,
 						previousOrientation,
 						occurrence.body.perception,
@@ -74,7 +83,7 @@ behavior StandardDriver {
 				}
 				if (motion === null) {
 					motion = driveRandomly(
-						occurrence.body.position,
+						position,
 						direction,
 						previousOrientation,
 						occurrence.body.perception,
@@ -86,6 +95,7 @@ behavior StandardDriver {
 				}
 			}
 		}
+		synchronizeLogs
 		synchronizeBody
 	}
 	

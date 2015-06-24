@@ -43,7 +43,7 @@ agent TrafficSimulationProblem extends JaakKernelAgent {
 		var uiFrame = new TrafficFrame(uiPanel, physicEnvironment.width, physicEnvironment.height, controller)
 		addJaakListener(uiFrame)
 
-		var logger = new SimulationLogger(uiPanel);
+		var logger = SimulationLogger::createLogger(uiPanel);
 		addJaakListener(logger)
 
 		fireEnvironmentChange
@@ -132,6 +132,11 @@ agent TrafficSimulationProblem extends JaakKernelAgent {
 		return spawners;
 	}
 	
+	def newTrafficLightGroup(crossRoad : Rectangle2i) : TrafficLightGroup {
+		var c = TrafficConstants::TRAFFIC_LIGHT_GROUP_TYPE.getConstructor(typeof(Rectangle2i))
+		return c.newInstance(crossRoad)
+	}
+	
 	/* Create an instance of the environment that must
 	 * be used by the Jaak kernel.
 	 * 
@@ -165,7 +170,7 @@ agent TrafficSimulationProblem extends JaakKernelAgent {
 			if (r !== null) {
 				var group = trafficLights.get(r)
 				if (group === null) {
-					group = new TrafficLightGroup(r)
+					group = newTrafficLightGroup(r)
 					trafficLights.put(r, group)
 				}
 				var light = group.createTrafficLight(entry.value)

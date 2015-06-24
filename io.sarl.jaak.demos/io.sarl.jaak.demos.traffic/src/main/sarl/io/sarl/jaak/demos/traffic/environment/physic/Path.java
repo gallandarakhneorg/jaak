@@ -2,6 +2,7 @@ package io.sarl.jaak.demos.traffic.environment.physic;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.arakhne.afc.math.discrete.object2d.Point2i;
 
@@ -16,8 +17,18 @@ public class Path extends ArrayList<Point2i> implements Cloneable, Serializable 
 
 	private static final long serialVersionUID = 3927921866951405752L;
 
+	private final UUID id = UUID.randomUUID();
+	
 	public Path() {
 		//
+	}
+	
+	/** Replies the identifier of the path.
+	 *
+	 * @return the id.
+	 */
+	public UUID getID() {
+		return this.id;
 	}
 	
 	/** Remove the elements of the path until the given point.

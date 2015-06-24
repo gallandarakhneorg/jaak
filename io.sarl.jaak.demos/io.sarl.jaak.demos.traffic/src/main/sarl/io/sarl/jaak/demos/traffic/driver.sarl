@@ -11,6 +11,8 @@ import io.sarl.jaak.demos.traffic.behaviors.GPSSkill
 import io.sarl.jaak.demos.traffic.behaviors.StandardDriver
 import io.sarl.jaak.demos.traffic.behaviors.UrgencyDriver
 import io.sarl.jaak.demos.traffic.environment.physic.MapUtil
+import io.sarl.jaak.demos.traffic.logging.SimulationAgentLoggerCapacity
+import io.sarl.jaak.demos.traffic.logging.SimulationAgentLoggerSkill
 import io.sarl.jaak.environment.BodyCreated
 import io.sarl.jaak.environment.Perception
 import io.sarl.jaak.environment.PhysicBody
@@ -54,6 +56,7 @@ agent Driver {
 	on Initialize {
 		synchronized(this) {
 			var body = new PhysicBodySkill
+			setSkill(typeof(SimulationAgentLoggerCapacity), new SimulationAgentLoggerSkill) 
 			setSkill(typeof(DrivingCapacity), new DrivingSkill) 
 			setSkill(typeof(GPSCapacity), new GPSSkill)
 			setSkill(typeof(PhysicBody), body)
@@ -65,7 +68,8 @@ agent Driver {
 	on Destroy {
 		<PhysicBodySkill>clearSkill(typeof(PhysicBody));
 		<GPSSkill>clearSkill(typeof(GPSCapacity));
-		<DrivingSkill>clearSkill(typeof(DrivingCapacity))
+		<DrivingSkill>clearSkill(typeof(DrivingCapacity));
+		<SimulationAgentLoggerSkill>clearSkill(typeof(SimulationAgentLoggerCapacity))
 	}
 	
 	def random(l : List<Point2i>) : Point2i {

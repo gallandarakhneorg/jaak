@@ -61,8 +61,8 @@ public final class RealTurtleBody implements TurtleBody, Comparable<RealTurtleBo
 	private final UUID turtle;
 	private final transient TurtleFrustum frustum;
 	private Serializable semantic;
-	private Collection<EnvironmentalObject> perceivedObjects;
-	private Collection<PerceivedTurtle> perceivedBodies;
+	private List<EnvironmentalObject> perceivedObjects;
+	private List<PerceivedTurtle> perceivedBodies;
 	private Map<Vector2i, Serializable> groundPerception;
 	private Collection<PickedObject> pickingResults;
 	private transient MotionInfluence lastMotionInfluence;
@@ -114,7 +114,7 @@ public final class RealTurtleBody implements TurtleBody, Comparable<RealTurtleBo
 	 * @param objects are the perceptions of environmental objects.
 	 * @param groundPerception are the perceptions of the ground.
 	 */
-	synchronized void setPerceptions(Collection<PerceivedTurtle> bodies, Collection<EnvironmentalObject> objects,
+	synchronized void setPerceptions(List<PerceivedTurtle> bodies, List<EnvironmentalObject> objects,
 			Map<Vector2i, Serializable> groundPerception) {
 		this.lastMotionInfluence = null;
 		this.otherInfluences = null;
@@ -467,22 +467,35 @@ public final class RealTurtleBody implements TurtleBody, Comparable<RealTurtleBo
 	 * {@inheritDoc}
 	 */
 	@Override
-	public synchronized Collection<EnvironmentalObject> getPerceivedObjects() {
+	public synchronized List<EnvironmentalObject> getPerceivedObjects() {
 		if (this.perceivedObjects == null) {
 			throw new IllegalStateException();
 		}
-		return Collections.unmodifiableCollection(this.perceivedObjects);
+		return Collections.unmodifiableList(this.perceivedObjects);
+	}
+
+	@Override
+	public Iterable<EnvironmentalObject> getPerceivedObjectsAtCurrentPosition() {
+		if (this.perceivedObjects == null) {
+			throw new IllegalStateException();
+		}
+		return new Iterable<EnvironmentalObject>() {
+			@Override
+			public Iterator<EnvironmentalObject> iterator() {
+				return new CurrentPositionObjectIterator();
+			}
+		};
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public synchronized Collection<PerceivedTurtle> getPerceivedTurtles() {
+	public synchronized List<PerceivedTurtle> getPerceivedTurtles() {
 		if (this.perceivedBodies == null) {
 			throw new IllegalStateException();
 		}
-		return Collections.unmodifiableCollection(this.perceivedBodies);
+		return Collections.unmodifiableList(this.perceivedBodies);
 	}
 
 	/**
@@ -572,6 +585,37 @@ public final class RealTurtleBody implements TurtleBody, Comparable<RealTurtleBo
 		if (this.pickingResults != null && PickedObject.class.isAssignableFrom(type)) {
 			for (Perceivable p : this.pickingResults) {
 				if (type.isInstance(p)) {
+					return type.cast(p);
+				}
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	public <T extends Perceivable> T getFirstPerceptionAtCurrentPosition(Class<T> type) {
+		assert (type != null);
+		if (this.perceivedBodies == null || this.perceivedObjects == null) {
+			throw new IllegalStateException();
+		}
+		Point2i myPosition = getPosition();
+		if (PerceivedTurtle.class.isAssignableFrom(type)) {
+			for (Perceivable p : this.perceivedBodies) {
+				if (type.isInstance(p) && myPosition.equals(p.getPosition())) {
+					return type.cast(p);
+				}
+			}
+		}
+		if (EnvironmentalObject.class.isAssignableFrom(type)) {
+			for (Perceivable p : this.perceivedObjects) {
+				if (type.isInstance(p) && myPosition.equals(p.getPosition())) {
+					return type.cast(p);
+				}
+			}
+		}
+		if (this.pickingResults != null && PickedObject.class.isAssignableFrom(type)) {
+			for (Perceivable p : this.pickingResults) {
+				if (type.isInstance(p) && myPosition.equals(p.getPosition())) {
 					return type.cast(p);
 				}
 			}
@@ -704,4 +748,54 @@ public final class RealTurtleBody implements TurtleBody, Comparable<RealTurtleBo
 		return this.lastMotionInfluenceStatus == null ? MotionInfluenceStatus.NOT_AVAILABLE : this.lastMotionInfluenceStatus;
 	}
 
+	
+	/**
+	 * @author $Author: sgalland$
+	 * @version $FullVersion$
+	 * @mavengroupid $GroupId$
+	 * @mavenartifactid $ArtifactId$
+	 */
+	private class CurrentPositionObjectIterator implements Iterator<EnvironmentalObject> {
+		
+		private final Iterator<EnvironmentalObject> objects;
+		private EnvironmentalObject next;
+		
+		/**
+		 */
+		public CurrentPositionObjectIterator() {
+			this.objects = RealTurtleBody.this.perceivedObjects.iterator();
+			searchNext();
+		}
+		
+		private void searchNext() {
+			this.next = null;
+			Point2i myPosition = getPosition();
+			while (this.next == null && this.objects.hasNext()) {
+				EnvironmentalObject n = this.objects.next();
+				if (myPosition.equals(n.getPosition())) {
+					this.next = n;
+				}
+			}
+		}
+
+		@Override
+		public boolean hasNext() {
+			return this.next != null;
+		}
+
+		@Override
+		public EnvironmentalObject next() {
+			assert (this.next != null);
+			EnvironmentalObject n = this.next;
+			searchNext();
+			return n;
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+		
+	}
+	
 }
