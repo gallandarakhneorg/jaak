@@ -6,11 +6,11 @@ import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import io.sarl.jaak.demos.traffic.behaviors.DrivingCapacity
 import io.sarl.jaak.demos.traffic.behaviors.DrivingSkill
+import io.sarl.jaak.demos.traffic.behaviors.EmergencyDriver
 import io.sarl.jaak.demos.traffic.behaviors.GPSCapacity
 import io.sarl.jaak.demos.traffic.behaviors.GPSSkill
 import io.sarl.jaak.demos.traffic.behaviors.StandardDriver
-import io.sarl.jaak.demos.traffic.behaviors.UrgencyDriver
-import io.sarl.jaak.demos.traffic.environment.physic.MapUtil
+import io.sarl.jaak.demos.traffic.environment.MapUtil
 import io.sarl.jaak.demos.traffic.logging.SimulationAgentLoggerCapacity
 import io.sarl.jaak.demos.traffic.logging.SimulationAgentLoggerSkill
 import io.sarl.jaak.environment.BodyCreated
@@ -19,28 +19,10 @@ import io.sarl.jaak.environment.PhysicBody
 import io.sarl.jaak.environment.PhysicBodySkill
 import io.sarl.jaak.environment.SimulationStopped
 import io.sarl.lang.core.Behavior
-import java.util.List
 import org.arakhne.afc.math.continous.object2d.Vector2f
 import org.arakhne.afc.math.discrete.object2d.Point2i
 
-/** This class defines an ant.
- * <p>
- * The most important characteristic of an ant in this context 
- * is related to its individual and unpredictable tendency 
- * to choose a certain route among the many available. Each instance of 
- * the class Ant must represent an individual agent with singular 
- * characteristics. This can be implemented by using a mathematical 
- * function. As described above the pheromone level over a route is 
- * measured by an integer number. The agent will use a method that 
- * evaluates its tendency of choosing a route based on the 
- * pheromone intensity. A good variability of the behavior of 
- * the agents can be expressed as a sinusoidal function 
- * with at least three coefficients: T(PL) = Alpha * sin(Beta * PL + Gamma).
- * <p>
- * The input PL is the pheromone level over a route. Alfa, Beta and 
- * Gamma will be properties of the Ant class initialized as random 
- * float numbers within the interval [-5..5]. These properties will 
- * make possible to have different individuals in the population.
+/** This class defines a driver.
  * 
  * @author $Author: sgalland$
  * @version $FullVersion$
@@ -72,15 +54,21 @@ agent Driver {
 		<SimulationAgentLoggerSkill>clearSkill(typeof(SimulationAgentLoggerCapacity))
 	}
 	
-	def random(l : List<Point2i>) : Point2i {
-		l.get((Math.random * l.size) as int)
+	def createEmergencyDriverBehavior : Behavior {
+		var crashes = MapUtil::crashPositions
+		var target = crashes.get((Math.random * crashes.size) as int)
+		new EmergencyDriver(this, target)
+	}
+	
+	def createStandardDriverBehavior(target : Point2i) : Behavior {
+		new StandardDriver(this, target)
 	}
 	
 	on BodyCreated {
 		synchronized(this) {
 			var beh : Behavior
-			if (occurrence.body.semantic == UrgencyDriver) {
-				beh = new UrgencyDriver(this, MapUtil::getCrashPositions.random)
+			if (occurrence.body.semantic == EmergencyDriver) {
+				beh = createEmergencyDriverBehavior
 			} else {
 				var v = new Vector2f(occurrence.worldWidth / 2, occurrence.worldHeight / 2)
 				v.sub(occurrence.body.position.x(), occurrence.body.position.y());
@@ -91,7 +79,7 @@ agent Driver {
 				var target = new Point2i(occurrence.body.position)
 				target.add(v)
 				target = MapUtil::normalizePoint(target)
-				beh = new StandardDriver(this, target)
+				beh = createStandardDriverBehavior(target)
 			}
 			var b = tmpBehavior
 			tmpBehavior = null

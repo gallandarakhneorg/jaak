@@ -1,13 +1,13 @@
 package io.sarl.jaak.demos.traffic.ui;
 
 import io.sarl.jaak.demos.traffic.TrafficConstants;
+import io.sarl.jaak.demos.traffic.behaviors.EmergencyDriver;
 import io.sarl.jaak.demos.traffic.behaviors.StandardDriver;
-import io.sarl.jaak.demos.traffic.behaviors.UrgencyDriver;
-import io.sarl.jaak.demos.traffic.environment.physic.CrashedVehicle;
-import io.sarl.jaak.demos.traffic.environment.physic.GroundType;
-import io.sarl.jaak.demos.traffic.environment.physic.Siren;
-import io.sarl.jaak.demos.traffic.environment.physic.Sound;
-import io.sarl.jaak.demos.traffic.environment.physic.TrafficLight;
+import io.sarl.jaak.demos.traffic.environment.CrashedVehicle;
+import io.sarl.jaak.demos.traffic.environment.GroundType;
+import io.sarl.jaak.demos.traffic.environment.Siren;
+import io.sarl.jaak.demos.traffic.environment.Sound;
+import io.sarl.jaak.demos.traffic.environment.TrafficLight;
 import io.sarl.jaak.environment.EnvironmentArea;
 import io.sarl.jaak.environment.perception.EnvironmentalObject;
 import io.sarl.jaak.kernel.JaakEvent;
@@ -60,9 +60,9 @@ public class TrafficPanel extends JPanel implements JaakListener, MouseListener,
 	 */
 	public static final Color STANDARD_VEHICLE_COLOR = Color.BLUE;
 
-	/** Color for urgency vehicles.
+	/** Color for emergency vehicles.
 	 */
-	public static final Color URGENCY_VEHICLE_COLOR = Color.YELLOW;
+	public static final Color EMERGENCY_VEHICLE_COLOR = Color.YELLOW;
 
 	/** Color for crash location.
 	 */
@@ -151,8 +151,8 @@ public class TrafficPanel extends JPanel implements JaakListener, MouseListener,
 				for (int y = 0; y < this.height; ++y) {
 					ac = c = null;
 					semantic = environment.getTurtleSemantic(x, y);
-					if (UrgencyDriver.class.equals(semantic)) {
-						c = URGENCY_VEHICLE_COLOR;
+					if (EmergencyDriver.class.equals(semantic)) {
+						c = EMERGENCY_VEHICLE_COLOR;
 					} else if (StandardDriver.class.equals(semantic)) {
 						c = STANDARD_VEHICLE_COLOR;
 					} else {
@@ -184,7 +184,7 @@ public class TrafficPanel extends JPanel implements JaakListener, MouseListener,
 								case AGENT_DESTROYER:
 									c = ROAD_COLOR;
 									break;
-								case URGENCY_LOCATION:
+								case EMERGENCY_LOCATION:
 									this.crashes.add(new Point2i(x, y));
 									c = ROAD_COLOR;
 									break;

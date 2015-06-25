@@ -1,6 +1,6 @@
 package io.sarl.jaak.demos.traffic.logging
 
-import io.sarl.jaak.demos.traffic.environment.physic.Path
+import io.sarl.jaak.demos.traffic.environment.Path
 import org.arakhne.afc.math.discrete.object2d.Point2i
 
 /** This interface defines the capacity to log simulation information from an agent.
@@ -14,7 +14,7 @@ capacity SimulationAgentLoggerCapacity {
 
 	def logPath(path : Path, t : float)
 
-	def logUrgencySirenSignal(position : Point2i, isStopDecided : boolean, t : float)
+	def logEmergencySirenSignal(position : Point2i, isStopDecided : boolean, t : float)
 	
 	def synchronizeLogs
 

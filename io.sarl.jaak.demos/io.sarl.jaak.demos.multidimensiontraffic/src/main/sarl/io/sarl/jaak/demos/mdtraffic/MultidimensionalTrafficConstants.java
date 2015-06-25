@@ -18,7 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.sarl.jaak.demos.traffic;
+package io.sarl.jaak.demos.mdtraffic;
+
+import java.util.UUID;
 
 
 
@@ -29,37 +31,17 @@ package io.sarl.jaak.demos.traffic;
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
-public final class TrafficConstants {
+public final class MultidimensionalTrafficConstants {
 
-	/** Budget of driver agents for a specific spawner.
+	/** Id of the communication space for receiving the agent's messages.
 	 */
-	public static final int STANDARD_DRIVER_BUDGET = 25;
+	public static final UUID OUTPUT_COMMUNICATION_SPACE_ID = UUID.randomUUID();
 
-	/** Budget of emergency driver agents for a specific spawner.
+	/** Id of the communication space for emiting messages to the agents.
 	 */
-	public static final int EMERGENCY_DRIVER_BUDGET = 1;
-
-	/** Time at which the crash occurs.
-	 */
-	public static final int CRASH_TIME = 200;
-
-	/** Duration of the green phase.
-	 */
-	public static final float GREEN_PHASE_DURATION = 40;
-
-	/** Duration of the orange phase.
-	 */
-	public static final float ORANGE_PHASE_DURATION = 4;
-
-	/** Radius of the siren sound.
-	 */
-	public static final int SIREN_RADIUS = 15;
+	public static final UUID INPUT_COMMUNICATION_SPACE_ID = UUID.randomUUID();
 	
-	/** Decrease the sound intensity of the given amount at each simulation step.
-	 */
-	public static final int SOUND_DECREASE = 2;
-	
-	private TrafficConstants() {
+	private MultidimensionalTrafficConstants() {
 		//
 	}
 	

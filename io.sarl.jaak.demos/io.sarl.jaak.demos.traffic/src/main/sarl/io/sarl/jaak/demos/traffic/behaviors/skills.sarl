@@ -1,10 +1,10 @@
 package io.sarl.jaak.demos.traffic.behaviors
 
-import io.sarl.jaak.demos.traffic.environment.physic.Astar
-import io.sarl.jaak.demos.traffic.environment.physic.MapUtil
-import io.sarl.jaak.demos.traffic.environment.physic.Path
-import io.sarl.jaak.demos.traffic.environment.physic.TrafficLight
-import io.sarl.jaak.demos.traffic.environment.physic.TrafficLightState
+import io.sarl.jaak.demos.traffic.environment.Astar
+import io.sarl.jaak.demos.traffic.environment.MapUtil
+import io.sarl.jaak.demos.traffic.environment.Path
+import io.sarl.jaak.demos.traffic.environment.TrafficLight
+import io.sarl.jaak.demos.traffic.environment.TrafficLightState
 import io.sarl.jaak.environment.body.TurtleObject
 import io.sarl.jaak.environment.perception.Perceivable
 import java.io.Serializable

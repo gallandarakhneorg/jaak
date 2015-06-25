@@ -1,6 +1,6 @@
 package io.sarl.jaak.demos.traffic.logging;
 
-import io.sarl.jaak.demos.traffic.environment.physic.GroundType;
+import io.sarl.jaak.demos.traffic.environment.GroundType;
 import io.sarl.jaak.demos.traffic.util.Rectangle2iComparator;
 import io.sarl.jaak.environment.EnvironmentArea;
 import io.sarl.jaak.kernel.JaakEvent;
@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.nio.channels.IllegalSelectorException;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,6 +40,7 @@ import org.arakhne.afc.vmutil.FileSystem;
  */
 public class SimulationLogger implements JaakListener {
 
+	private static final DecimalFormat FILE_INDEX_FORMATER = new DecimalFormat("00000000.000");
 	private static SimulationLogger LOGGER;
 	
 	/** Replies the simulation logger.
@@ -66,6 +68,15 @@ public class SimulationLogger implements JaakListener {
 			}
 			return LOGGER;
 		}
+	}
+
+	/** Format a number for being a valid file index.
+	 *
+	 * @param n the number.
+	 * @return the file index.
+	 */
+	public static String formatIdx(float n) {
+		return FILE_INDEX_FORMATER.format(n);
 	}
 
 	private final File logFolder;
@@ -139,7 +150,7 @@ public class SimulationLogger implements JaakListener {
 					Graphics2D g = (Graphics2D) img.getGraphics();
 					this.printer.paint(g);
 					g.dispose();
-					ImageIO.write(img, "png", new File(this.vehicleMapFolder, "t" + time + ".png"));
+					ImageIO.write(img, "png", new File(this.vehicleMapFolder, "t" + formatIdx(time) + ".png"));
 				}
 	
 				if (this.zones == null) {
@@ -154,10 +165,10 @@ public class SimulationLogger implements JaakListener {
 									switch (type) {
 									case ROAD:
 									case AGENT_DESTROYER:
-									case URGENCY_LOCATION:
+									case EMERGENCY_LOCATION:
 										r = searchFor(environment, x, y, GroundType.ROAD,
 												GroundType.AGENT_DESTROYER,
-												GroundType.URGENCY_LOCATION);
+												GroundType.EMERGENCY_LOCATION);
 										break;
 									case CROSS_ROAD:
 										r = searchFor(environment, x, y, GroundType.CROSS_ROAD);
@@ -210,7 +221,7 @@ public class SimulationLogger implements JaakListener {
 				vehicleDensityGraphics.setColor(Color.WHITE);
 				vehicleDensityGraphics.fillRect(-1, -1, width + 2, height + 2);
 				
-				try (PrintWriter printWriter = new PrintWriter(new File(this.zoneFolder, "zones_" + time + ".csv"))) {
+				try (PrintWriter printWriter = new PrintWriter(new File(this.zoneFolder, "zones_" + formatIdx(time) + ".csv"))) {
 					printWriter.append("MIN_X\tMIN_Y\tMAX_X\tMAX_Y\tType\t# vehicles\tdensity\n");
 					for (Entry<Rectangle2i, ZoneData> data : densities.entrySet()) {
 						Rectangle2i r = data.getKey();
@@ -242,8 +253,8 @@ public class SimulationLogger implements JaakListener {
 				vehicleCountGraphics.dispose();
 				vehicleDensityGraphics.dispose();
 				
-				ImageIO.write(vehicleCount, "png", new File(this.countMapFolder, "t" + time + ".png"));
-				ImageIO.write(vehicleDensity, "png", new File(this.densityMapFolder, "t" + time + ".png"));
+				ImageIO.write(vehicleCount, "png", new File(this.countMapFolder, "t" + formatIdx(time) + ".png"));
+				ImageIO.write(vehicleDensity, "png", new File(this.densityMapFolder, "t" + formatIdx(time) + ".png"));
 			} catch (IOException e) {
 				throw new Error(e);
 			}

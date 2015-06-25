@@ -15,6 +15,7 @@
 	<modules>
 		<module>io.sarl.jaak.demos.ants</module>
 		<module>io.sarl.jaak.demos.traffic</module>
+		<module>io.sarl.jaak.demos.multidimensiontraffic</module>
 	</modules>
 
 </project>

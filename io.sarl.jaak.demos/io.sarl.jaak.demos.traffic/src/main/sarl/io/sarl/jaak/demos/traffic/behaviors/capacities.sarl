@@ -1,6 +1,6 @@
 package io.sarl.jaak.demos.traffic.behaviors
 
-import io.sarl.jaak.demos.traffic.environment.physic.Path
+import io.sarl.jaak.demos.traffic.environment.Path
 import io.sarl.jaak.environment.body.TurtleObject
 import io.sarl.jaak.environment.perception.Perceivable
 import java.io.Serializable

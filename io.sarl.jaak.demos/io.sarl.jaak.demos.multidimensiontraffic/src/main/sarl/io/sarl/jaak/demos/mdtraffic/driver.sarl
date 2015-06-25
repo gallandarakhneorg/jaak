@@ -1,0 +1,41 @@
+package io.sarl.jaak.demos.mdtraffic
+
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Initialize
+import io.sarl.jaak.demos.mdtraffic.behaviors.EmergencyDriver
+import io.sarl.lang.core.Behavior
+import io.sarl.util.OpenEventSpace
+import io.sarl.util.OpenEventSpaceSpecification
+import io.sarl.lang.core.Address
+
+/** This class defines a driver.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+agent Driver extends io.sarl.jaak.demos.traffic.Driver {
+
+	uses DefaultContextInteractions
+
+	var outputSpace : OpenEventSpace
+	var inputSpace : OpenEventSpace
+	var address : Address
+
+	on Initialize {
+		outputSpace = defaultContext.createSpace(
+			typeof(OpenEventSpaceSpecification), MultidimensionalTrafficConstants::OUTPUT_COMMUNICATION_SPACE_ID)		
+		inputSpace = defaultContext.createSpace(
+			typeof(OpenEventSpaceSpecification), MultidimensionalTrafficConstants::INPUT_COMMUNICATION_SPACE_ID)
+		address = outputSpace.register(asEventListener)		
+
+		//TODO: Replace by the "super(occurrence)" syntax when introduced.
+		super._handle_Initialize_0(occurrence)
+	}
+
+	def createEmergencyDriverBehavior : Behavior {
+		new EmergencyDriver(this, outputSpace, address)
+	}
+	
+}

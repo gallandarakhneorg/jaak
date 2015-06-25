@@ -2,9 +2,9 @@ package io.sarl.jaak.demos.traffic.behaviors
 
 import io.sarl.core.Lifecycle
 import io.sarl.jaak.demos.traffic.TrafficConstants
-import io.sarl.jaak.demos.traffic.environment.physic.GroundType
-import io.sarl.jaak.demos.traffic.environment.physic.Path
-import io.sarl.jaak.demos.traffic.environment.physic.Siren
+import io.sarl.jaak.demos.traffic.environment.GroundType
+import io.sarl.jaak.demos.traffic.environment.Path
+import io.sarl.jaak.demos.traffic.environment.Siren
 import io.sarl.jaak.demos.traffic.logging.SimulationAgentLoggerCapacity
 import io.sarl.jaak.environment.Perception
 import io.sarl.jaak.environment.PhysicBody
@@ -29,13 +29,13 @@ behavior StandardDriver {
 	val target : Point2i
 	
 	var path : Path
-
+	
 	new (owner : Agent, target : Point2i) {
 		super(owner);
 		this.target = target
 	}
 	
-	def stopWhenUrgency(sirenPosition : Point2i, groundType : Serializable, direction : Vector2i) : boolean {
+	def stopWhenEmergency(sirenPosition : Point2i, groundType : Serializable, direction : Vector2i) : boolean {
 		// Do not stop on cross road.
 		if (groundType !== GroundType::CROSS_ROAD) {
 			var sirenDirection = new Vector2i
@@ -62,15 +62,15 @@ behavior StandardDriver {
 
 			var siren = occurrence.body.getFirstPerceptionAtCurrentPosition(typeof(Siren))
 			
-			var stopForUrgencyVehicle = false
+			var stopForEmergencyVehicle = false
 			
 			if (siren != null) {
 				var sirenPosition = siren.soundSourcePosition
-				stopForUrgencyVehicle = stopWhenUrgency(sirenPosition, occurrence.body.currentGroundType, direction)
-				logUrgencySirenSignal(sirenPosition, stopForUrgencyVehicle, occurrence.currentTime)
+				stopForEmergencyVehicle = stopWhenEmergency(sirenPosition, occurrence.body.currentGroundType, direction)
+				logEmergencySirenSignal(sirenPosition, stopForEmergencyVehicle, occurrence.currentTime)
 			}
 			
-			if (!stopForUrgencyVehicle && !occurrence.body.vehicleStop) {
+			if (!stopForEmergencyVehicle && !occurrence.body.vehicleStop) {
 				var motion : Vector2i = null
 				if (path !== null && !path.empty) {
 					motion = followPath(
@@ -101,22 +101,22 @@ behavior StandardDriver {
 	
 }
 
-/** This class defines an urgency vehicle driver.
+/** This class defines an emergency vehicle driver.
  * 
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
-behavior UrgencyDriver {
+behavior EmergencyDriver {
 
 	uses DrivingCapacity, Lifecycle, PhysicBody, GPSCapacity
 
 	var previousOrientation : Vector2i
 
-	val target : Point2i
-	
 	var path : Path
+
+	var target : Point2i
 
 	new (owner : Agent, target : Point2i) {
 		super(owner);
@@ -124,10 +124,12 @@ behavior UrgencyDriver {
 	}
 
 	on Perception {
-		if (occurrence.currentTime >= TrafficConstants::CRASH_TIME) {
-			synchronized(owner) {
+		synchronized(owner) {
+			if (occurrence.currentTime >= TrafficConstants::CRASH_TIME) {
 				var groundType = occurrence.body.currentGroundType
-				if (groundType === GroundType::URGENCY_LOCATION) {
+				if (groundType === GroundType::EMERGENCY_LOCATION) {
+					target = null
+					path = null
 					killMe
 				}
 	
@@ -150,7 +152,7 @@ behavior UrgencyDriver {
 					move(motion, true)
 					this.previousOrientation = direction
 				}
-
+	
 				dropOff(new Siren())
 			}
 		}

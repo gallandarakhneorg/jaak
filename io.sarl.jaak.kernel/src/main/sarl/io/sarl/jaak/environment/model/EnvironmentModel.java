@@ -75,7 +75,7 @@ import org.arakhne.afc.util.MultiCollection;
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
-public class JaakEnvironment implements EnvironmentArea {
+public class EnvironmentModel implements EnvironmentArea {
 
 	/** Defines the default perception distance for turtles.
 	 */
@@ -100,7 +100,7 @@ public class JaakEnvironment implements EnvironmentArea {
 	 * @param height is the height of the world grid.
 	 * @param timeManager is the time manager used to run Jaak.
 	 */
-	public JaakEnvironment(int width, int height, TimeManager timeManager) {
+	public EnvironmentModel(int width, int height, TimeManager timeManager) {
 		this.grid = new JaakGrid(width, height, new StandardObjectManipulator());
 		this.timeManager = timeManager;
 	}
@@ -109,7 +109,7 @@ public class JaakEnvironment implements EnvironmentArea {
 	 * @param width is the width of the world grid.
 	 * @param height is the height of the world grid.
 	 */
-	public JaakEnvironment(int width, int height) {
+	public EnvironmentModel(int width, int height) {
 		this(width, height, null);
 	}
 
@@ -194,14 +194,6 @@ public class JaakEnvironment implements EnvironmentArea {
 	public void setTimeManager(TimeManager timeManager) {
 		assert (timeManager != null);
 		this.timeManager = timeManager;
-	}
-
-	/** Replies the time manager for the environment.
-	 *
-	 * @return the time manager which must be used by the environment.
-	 */
-	public TimeManager getTimeManager() {
-		return this.timeManager;
 	}
 
 	/** Replies the action applier for this environment.
@@ -354,14 +346,6 @@ public class JaakEnvironment implements EnvironmentArea {
 	 */
 	public void setEndogenousEngine(EnvironmentEndogenousEngine engine) {
 		this.endogenousEngine = engine;
-	}
-
-	/** Replies the endogenous engine associated to this environment.
-	 *
-	 * @return the endogenous engine.
-	 */
-	public EnvironmentEndogenousEngine getEndogenousEngine() {
-		return this.endogenousEngine;
 	}
 
 	/** Set the solver of influence conflicts.
@@ -856,7 +840,7 @@ public class JaakEnvironment implements EnvironmentArea {
 				return null;
 			}
 
-			if (JaakEnvironment.this.addBody(body, position)) {
+			if (EnvironmentModel.this.addBody(body, position)) {
 				return body;
 			}
 			return null;

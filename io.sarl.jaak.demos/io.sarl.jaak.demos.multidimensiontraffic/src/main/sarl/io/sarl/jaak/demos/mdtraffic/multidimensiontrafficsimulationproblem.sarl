@@ -1,0 +1,162 @@
+package io.sarl.jaak.demos.mdtraffic
+
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Initialize
+import io.sarl.jaak.demos.mdtraffic.environment.MultiEndogenousEngine
+import io.sarl.jaak.demos.mdtraffic.environment.communication.CommunicationEvent
+import io.sarl.jaak.demos.mdtraffic.environment.communication.EmergencyDetected
+import io.sarl.jaak.demos.mdtraffic.environment.communication.PriorityRequest
+import io.sarl.jaak.demos.mdtraffic.environment.physic.CrashInfluence
+import io.sarl.jaak.demos.mdtraffic.environment.physic.EmergencyGenerator
+import io.sarl.jaak.demos.traffic.TrafficSimulationProblem
+import io.sarl.jaak.demos.traffic.environment.ReactiveTrafficLightGroup
+import io.sarl.jaak.demos.traffic.environment.Siren
+import io.sarl.jaak.demos.traffic.environment.TrafficLightGroup
+import io.sarl.jaak.environment.model.JaakEnvironment
+import io.sarl.jaak.environment.spawner.JaakSpawner
+import io.sarl.jaak.environment.time.TimeManager
+import io.sarl.jaak.kernel.AgentInfluence
+import io.sarl.lang.core.Address
+import io.sarl.lang.core.Agent
+import io.sarl.util.OpenEventSpace
+import io.sarl.util.OpenEventSpaceSpecification
+import org.arakhne.afc.math.discrete.object2d.Rectangle2i
+
+/** This class defines the multidimensional simulation environment for the traffic simulation problem.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+agent MultidimensionalTrafficSimulationProblem extends TrafficSimulationProblem {
+
+	uses DefaultContextInteractions
+
+	var rules : RuleDatabase
+	
+	var outputSpace : OpenEventSpace
+	var inputSpace : OpenEventSpace
+
+	on Initialize {
+		outputSpace = defaultContext.createSpace(
+			typeof(OpenEventSpaceSpecification), MultidimensionalTrafficConstants::OUTPUT_COMMUNICATION_SPACE_ID)		
+		inputSpace = defaultContext.createSpace(
+			typeof(OpenEventSpaceSpecification), MultidimensionalTrafficConstants::INPUT_COMMUNICATION_SPACE_ID)
+		outputSpace.register(asEventListener)		
+
+		//TODO: Replace by the "super(occurrence)" syntax when introduced.
+		super._handle_Initialize_0(occurrence)
+		
+	}
+
+	/* Replies the type of the agents to spawn.
+	 *
+	 * @param spawner - the spawner that will create the agent.
+	 */
+	def getSpawnableAgentType(spawner : JaakSpawner) : Class<? extends Agent> {
+		return typeof(Driver)
+	}
+	
+	/* Create an instance of the environment that must
+	 * be used by the Jaak kernel.
+	 * 
+	 * @return the instance of time manager.
+	 */
+	def createEnvironment(tm : TimeManager) : JaakEnvironment {
+		var env = super.createEnvironment(tm)
+		this.rules = new RuleDatabase(env, this.inputSpace)
+		this.rules.createRules
+		var oldEndogenousEngine = env.endogenousEngine
+		var newEndogenousEngine = new MultiEndogenousEngine
+		newEndogenousEngine += oldEndogenousEngine
+		newEndogenousEngine += new EmergencyGenerator
+		newEndogenousEngine += this.rules // Must be the last
+		env.endogenousEngine = newEndogenousEngine
+		return env
+	}
+	
+	on CommunicationEvent {
+		synchronized(this) {
+			if (rules.filter(occurrence)) {
+				occurrence.source = new Address(this.inputSpace.ID, occurrence.source.UUID)
+				this.inputSpace.emit(occurrence);
+			}
+		}
+	}
+	
+	on AgentInfluence [occurrence.isValid] {
+		synchronized (this) {
+			if (rules.filter(occurrence.influence)) {
+				//TODO: Replace by the "super(occurrence)" syntax when introduced.
+				super._handle_AgentInfluence_4(occurrence)
+			}
+		}
+	}
+	
+	def newTrafficLightGroup(crossRoad : Rectangle2i) : TrafficLightGroup {
+		return new ReactiveTrafficLightGroup(crossRoad)
+	}
+
+	def createRules(it : RuleDatabase) {
+		// case a
+		// PriorityRequest => restrict to local traffic lights
+//		add(
+//			[a : Object, b : JaakEnvironment, c : OpenEventSpace |
+//				a instanceof PriorityRequest
+//			]
+//			->
+//			[a : Object, b : JaakEnvironment, c : OpenEventSpace |
+//				var e = a as PriorityRequest
+//				var body = b.getBodyFor(e.source.UUID)
+//				if (body !== null) {
+//					var frustum = new CircleTurtleFrustum(TrafficConstants::SIREN_RADIUS)
+//					var iterator = frustum.getPerceivedCells(body.position, 0, b)
+//					var addresses = newArrayList
+//					while (iterator.hasNext) {
+//						var pts = iterator.next
+//						for (obj : b.getEnvironmentalObjects(pts.x(), pts.y(), typeof(TrafficLight))) {
+//							addresses += new Address(c.ID, obj.environmentalObjectIdentifier)
+//						}
+//					}
+//					if (!addresses.empty) {
+//						c.emit(e, Scopes::addresses(addresses))
+//					}
+//					return false
+//				}
+//				return true
+//			]
+//		)
+		
+		// case c
+		// CrashInfluence => EmergencyDetected
+		add(
+			[a : Object, b : JaakEnvironment, c : OpenEventSpace |
+				a instanceof CrashInfluence
+			]
+			->
+			[a : Object, b : JaakEnvironment, c : OpenEventSpace |
+				var i = a as CrashInfluence
+				var e = new EmergencyDetected(i.position)
+				e.source = new Address(c.ID, ID)
+				c.emit(e)
+				true
+			]
+		)
+
+		// case c
+		// PriorityRequest => Siren
+		add(
+			[a : Object, b : JaakEnvironment, c : OpenEventSpace |
+				a instanceof PriorityRequest
+			]
+			->
+			[a : Object, b : JaakEnvironment, c : OpenEventSpace |
+				var e = a as PriorityRequest
+				b.getBodyFor(e.source.UUID).dropOff(new Siren)
+				true
+			]
+		)
+	}
+
+}

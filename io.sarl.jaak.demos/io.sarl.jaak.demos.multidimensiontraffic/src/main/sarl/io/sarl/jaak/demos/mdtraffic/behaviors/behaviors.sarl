@@ -1,0 +1,105 @@
+package io.sarl.jaak.demos.mdtraffic.behaviors
+
+import io.sarl.core.Lifecycle
+import io.sarl.jaak.demos.mdtraffic.environment.communication.CommunicationEvent
+import io.sarl.jaak.demos.mdtraffic.environment.communication.EmergencyDetected
+import io.sarl.jaak.demos.mdtraffic.environment.communication.EmergencyResolved
+import io.sarl.jaak.demos.mdtraffic.environment.communication.EmergencyVehicleActivated
+import io.sarl.jaak.demos.mdtraffic.environment.communication.PriorityRequest
+import io.sarl.jaak.demos.traffic.behaviors.DrivingCapacity
+import io.sarl.jaak.demos.traffic.behaviors.GPSCapacity
+import io.sarl.jaak.demos.traffic.environment.GroundType
+import io.sarl.jaak.demos.traffic.environment.Path
+import io.sarl.jaak.environment.Perception
+import io.sarl.jaak.environment.PhysicBody
+import io.sarl.lang.core.Address
+import io.sarl.lang.core.Agent
+import io.sarl.util.OpenEventSpace
+import java.util.concurrent.atomic.AtomicBoolean
+import org.arakhne.afc.math.discrete.object2d.Point2i
+import org.arakhne.afc.math.discrete.object2d.Vector2i
+
+/** This class defines an emergency vehicle driver.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+behavior EmergencyDriver {
+
+	uses DrivingCapacity, Lifecycle, PhysicBody, GPSCapacity
+
+	var previousOrientation : Vector2i
+
+	var path : Path
+
+	var target : Point2i
+
+	val emergencyDetected = new AtomicBoolean(false)
+
+	val outputSpace : OpenEventSpace
+	
+	val address : Address
+
+	new (owner : Agent, outputSpace : OpenEventSpace, address : Address) {
+		super(owner);
+		this.outputSpace = outputSpace
+		this.address = address
+	}
+	
+	def emit(evt : CommunicationEvent) {
+		evt.source = this.address 
+		this.outputSpace.emit(evt)
+	}
+
+	on EmergencyDetected [!this.emergencyDetected.get] {
+		synchronized(owner) {
+			target = occurrence.position.clone
+			var direction = Vector2i::toOrientationVector(headingAngle)
+			path = updatePath(path, position, target, direction)
+			this.emergencyDetected.set(true)
+			emit(new EmergencyVehicleActivated(path))
+		}
+	}
+
+	on Perception [this.emergencyDetected.get] {
+		synchronized(owner) {
+			var groundType = occurrence.body.currentGroundType
+			if (groundType === GroundType::EMERGENCY_LOCATION) {
+				emit(new EmergencyResolved(target))
+				target = null
+				path = null
+				killMe
+			}
+
+			var direction = Vector2i::toOrientationVector(occurrence.body.headingAngle)
+	
+			path = updatePath(path, occurrence.body.position, target, direction)
+			
+			var motion : Vector2i = null
+			if (path !== null && !path.empty) {
+				motion = followPath(
+					path,
+					occurrence.body.position,
+					direction,
+					previousOrientation,
+					occurrence.body.perception,
+					occurrence.body.groundPerception)
+			}
+			
+			if (motion !== null && motion.lengthSquared > 0) {
+				move(motion, true)
+				this.previousOrientation = direction
+			}
+
+			emit(new PriorityRequest)
+		}
+		synchronizeBody
+	}
+	
+	on Perception [!this.emergencyDetected.get] {
+		synchronizeBody
+	}
+
+}

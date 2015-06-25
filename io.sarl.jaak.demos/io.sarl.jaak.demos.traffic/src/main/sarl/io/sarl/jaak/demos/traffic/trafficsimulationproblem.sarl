@@ -1,13 +1,14 @@
 package io.sarl.jaak.demos.traffic
 
 import io.sarl.core.Initialize
-import io.sarl.jaak.demos.traffic.environment.physic.GroundType
-import io.sarl.jaak.demos.traffic.environment.physic.MapUtil
-import io.sarl.jaak.demos.traffic.environment.physic.TrafficLightGroup
-import io.sarl.jaak.demos.traffic.environment.physic.TrafficLightManager
+import io.sarl.jaak.demos.traffic.environment.GroundType
+import io.sarl.jaak.demos.traffic.environment.MapUtil
+import io.sarl.jaak.demos.traffic.environment.TrafficInfluenceSolver
+import io.sarl.jaak.demos.traffic.environment.TrafficLightGroup
+import io.sarl.jaak.demos.traffic.environment.TrafficLightManager
 import io.sarl.jaak.demos.traffic.logging.SimulationLogger
+import io.sarl.jaak.demos.traffic.spawn.EmergencyDriverSpawner
 import io.sarl.jaak.demos.traffic.spawn.StandardDriverSpawner
-import io.sarl.jaak.demos.traffic.spawn.UrgencyDriverSpawner
 import io.sarl.jaak.demos.traffic.ui.TrafficFrame
 import io.sarl.jaak.demos.traffic.ui.TrafficPanel
 import io.sarl.jaak.demos.traffic.util.Rectangle2iComparator
@@ -22,7 +23,7 @@ import java.io.Serializable
 import org.arakhne.afc.math.discrete.object2d.Point2i
 import org.arakhne.afc.math.discrete.object2d.Rectangle2i
 import org.arakhne.afc.math.discrete.object2d.Vector2i
-import io.sarl.jaak.demos.traffic.environment.physic.TrafficInfluenceSolver
+import io.sarl.jaak.demos.traffic.environment.PassiveTrafficLightGroup
 
 /** This class defines the simulation environment for the traffic simulation problem.
  * 
@@ -69,12 +70,12 @@ agent TrafficSimulationProblem extends JaakKernelAgent {
 	}
 	
 	/**
-	 * Create an urgency driver spawner.
+	 * Create an emergency driver spawner.
 	 */
-	def createUrgencySpawner(x : int, y : int, direction : Vector2i) : JaakSpawner {
-		return new UrgencyDriverSpawner(
+	def createEmergencySpawner(x : int, y : int, direction : Vector2i) : JaakSpawner {
+		return new EmergencyDriverSpawner(
 			physicEnvironment,
-			TrafficConstants::URGENCY_DRIVER_BUDGET,
+			TrafficConstants::EMERGENCY_DRIVER_BUDGET,
 			x, y,
 			direction)
 	}
@@ -125,16 +126,15 @@ agent TrafficSimulationProblem extends JaakKernelAgent {
 		for (position : standardVehicleSpawners) {
 			spawners.add(createAgentSpawner(position.x(), position.y(), computeDirection(position.x(), position.y())))
 		}
-		var urgencyVehicleSpawners = MapUtil::urgencyVehicleSpawningPositions
-		for (position : urgencyVehicleSpawners) {
-			spawners.add(createUrgencySpawner(position.x(), position.y(), computeDirection(position.x(), position.y())))
+		var emergencyVehicleSpawners = MapUtil::emergencyVehicleSpawningPositions
+		for (position : emergencyVehicleSpawners) {
+			spawners.add(createEmergencySpawner(position.x(), position.y(), computeDirection(position.x(), position.y())))
 		}
 		return spawners;
 	}
 	
 	def newTrafficLightGroup(crossRoad : Rectangle2i) : TrafficLightGroup {
-		var c = TrafficConstants::TRAFFIC_LIGHT_GROUP_TYPE.getConstructor(typeof(Rectangle2i))
-		return c.newInstance(crossRoad)
+		return new PassiveTrafficLightGroup(crossRoad)
 	}
 	
 	/* Create an instance of the environment that must

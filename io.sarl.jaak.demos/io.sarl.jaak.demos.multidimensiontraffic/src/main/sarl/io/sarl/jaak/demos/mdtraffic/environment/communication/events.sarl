@@ -1,0 +1,77 @@
+package io.sarl.jaak.demos.mdtraffic.environment.communication
+
+import org.arakhne.afc.math.discrete.object2d.Point2i
+import org.arakhne.afc.math.discrete.object2d.UnmodifiablePoint2i
+import io.sarl.jaak.demos.traffic.environment.Path
+
+/** Abstract communication event.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+event CommunicationEvent
+
+/** A request for obtaining the priority at traffic lights.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+event PriorityRequest extends CommunicationEvent
+
+/** An emergency situation was detected.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+event EmergencyDetected extends CommunicationEvent {
+
+	/** Position of the emergency situation. */	
+	val position : Point2i
+	
+	new (position : Point2i) {
+		this.position = new UnmodifiablePoint2i(position.x(), position.y())
+	}
+
+}
+
+/** An emergency vehicle was activated.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+event EmergencyVehicleActivated extends CommunicationEvent {
+	
+	/** Path followed by the emergency vehicle. */
+	val path : Path
+	
+	new (path : Path) {
+		this.path = path.clone
+	}
+
+}
+
+/** An emergency situation was resolved.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+event EmergencyResolved extends CommunicationEvent {
+	
+	/** Position of the emergency situation. */	
+	val position : Point2i
+	
+	new (position : Point2i) {
+		this.position = new UnmodifiablePoint2i(position.x(), position.y())
+	}
+
+}
