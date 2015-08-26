@@ -19,8 +19,8 @@
  */
 package io.sarl.jaak.demos.mdtraffic;
 
+import io.sarl.jaak.demos.mdtraffic.environment.MultiEndogenousEngine;
 import io.sarl.jaak.demos.mdtraffic.environment.communication.CommunicationEvent;
-import io.sarl.jaak.environment.endogenous.EnvironmentEndogenousEngine;
 import io.sarl.jaak.environment.influence.Influence;
 import io.sarl.jaak.environment.model.GridModel;
 import io.sarl.jaak.environment.model.JaakEnvironment;
@@ -29,6 +29,7 @@ import io.sarl.util.OpenEventSpace;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.xtext.xbase.lib.Functions.Function3;
@@ -48,16 +49,16 @@ import org.eclipse.xtext.xbase.lib.Pair;
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
-public class RuleDatabase implements EnvironmentEndogenousEngine {
+public class RuleDatabase extends MultiEndogenousEngine {
 	
+	private static final long serialVersionUID = -3427565327797316502L;
+
 	private final JaakEnvironment physicEnvironment;
 	private final OpenEventSpace communicationEnvironment;
 	
 	private final List<Pair<
 					Function3<Object, JaakEnvironment, OpenEventSpace, Boolean>,
 					Function3<Object, JaakEnvironment, OpenEventSpace, Boolean>>> rules = new ArrayList<>();
-	
-	private List<Influence> influences = new ArrayList<>();
 	
 	/**
 	 * @param physicEnvironment
@@ -103,9 +104,17 @@ public class RuleDatabase implements EnvironmentEndogenousEngine {
 	public synchronized Collection<Influence> computeInfluences(
 			GridModel grid,
 			TimeManager timeManager) {
-		Collection<Influence> infs = this.influences;
-		this.influences = new ArrayList<>();
-		return infs;
+		Collection<Influence> generatedInfluences = super.computeInfluences(grid, timeManager);
+
+		Iterator<Influence> iterator = generatedInfluences.iterator();
+		while (iterator.hasNext()) {
+			Influence influence = iterator.next();
+			if (!filter(influence)) {
+				iterator.remove();
+			}
+		}
+
+		return generatedInfluences;
 	}
 		
 }

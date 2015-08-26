@@ -45,12 +45,6 @@ import org.arakhne.afc.util.Pair;
  */
 public class TrafficInfluenceSolver extends PathBasedInfluenceSolver {
 
-	/**
-	 */
-	public TrafficInfluenceSolver() {
-		super();
-	}
-	
 	@Override
 	protected void applyInfluence(ActionApplier actionApplier,
 			Influence influence, MotionInfluenceStatus motionStatus) {

@@ -2,7 +2,6 @@ package io.sarl.jaak.demos.mdtraffic
 
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
-import io.sarl.jaak.demos.mdtraffic.environment.MultiEndogenousEngine
 import io.sarl.jaak.demos.mdtraffic.environment.communication.CommunicationEvent
 import io.sarl.jaak.demos.mdtraffic.environment.communication.EmergencyDetected
 import io.sarl.jaak.demos.mdtraffic.environment.communication.PriorityRequest
@@ -35,15 +34,17 @@ agent MultidimensionalTrafficSimulationProblem extends TrafficSimulationProblem 
 
 	var rules : RuleDatabase
 	
-	var outputSpace : OpenEventSpace
-	var inputSpace : OpenEventSpace
+	var receiveFromAgentSpace : OpenEventSpace
+	var emitToAgentSpace : OpenEventSpace
 
 	on Initialize {
-		outputSpace = defaultContext.createSpace(
-			typeof(OpenEventSpaceSpecification), MultidimensionalTrafficConstants::OUTPUT_COMMUNICATION_SPACE_ID)		
-		inputSpace = defaultContext.createSpace(
-			typeof(OpenEventSpaceSpecification), MultidimensionalTrafficConstants::INPUT_COMMUNICATION_SPACE_ID)
-		outputSpace.register(asEventListener)		
+		receiveFromAgentSpace = defaultContext.createSpace(
+			typeof(OpenEventSpaceSpecification), MultidimensionalTrafficConstants::AGENT_TO_ENVIRONMENT_COMMUNICATION_SPACE_ID)		
+		emitToAgentSpace = defaultContext.createSpace(
+			typeof(OpenEventSpaceSpecification), MultidimensionalTrafficConstants::ENVIRONMENT_TO_AGENT_COMMUNICATION_SPACE_ID)
+		receiveFromAgentSpace.register(asEventListener)
+		
+		controller.simulationStepTimeOut = MultidimensionalTrafficConstants::AGENT_TIMEOUT		
 
 		//TODO: Replace by the "super(occurrence)" syntax when introduced.
 		super._handle_Initialize_0(occurrence)
@@ -65,22 +66,20 @@ agent MultidimensionalTrafficSimulationProblem extends TrafficSimulationProblem 
 	 */
 	def createEnvironment(tm : TimeManager) : JaakEnvironment {
 		var env = super.createEnvironment(tm)
-		this.rules = new RuleDatabase(env, this.inputSpace)
+		this.rules = new RuleDatabase(env, this.emitToAgentSpace)
 		this.rules.createRules
 		var oldEndogenousEngine = env.endogenousEngine
-		var newEndogenousEngine = new MultiEndogenousEngine
-		newEndogenousEngine += oldEndogenousEngine
-		newEndogenousEngine += new EmergencyGenerator
-		newEndogenousEngine += this.rules // Must be the last
-		env.endogenousEngine = newEndogenousEngine
+		this.rules += oldEndogenousEngine
+		this.rules += new EmergencyGenerator
+		env.endogenousEngine = this.rules
 		return env
 	}
 	
 	on CommunicationEvent {
 		synchronized(this) {
 			if (rules.filter(occurrence)) {
-				occurrence.source = new Address(this.inputSpace.ID, occurrence.source.UUID)
-				this.inputSpace.emit(occurrence);
+				occurrence.source = new Address(this.emitToAgentSpace.ID, occurrence.source.UUID)
+				this.emitToAgentSpace.emit(occurrence);
 			}
 		}
 	}

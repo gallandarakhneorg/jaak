@@ -33,19 +33,17 @@ skill SimulationAgentLoggerSkill implements SimulationAgentLoggerCapacity {
 	}
 	
 	def logPath(path : Path, t : float) {
-		if (t < this.t) {
-			throw new IllegalStateException
+		if (t >= this.t) {
+			this.t = t
+			this.path = path
 		}
-		this.t = t
-		this.path = path
 	}
 	
 	def logEmergencySirenSignal(position : Point2i, isStopDecided : boolean, t : float) {
-		if (t < this.t) {
-			throw new IllegalStateException
+		if (t >= this.t) {
+			this.emergencySirenPosition = position
+			this.isStopDecidedWhenEmergency = isStopDecided
 		}
-		this.emergencySirenPosition = position
-		this.isStopDecidedWhenEmergency = isStopDecided
 	}
 
 	def synchronizeLogs {
@@ -76,6 +74,48 @@ skill SimulationAgentLoggerSkill implements SimulationAgentLoggerCapacity {
 				writer.print(p.y())
 			}
 		}
+		writer.print("\n")
+		writer.flush
+		writer.close
+	}
+		
+}
+
+/** This skill defines the capacity to log simulation information from an agent.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+skill SimulationEmergencyAgentLoggerSkill implements SimulationEmergencyAgentLoggerCapacity {
+
+	var logFile : File
+	
+	var startTime : float = -1
+	var endTime : float = -1
+
+	def install {
+		var logFolder = SimulationLogger::logger.loggingFolder
+		this.logFile = new File(logFolder, "emergencyVehicle_" + owner.ID + ".csv")
+		var writer = new PrintWriter(this.logFile)
+		writer.println("Start time\tEnd time")
+		writer.close
+	}
+	
+	def logDrivingDuringEmergencySituation(t : float) {
+		if (startTime < 0) {
+			startTime = t
+		}
+		endTime = t
+	}
+	
+	def synchronizeLogs {
+		var writer = new PrintWriter(this.logFile)
+		writer.println("Start time\tEnd time")
+		writer.print(this.startTime)
+		writer.print("\t")
+		writer.print(this.endTime)
 		writer.print("\n")
 		writer.flush
 		writer.close

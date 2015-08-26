@@ -258,10 +258,7 @@ public abstract class InfluenceSolver<T extends TurtleBody> {
 				assert (emitter != null);
 				oci.changeBody(emitter);
 			}
-		} else {
-			throw new IllegalStateException();
 		}
-
 	}
 
 	/** Invoked to put back a picking perception for the given body.

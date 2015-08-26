@@ -3,6 +3,7 @@ package io.sarl.jaak.demos.traffic
 import io.sarl.core.Initialize
 import io.sarl.jaak.demos.traffic.environment.GroundType
 import io.sarl.jaak.demos.traffic.environment.MapUtil
+import io.sarl.jaak.demos.traffic.environment.PassiveTrafficLightGroup
 import io.sarl.jaak.demos.traffic.environment.TrafficInfluenceSolver
 import io.sarl.jaak.demos.traffic.environment.TrafficLightGroup
 import io.sarl.jaak.demos.traffic.environment.TrafficLightManager
@@ -23,7 +24,6 @@ import java.io.Serializable
 import org.arakhne.afc.math.discrete.object2d.Point2i
 import org.arakhne.afc.math.discrete.object2d.Rectangle2i
 import org.arakhne.afc.math.discrete.object2d.Vector2i
-import io.sarl.jaak.demos.traffic.environment.PassiveTrafficLightGroup
 
 /** This class defines the simulation environment for the traffic simulation problem.
  * 
@@ -147,7 +147,7 @@ agent TrafficSimulationProblem extends JaakKernelAgent {
 
 		var environment = new JaakEnvironment(worldModel.length, worldModel.get(0).length)
 		environment.timeManager = tm
-		environment.influenceSolver = new TrafficInfluenceSolver
+		environment.influenceSolver = new TrafficInfluenceSolver()
 		environment.wrapped = false
 		var actionApplier = environment.actionApplier
 	

@@ -10,6 +10,7 @@ import io.sarl.jaak.demos.traffic.behaviors.DrivingCapacity
 import io.sarl.jaak.demos.traffic.behaviors.GPSCapacity
 import io.sarl.jaak.demos.traffic.environment.GroundType
 import io.sarl.jaak.demos.traffic.environment.Path
+import io.sarl.jaak.demos.traffic.logging.SimulationEmergencyAgentLoggerCapacity
 import io.sarl.jaak.environment.Perception
 import io.sarl.jaak.environment.PhysicBody
 import io.sarl.lang.core.Address
@@ -28,7 +29,7 @@ import org.arakhne.afc.math.discrete.object2d.Vector2i
  */
 behavior EmergencyDriver {
 
-	uses DrivingCapacity, Lifecycle, PhysicBody, GPSCapacity
+	uses DrivingCapacity, Lifecycle, PhysicBody, GPSCapacity, SimulationEmergencyAgentLoggerCapacity
 
 	var previousOrientation : Vector2i
 
@@ -38,19 +39,23 @@ behavior EmergencyDriver {
 
 	val emergencyDetected = new AtomicBoolean(false)
 
-	val outputSpace : OpenEventSpace
+	val emitToEnvironmentSpace : OpenEventSpace
 	
 	val address : Address
 
-	new (owner : Agent, outputSpace : OpenEventSpace, address : Address) {
+	new (owner : Agent, emitToEnvironmentSpace : OpenEventSpace, address : Address) {
 		super(owner);
-		this.outputSpace = outputSpace
-		this.address = address
+		this.emitToEnvironmentSpace = emitToEnvironmentSpace
+		if (address.spaceId == emitToEnvironmentSpace.ID) {
+			this.address = address
+		} else {
+			this.address = new Address(emitToEnvironmentSpace.ID, address.UUID)
+		}
 	}
 	
 	def emit(evt : CommunicationEvent) {
 		evt.source = this.address 
-		this.outputSpace.emit(evt)
+		this.emitToEnvironmentSpace.emit(evt)
 	}
 
 	on EmergencyDetected [!this.emergencyDetected.get] {
@@ -72,6 +77,8 @@ behavior EmergencyDriver {
 				path = null
 				killMe
 			}
+
+			logDrivingDuringEmergencySituation(occurrence.currentTime)
 
 			var direction = Vector2i::toOrientationVector(occurrence.body.headingAngle)
 	
@@ -95,6 +102,7 @@ behavior EmergencyDriver {
 
 			emit(new PriorityRequest)
 		}
+		synchronizeLogs
 		synchronizeBody
 	}
 	

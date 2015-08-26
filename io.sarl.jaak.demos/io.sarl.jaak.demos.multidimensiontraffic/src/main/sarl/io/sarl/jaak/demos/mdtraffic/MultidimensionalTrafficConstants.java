@@ -35,12 +35,16 @@ public final class MultidimensionalTrafficConstants {
 
 	/** Id of the communication space for receiving the agent's messages.
 	 */
-	public static final UUID OUTPUT_COMMUNICATION_SPACE_ID = UUID.randomUUID();
+	public static final UUID AGENT_TO_ENVIRONMENT_COMMUNICATION_SPACE_ID = UUID.randomUUID();
 
 	/** Id of the communication space for emiting messages to the agents.
 	 */
-	public static final UUID INPUT_COMMUNICATION_SPACE_ID = UUID.randomUUID();
+	public static final UUID ENVIRONMENT_TO_AGENT_COMMUNICATION_SPACE_ID = UUID.randomUUID();
 	
+	/** Timeout when waiting for agent influences.
+	 */
+	public static final int AGENT_TIMEOUT = 10;
+
 	private MultidimensionalTrafficConstants() {
 		//
 	}

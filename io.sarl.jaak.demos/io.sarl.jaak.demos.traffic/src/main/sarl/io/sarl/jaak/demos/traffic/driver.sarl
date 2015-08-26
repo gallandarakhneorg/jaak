@@ -5,14 +5,16 @@ import io.sarl.core.Destroy
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
 import io.sarl.jaak.demos.traffic.behaviors.DrivingCapacity
-import io.sarl.jaak.demos.traffic.behaviors.DrivingSkill
 import io.sarl.jaak.demos.traffic.behaviors.EmergencyDriver
 import io.sarl.jaak.demos.traffic.behaviors.GPSCapacity
 import io.sarl.jaak.demos.traffic.behaviors.GPSSkill
 import io.sarl.jaak.demos.traffic.behaviors.StandardDriver
+import io.sarl.jaak.demos.traffic.behaviors.StandardDrivingSkill
 import io.sarl.jaak.demos.traffic.environment.MapUtil
 import io.sarl.jaak.demos.traffic.logging.SimulationAgentLoggerCapacity
 import io.sarl.jaak.demos.traffic.logging.SimulationAgentLoggerSkill
+import io.sarl.jaak.demos.traffic.logging.SimulationEmergencyAgentLoggerCapacity
+import io.sarl.jaak.demos.traffic.logging.SimulationEmergencyAgentLoggerSkill
 import io.sarl.jaak.environment.BodyCreated
 import io.sarl.jaak.environment.Perception
 import io.sarl.jaak.environment.PhysicBody
@@ -38,8 +40,11 @@ agent Driver {
 	on Initialize {
 		synchronized(this) {
 			var body = new PhysicBodySkill
-			setSkill(typeof(SimulationAgentLoggerCapacity), new SimulationAgentLoggerSkill) 
-			setSkill(typeof(DrivingCapacity), new DrivingSkill) 
+			// Select the driving capacity:
+			//    ROADHOG
+			//setSkill(typeof(DrivingCapacity), new RoadhogDrivingSkill) 
+			//    STANDARD
+			setSkill(typeof(DrivingCapacity), new StandardDrivingSkill) 
 			setSkill(typeof(GPSCapacity), new GPSSkill)
 			setSkill(typeof(PhysicBody), body)
 			tmpBehavior = new PerceptionCatcher(this)
@@ -48,10 +53,11 @@ agent Driver {
 	}
 	
 	on Destroy {
+		<SimulationAgentLoggerSkill>clearSkill(typeof(SimulationAgentLoggerCapacity));
+		<SimulationEmergencyAgentLoggerSkill>clearSkill(typeof(SimulationEmergencyAgentLoggerCapacity));
 		<PhysicBodySkill>clearSkill(typeof(PhysicBody));
 		<GPSSkill>clearSkill(typeof(GPSCapacity));
-		<DrivingSkill>clearSkill(typeof(DrivingCapacity));
-		<SimulationAgentLoggerSkill>clearSkill(typeof(SimulationAgentLoggerCapacity))
+		<StandardDrivingSkill>clearSkill(typeof(DrivingCapacity));
 	}
 	
 	def createEmergencyDriverBehavior : Behavior {
@@ -68,8 +74,10 @@ agent Driver {
 		synchronized(this) {
 			var beh : Behavior
 			if (occurrence.body.semantic == EmergencyDriver) {
+				setSkill(typeof(SimulationEmergencyAgentLoggerCapacity), new SimulationEmergencyAgentLoggerSkill) 
 				beh = createEmergencyDriverBehavior
 			} else {
+				setSkill(typeof(SimulationAgentLoggerCapacity), new SimulationAgentLoggerSkill) 
 				var v = new Vector2f(occurrence.worldWidth / 2, occurrence.worldHeight / 2)
 				v.sub(occurrence.body.position.x(), occurrence.body.position.y());
 				v.normalize

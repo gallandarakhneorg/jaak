@@ -13,6 +13,70 @@ import java.util.Random
 import org.arakhne.afc.math.discrete.object2d.Point2i
 import org.arakhne.afc.math.discrete.object2d.Vector2i
 
+/** The skill for driving like a roadhog.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+skill RoadhogDrivingSkill implements DrivingCapacity {
+	
+	var random = new Random
+	
+	def driveRandomly(
+		position : Point2i,
+		orientation : Vector2i,
+	 	previousOrientation : Vector2i,
+		perception : Iterable<? extends Perceivable>,
+		ground : Map<Vector2i, Serializable>) : Vector2i {
+		
+		var directions = MapUtil::detectDirections(position, orientation, previousOrientation, ground)
+		
+		var motion : Vector2i = null
+		
+		switch (directions.size) {
+			case 0: {
+			}
+			case 1: {
+				motion = directions.get(0)
+			}
+			default: {
+				var n = random.nextInt(directions.size)
+				motion = directions.get(n)
+			}
+		}
+		
+		if (motion !== null && motion.lengthSquared == 0) {
+			motion = null;
+		}
+
+		return motion
+	}
+	
+	def followPath(
+		path : Path,
+		position : Point2i,
+		orientation : Vector2i,
+		previousOrientation : Vector2i,
+		perception : Iterable<? extends Perceivable>,
+		ground : Map<Vector2i, Serializable>) : Vector2i {
+		if (position.distanceL1(path.get(0)) > 1) {
+			return null
+		}
+
+		var expectedDirection = new Vector2i
+		expectedDirection.sub(path.get(0), position)
+		
+		return expectedDirection;
+	}
+	
+	def isVehicleStop(body : TurtleObject) : boolean {
+		return false
+	}
+
+}
+
 /** The skill for driving.
  * 
  * @author $Author: sgalland$
@@ -20,7 +84,7 @@ import org.arakhne.afc.math.discrete.object2d.Vector2i
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
-skill DrivingSkill implements DrivingCapacity {
+skill StandardDrivingSkill implements DrivingCapacity {
 	
 	var random = new Random
 	
@@ -114,3 +178,4 @@ skill GPSSkill implements GPSCapacity {
 	}
 	
 }
+

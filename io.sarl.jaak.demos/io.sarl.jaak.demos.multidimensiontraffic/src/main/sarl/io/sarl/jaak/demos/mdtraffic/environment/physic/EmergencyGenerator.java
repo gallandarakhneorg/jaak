@@ -26,6 +26,8 @@ public class EmergencyGenerator extends ArrayList<TrafficLightGroup> implements 
 
 	private static final long serialVersionUID = 2605027929020837388L;
 
+	private boolean isCrashGenerated = false;
+	
 	/**
 	 */
 	public EmergencyGenerator() {
@@ -42,7 +44,8 @@ public class EmergencyGenerator extends ArrayList<TrafficLightGroup> implements 
 
 	@Override
 	public Collection<Influence> computeInfluences(GridModel grid, TimeManager timeManager) {
-		if (timeManager.getCurrentTime() >= TrafficConstants.CRASH_TIME) {
+		if (!this.isCrashGenerated && timeManager.getCurrentTime() >= TrafficConstants.CRASH_TIME) {
+			this.isCrashGenerated = true;
 			List<Point2i> crashes = MapUtil.getCrashPositions();
 			Point2i position = crashes.get((int) Math.random() * crashes.size());
 			return Collections.<Influence>singleton(new CrashInfluence(position));

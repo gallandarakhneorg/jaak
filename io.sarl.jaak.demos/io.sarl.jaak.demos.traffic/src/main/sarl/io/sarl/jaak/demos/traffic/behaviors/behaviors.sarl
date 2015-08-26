@@ -12,6 +12,7 @@ import io.sarl.lang.core.Agent
 import java.io.Serializable
 import org.arakhne.afc.math.discrete.object2d.Point2i
 import org.arakhne.afc.math.discrete.object2d.Vector2i
+import io.sarl.jaak.demos.traffic.logging.SimulationEmergencyAgentLoggerCapacity
 
 /** This class defines a standard driver.
  * 
@@ -110,7 +111,7 @@ behavior StandardDriver {
  */
 behavior EmergencyDriver {
 
-	uses DrivingCapacity, Lifecycle, PhysicBody, GPSCapacity
+	uses DrivingCapacity, Lifecycle, PhysicBody, GPSCapacity, SimulationEmergencyAgentLoggerCapacity
 
 	var previousOrientation : Vector2i
 
@@ -133,6 +134,8 @@ behavior EmergencyDriver {
 					killMe
 				}
 	
+				logDrivingDuringEmergencySituation(occurrence.currentTime)
+
 				var direction = Vector2i::toOrientationVector(occurrence.body.headingAngle)
 		
 				path = updatePath(path, occurrence.body.position, target, direction)
@@ -156,6 +159,7 @@ behavior EmergencyDriver {
 				dropOff(new Siren())
 			}
 		}
+		synchronizeLogs
 		synchronizeBody
 	}
 	

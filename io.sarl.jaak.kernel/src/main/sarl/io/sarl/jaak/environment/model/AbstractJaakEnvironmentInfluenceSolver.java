@@ -35,12 +35,6 @@ import io.sarl.jaak.environment.solver.InfluenceSolver;
 public abstract class AbstractJaakEnvironmentInfluenceSolver extends InfluenceSolver<RealTurtleBody> {
 
 	/**
-	 */
-	public AbstractJaakEnvironmentInfluenceSolver() {
-		//
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override

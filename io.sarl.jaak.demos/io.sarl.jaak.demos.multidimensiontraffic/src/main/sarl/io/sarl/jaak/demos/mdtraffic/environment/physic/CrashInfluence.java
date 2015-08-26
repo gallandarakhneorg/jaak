@@ -51,4 +51,15 @@ public class CrashInfluence extends Influence {
 		return this.position.clone();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "CRASH @ "
+				+ getPosition().toString()
+				+ " NOTIFIED BY "
+				+ super.toString();
+	}
+
 }
