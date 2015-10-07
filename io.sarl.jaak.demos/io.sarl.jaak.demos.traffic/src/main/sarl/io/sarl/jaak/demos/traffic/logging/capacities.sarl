@@ -12,9 +12,9 @@ import org.arakhne.afc.math.discrete.object2d.Point2i
  */
 capacity SimulationAgentLoggerCapacity {
 
-	def logPath(path : Path, t : float)
+	def logPath(agentPosition : Point2i, path : Path, t : float)
 
-	def logEmergencySirenSignal(position : Point2i, isStopDecided : boolean, t : float)
+	def logEmergencySirenSignal(sirenPosition : Point2i, isStopDecided : boolean, t : float)
 	
 	def synchronizeLogs
 

@@ -59,7 +59,7 @@ behavior StandardDriver {
 			var direction = Vector2i::toOrientationVector(headingAngle)
 	
 			path = updatePath(path, position, target, direction)
-			logPath(path, occurrence.currentTime)
+			logPath(position, path, occurrence.currentTime)
 
 			var siren = occurrence.body.getFirstPerceptionAtCurrentPosition(typeof(Siren))
 			

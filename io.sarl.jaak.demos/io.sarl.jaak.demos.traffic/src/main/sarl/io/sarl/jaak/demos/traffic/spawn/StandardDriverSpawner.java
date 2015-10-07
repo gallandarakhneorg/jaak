@@ -1,5 +1,6 @@
 package io.sarl.jaak.demos.traffic.spawn;
 
+import io.sarl.jaak.demos.traffic.TrafficConstants;
 import io.sarl.jaak.demos.traffic.behaviors.StandardDriver;
 import io.sarl.jaak.environment.EnvironmentArea;
 import io.sarl.jaak.environment.body.TurtleBody;
@@ -43,7 +44,7 @@ public class StandardDriverSpawner extends JaakPointSpawner {
 
 	@Override
 	protected boolean isSpawnable(TimeManager timeManager) {
-		return (this.budget > 0) && (this.firstSpawn.get() || this.random.nextFloat() <= (1f/20f));
+		return (this.budget > 0) && (this.firstSpawn.get() || this.random.nextFloat() <= TrafficConstants.SPAWN_RATE);
 	}
 
 	@Override

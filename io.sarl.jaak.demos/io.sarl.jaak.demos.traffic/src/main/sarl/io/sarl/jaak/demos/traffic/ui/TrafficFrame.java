@@ -1,24 +1,28 @@
 package io.sarl.jaak.demos.traffic.ui;
 
+import io.sarl.jaak.demos.traffic.logging.SimulationLogger;
 import io.sarl.jaak.kernel.JaakController;
 import io.sarl.jaak.kernel.JaakEvent;
 import io.sarl.jaak.kernel.JaakListener;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.arakhne.afc.vmutil.locale.Locale;
 
 /**
- * Graphic User Interface for the ant demo.
+ * Graphic User Interface for the traffic demo.
  *
  * @author $Author: sgalland$
  * @version $FullVersion$
@@ -49,11 +53,26 @@ public class TrafficFrame extends JFrame implements JaakListener {
 		JScrollPane scrollPane = new JScrollPane(panel);
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setLayout(new GridLayout(2, 1));
+		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+
+		final JCheckBox logPictures = new JCheckBox(Locale.getString(TrafficFrame.class, "LOG_PICTURES"));
+		bottomPanel.add(logPictures);
+		logPictures.setSelected(SimulationLogger.isPictureOutput());
+		logPictures.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SimulationLogger.setPictureOutput(logPictures.isSelected());
+			}
+		});
+		
 		final JButton startButton = new JButton(Locale.getString(TrafficFrame.class, "START"));
-		getContentPane().add(startButton, BorderLayout.SOUTH);
+		bottomPanel.add(startButton);
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				logPictures.setEnabled(false);
 				startButton.setEnabled(false);
 				TrafficFrame.this.controller.startSimulation();
 			}

@@ -33,14 +33,14 @@ import org.arakhne.afc.math.MathUtil;
 import org.arakhne.afc.math.discrete.object2d.Point2i;
 
 /**
- * Graphic User Interface for the ant demo.
+ * Graphic User Interface for the traffic demo.
  * 
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
-public class TrafficPanel extends JPanel implements JaakListener, MouseListener, MouseMotionListener {
+public class TrafficPanel extends JPanel implements TrafficPrinter, JaakListener, MouseListener, MouseMotionListener {
 
 	private static final long serialVersionUID = 4513244867249144515L;
 	

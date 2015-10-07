@@ -1,6 +1,7 @@
 package io.sarl.jaak.demos.traffic.logging;
 
 import io.sarl.jaak.demos.traffic.environment.GroundType;
+import io.sarl.jaak.demos.traffic.ui.TrafficPrinter;
 import io.sarl.jaak.demos.traffic.util.Rectangle2iComparator;
 import io.sarl.jaak.environment.EnvironmentArea;
 import io.sarl.jaak.kernel.JaakEvent;
@@ -23,9 +24,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.imageio.ImageIO;
-import javax.swing.JPanel;
 
 import org.arakhne.afc.math.discrete.object2d.Rectangle2i;
 import org.arakhne.afc.vmutil.FileSystem;
@@ -42,6 +43,24 @@ public class SimulationLogger implements JaakListener {
 
 	private static final DecimalFormat FILE_INDEX_FORMATER = new DecimalFormat("00000000.000");
 	private static SimulationLogger LOGGER;
+	
+	private static final AtomicBoolean outputPictures = new AtomicBoolean(false);
+	
+	/** Change the flag that enable/disable the output of the pictures.
+	 *
+	 * @param enable is <code>true</code> for outputing the pictures.
+	 */
+	public static void setPictureOutput(boolean enable) {
+		outputPictures.set(enable);
+	}
+	
+	/** Replies if the pictures should be output.
+	 *
+	 * @return <code>true</code> for outputing the pictures.
+	 */
+	public static boolean isPictureOutput() {
+		return outputPictures.get();
+	}
 	
 	/** Replies the simulation logger.
 	 *
@@ -61,7 +80,7 @@ public class SimulationLogger implements JaakListener {
 	 * @param printer the UI printer linked to this simulation logger.
 	 * @return the simulation logger.
 	 */
-	public static SimulationLogger createLogger(JPanel printer) {
+	public static SimulationLogger createLogger(TrafficPrinter printer) {
 		synchronized(SimulationLogger.class) {
 			if (LOGGER == null) {
 				LOGGER = new SimulationLogger(printer);
@@ -89,12 +108,12 @@ public class SimulationLogger implements JaakListener {
 
 	private Zone[][] zones = null;
 
-	private final JPanel printer;
+	private final TrafficPrinter printer;
 
 	/**
 	 * @param printer the object that is able to output an image of the environment.
 	 */
-	private SimulationLogger(JPanel printer) {
+	private SimulationLogger(TrafficPrinter printer) {
 		try {
 			this.logFolder = FileSystem.createTempDirectory("trafficSimulation", null);
 			System.out.println("Logging into: " + this.logFolder);
@@ -150,7 +169,9 @@ public class SimulationLogger implements JaakListener {
 					Graphics2D g = (Graphics2D) img.getGraphics();
 					this.printer.paint(g);
 					g.dispose();
-					ImageIO.write(img, "png", new File(this.vehicleMapFolder, "t" + formatIdx(time) + ".png"));
+					if (isPictureOutput()) {
+						ImageIO.write(img, "png", new File(this.vehicleMapFolder, "t" + formatIdx(time) + ".png"));
+					}
 				}
 	
 				if (this.zones == null) {
@@ -253,8 +274,10 @@ public class SimulationLogger implements JaakListener {
 				vehicleCountGraphics.dispose();
 				vehicleDensityGraphics.dispose();
 				
-				ImageIO.write(vehicleCount, "png", new File(this.countMapFolder, "t" + formatIdx(time) + ".png"));
-				ImageIO.write(vehicleDensity, "png", new File(this.densityMapFolder, "t" + formatIdx(time) + ".png"));
+				if (isPictureOutput()) {
+					ImageIO.write(vehicleCount, "png", new File(this.countMapFolder, "t" + formatIdx(time) + ".png"));
+					ImageIO.write(vehicleDensity, "png", new File(this.densityMapFolder, "t" + formatIdx(time) + ".png"));
+				}
 			} catch (IOException e) {
 				throw new Error(e);
 			}

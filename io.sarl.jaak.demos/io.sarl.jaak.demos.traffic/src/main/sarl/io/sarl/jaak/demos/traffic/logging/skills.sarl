@@ -20,6 +20,7 @@ skill SimulationAgentLoggerSkill implements SimulationAgentLoggerCapacity {
 	var t : float = 0
 	var path : Path
 	var emergencySirenPosition : Point2i
+	var position : Point2i
 	var isStopDecidedWhenEmergency : boolean
 
 	def install {
@@ -28,14 +29,15 @@ skill SimulationAgentLoggerSkill implements SimulationAgentLoggerCapacity {
 		agentFolder.mkdirs
 		this.logFile = new File(agentFolder, "a_" + owner.ID + ".csv")
 		var writer = new PrintWriter(this.logFile)
-		writer.println("t\tSiren?\tSiren Position\tStop?\tPath")
+		writer.println("t\tPosition\tSiren?\tSiren Position\tStop?\tPath")
 		writer.close
 	}
 	
-	def logPath(path : Path, t : float) {
+	def logPath(position : Point2i, path : Path, t : float) {
 		if (t >= this.t) {
 			this.t = t
 			this.path = path
+			this.position = position.clone
 		}
 	}
 	
@@ -50,6 +52,8 @@ skill SimulationAgentLoggerSkill implements SimulationAgentLoggerCapacity {
 		var fwriter = new FileWriter(this.logFile, true)
 		var writer = new PrintWriter(fwriter)
 		writer.print(this.t)
+		writer.print("\t")
+		writer.print(if (this.position === null) "" else position.x() + " " + position.y())
 		writer.print("\t")
 		writer.print(if (this.emergencySirenPosition !== null) 1 else 0)
 		writer.print("\t")

@@ -8,6 +8,7 @@ import io.sarl.jaak.demos.traffic.behaviors.DrivingCapacity
 import io.sarl.jaak.demos.traffic.behaviors.EmergencyDriver
 import io.sarl.jaak.demos.traffic.behaviors.GPSCapacity
 import io.sarl.jaak.demos.traffic.behaviors.GPSSkill
+import io.sarl.jaak.demos.traffic.behaviors.RoadhogDrivingSkill
 import io.sarl.jaak.demos.traffic.behaviors.StandardDriver
 import io.sarl.jaak.demos.traffic.behaviors.StandardDrivingSkill
 import io.sarl.jaak.demos.traffic.environment.MapUtil
@@ -44,7 +45,8 @@ agent Driver {
 			//    ROADHOG
 			//setSkill(typeof(DrivingCapacity), new RoadhogDrivingSkill) 
 			//    STANDARD
-			setSkill(typeof(DrivingCapacity), new StandardDrivingSkill) 
+			setSkill(typeof(DrivingCapacity), new StandardDrivingSkill)
+			
 			setSkill(typeof(GPSCapacity), new GPSSkill)
 			setSkill(typeof(PhysicBody), body)
 			tmpBehavior = new PerceptionCatcher(this)

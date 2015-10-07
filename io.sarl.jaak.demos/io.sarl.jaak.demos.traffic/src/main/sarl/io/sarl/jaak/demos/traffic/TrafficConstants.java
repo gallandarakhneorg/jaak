@@ -34,6 +34,10 @@ public final class TrafficConstants {
 	/** Budget of driver agents for a specific spawner.
 	 */
 	public static final int STANDARD_DRIVER_BUDGET = 25;
+	
+	/** Probability to spawn a vehicle at a given time.
+	 */
+	public static final float SPAWN_RATE = 1f/20f;
 
 	/** Budget of emergency driver agents for a specific spawner.
 	 */
