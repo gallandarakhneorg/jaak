@@ -111,3 +111,26 @@ behavior EmergencyDriver {
 	}
 
 }
+
+/** This class defines a standard vehicle driver.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+behavior StandardDriver extends io.sarl.jaak.demos.traffic.behaviors.StandardDriver {
+
+	new (owner : Agent, target : Point2i) {
+		super(owner, target);
+	}
+	
+	on EmergencyVehicleActivated {
+		synchronized(owner) {
+			var direction = Vector2i::toOrientationVector(headingAngle)
+			path = findPath(position, target, direction, occurrence.path)
+			logEmergencyVehicleStarted(path, currentTime)
+		}
+	}
+
+}

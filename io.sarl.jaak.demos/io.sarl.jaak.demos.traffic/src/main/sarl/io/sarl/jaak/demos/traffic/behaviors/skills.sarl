@@ -156,8 +156,8 @@ skill StandardDrivingSkill implements DrivingCapacity {
 
 skill GPSSkill implements GPSCapacity {
 
-	def findPath(from : Point2i, to : Point2i, vehicleDirection : Vector2i) : Path {
-		return Astar::find(from, to, vehicleDirection)
+	def findPath(from : Point2i, to : Point2i, vehicleDirection : Vector2i, avoidableRoads : Path = null) : Path {
+		return Astar::find(from, to, vehicleDirection, avoidableRoads)
 	}
 	
 	def updatePath(path : Path, from : Point2i, to : Point2i, vehicleDirection : Vector2i) : Path {

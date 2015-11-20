@@ -14,6 +14,8 @@ capacity SimulationAgentLoggerCapacity {
 
 	def logPath(agentPosition : Point2i, path : Path, t : float)
 
+	def logEmergencyVehicleStarted(newPath : Path, t : float)
+
 	def logEmergencySirenSignal(sirenPosition : Point2i, isStopDecided : boolean, t : float)
 	
 	def synchronizeLogs

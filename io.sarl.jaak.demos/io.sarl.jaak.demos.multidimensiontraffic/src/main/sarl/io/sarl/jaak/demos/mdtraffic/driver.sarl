@@ -3,9 +3,11 @@ package io.sarl.jaak.demos.mdtraffic
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Initialize
 import io.sarl.jaak.demos.mdtraffic.behaviors.EmergencyDriver
+import io.sarl.jaak.demos.mdtraffic.behaviors.StandardDriver
 import io.sarl.lang.core.Address
 import io.sarl.lang.core.Behavior
 import io.sarl.util.OpenEventSpace
+import org.arakhne.afc.math.discrete.object2d.Point2i
 
 /** This class defines a driver.
  * 
@@ -35,4 +37,8 @@ agent Driver extends io.sarl.jaak.demos.traffic.Driver {
 		new EmergencyDriver(this, emitToEnvironmentSpace, address)
 	}
 	
+	def createStandardDriverBehavior(target : Point2i) : Behavior {
+		new StandardDriver(this, target)
+	}
+
 }

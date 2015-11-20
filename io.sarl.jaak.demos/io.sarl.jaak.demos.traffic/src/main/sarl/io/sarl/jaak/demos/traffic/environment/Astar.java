@@ -22,7 +22,8 @@ import org.arakhne.afc.util.ListUtil;
  */
 public final class Astar {
 
-	private static final int TRAVEL_COST = 1;
+	private static final float TRAVEL_COST = 1;
+	private static final float AVOIDABLE_ROAD_COST_FACTOR = 10;
 	
 	private static final CostComparator COST_COMPARATOR = new CostComparator();
 	private static final PositionComparator POSITION_COMPARATOR = new PositionComparator();
@@ -36,11 +37,23 @@ public final class Astar {
 	 * @param from the start point.
 	 * @param to the end point.
 	 * @param vehicleDirection the direction of the vehicle.
+	 * @param avoidableRoads the roads to avoid.
+	 * @return the path, except the start point.
+	 */
+	public static Path find(Point2i from, Point2i to, Vector2i vehicleDirection, Path avoidableRoads) {
+		Node targetNode = searchPath(from, to, vehicleDirection, avoidableRoads);
+		return buildPath(targetNode);
+	}
+	
+	/** Find a path.
+	 *
+	 * @param from the start point.
+	 * @param to the end point.
+	 * @param vehicleDirection the direction of the vehicle.
 	 * @return the path, except the start point.
 	 */
 	public static Path find(Point2i from, Point2i to, Vector2i vehicleDirection) {
-		Node targetNode = searchPath(from, to, vehicleDirection);
-		return buildPath(targetNode);
+		return find(from, to, vehicleDirection, null);
 	}
 	
 	private static Path buildPath(Node node) {
@@ -72,8 +85,17 @@ public final class Astar {
 //			}
 //		}
 //	}
-	
-	private static Node searchPath(Point2i from, Point2i to, Vector2i vehicleDirection) {
+
+	private static float computeCost(float costToReach, float travelCost, boolean avoidableRoad) {
+		float cost = travelCost;
+		if (avoidableRoad) {
+			cost *= AVOIDABLE_ROAD_COST_FACTOR;
+		}
+		cost += costToReach;
+		return cost;
+	}
+
+	private static Node searchPath(Point2i from, Point2i to, Vector2i vehicleDirection, Path avoidableRoads) {
 		GroundType[][] world = MapUtil.getWorldModel();
 
 		List<Node> openList = new ArrayList<>();
@@ -95,9 +117,16 @@ public final class Astar {
 					cheapest.getPreviousVehicleDirection(),
 					cheapest.getVehicleDirection())) {
 				Node candidate = new Node(n);
-				candidate.setCostToReach(cheapest.getCostToReach() + TRAVEL_COST);
-				candidate.setEstimatedCost(heuristic(n, to));
+				boolean avoidableRoad = false;
+				if (avoidableRoads != null && !avoidableRoads.isEmpty()) {
+					avoidableRoad = avoidableRoads.contains(n);
+				}
 				candidate.setPrevious(cheapest);
+				candidate.setCostToReach(computeCost(
+						cheapest.getCostToReach(),
+						TRAVEL_COST,
+						avoidableRoad));
+				candidate.setEstimatedCost(heuristic(n, to));
 				if (!ListUtil.contains(closeList, POSITION_COMPARATOR, candidate)) {
 					int oldIndex = openList.indexOf(candidate);
 					if (oldIndex != -1) {

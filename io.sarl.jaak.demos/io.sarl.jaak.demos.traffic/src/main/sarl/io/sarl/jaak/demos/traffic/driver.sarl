@@ -8,7 +8,6 @@ import io.sarl.jaak.demos.traffic.behaviors.DrivingCapacity
 import io.sarl.jaak.demos.traffic.behaviors.EmergencyDriver
 import io.sarl.jaak.demos.traffic.behaviors.GPSCapacity
 import io.sarl.jaak.demos.traffic.behaviors.GPSSkill
-import io.sarl.jaak.demos.traffic.behaviors.RoadhogDrivingSkill
 import io.sarl.jaak.demos.traffic.behaviors.StandardDriver
 import io.sarl.jaak.demos.traffic.behaviors.StandardDrivingSkill
 import io.sarl.jaak.demos.traffic.environment.MapUtil

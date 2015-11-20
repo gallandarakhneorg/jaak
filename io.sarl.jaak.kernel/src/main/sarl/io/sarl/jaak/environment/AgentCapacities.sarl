@@ -200,4 +200,10 @@ capacity PhysicBody {
 	 */
 	def getSpeed : float
 	
+	/** Replies the time.
+	 * 
+	 * @return the time
+	 */
+	def getCurrentTime : float
+	
 }

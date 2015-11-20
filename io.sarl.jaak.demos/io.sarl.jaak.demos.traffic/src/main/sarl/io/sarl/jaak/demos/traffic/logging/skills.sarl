@@ -41,6 +41,12 @@ skill SimulationAgentLoggerSkill implements SimulationAgentLoggerCapacity {
 		}
 	}
 	
+	def logEmergencyVehicleStarted(newPath : Path, t : float) {
+		if (t >= this.t) {
+			this.path = path;
+		}
+	}
+
 	def logEmergencySirenSignal(position : Point2i, isStopDecided : boolean, t : float) {
 		if (t >= this.t) {
 			this.emergencySirenPosition = position
@@ -82,7 +88,7 @@ skill SimulationAgentLoggerSkill implements SimulationAgentLoggerCapacity {
 		writer.flush
 		writer.close
 	}
-		
+	
 }
 
 /** This skill defines the capacity to log simulation information from an agent.

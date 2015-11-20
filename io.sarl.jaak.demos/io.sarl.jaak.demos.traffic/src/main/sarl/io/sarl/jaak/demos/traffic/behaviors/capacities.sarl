@@ -69,7 +69,7 @@ capacity DrivingCapacity {
  */
 capacity GPSCapacity {
 	
-	def findPath(from : Point2i, to : Point2i, vehicleDirection : Vector2i) : Path
+	def findPath(from : Point2i, to : Point2i, vehicleDirection : Vector2i, avoidableRoads : Path = null) : Path
 	
 	def updatePath(path : Path, from : Point2i, to : Point2i, vehicleDirection : Vector2i) : Path
 
