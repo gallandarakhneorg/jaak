@@ -54,11 +54,11 @@ agent Driver {
 	}
 	
 	on Destroy {
-		<SimulationAgentLoggerSkill>clearSkill(typeof(SimulationAgentLoggerCapacity));
-		<SimulationEmergencyAgentLoggerSkill>clearSkill(typeof(SimulationEmergencyAgentLoggerCapacity));
-		<PhysicBodySkill>clearSkill(typeof(PhysicBody));
-		<GPSSkill>clearSkill(typeof(GPSCapacity));
-		<StandardDrivingSkill>clearSkill(typeof(DrivingCapacity));
+		clearSkill(typeof(SimulationAgentLoggerCapacity));
+		clearSkill(typeof(SimulationEmergencyAgentLoggerCapacity));
+		clearSkill(typeof(PhysicBody));
+		clearSkill(typeof(GPSCapacity));
+		clearSkill(typeof(DrivingCapacity));
 	}
 	
 	def createEmergencyDriverBehavior : Behavior {
