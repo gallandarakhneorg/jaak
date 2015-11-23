@@ -6,7 +6,7 @@
 
 	<groupId>io.sarl.jaak</groupId>
 	<artifactId>io.sarl.jaak</artifactId>
-	<version>2.1.0.0-SNAPSHOT</version>
+	<version>2.0.3.0-SNAPSHOT</version>
 	<name>Jaak Environment</name>
 	<packaging>pom</packaging>
 	<url>https://github.com/gallandarakhneorg/jaak</url>
@@ -29,13 +29,13 @@
 	<!-- ======================================= -->
 
 	<properties>
-		<year>2014</year>
+		<year>2015</year>
 		<copyrighters>Stéphane GALLAND</copyrighters>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<compiler.level>1.7</compiler.level>
-		<sarl.version>1.0.0-SNAPSHOT</sarl.version>
-		<janus.version>2.1.0.0-SNAPSHOT</janus.version>
-		<guice.version>4.0-beta4</guice.version>
+		<compiler.level>1.8</compiler.level>
+		<sarl.version>0.3.0-SNAPSHOT</sarl.version>
+		<janus.version>2.0.3.0-SNAPSHOT</janus.version>
+		<guice.version>4.0</guice.version>
 		<afc.version>12.0</afc.version>
 	</properties>
 
@@ -84,7 +84,6 @@
 				<groupId>io.sarl.maven</groupId>
 				<artifactId>io.sarl.maven.sdk</artifactId>
 				<version>${sarl.version}</version>
-				<type>pom</type>
 				<exclusions>
 					<exclusion>
 						<groupId>com.google.guava</groupId>
@@ -165,7 +164,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>2.6.1</version>
+					<version>3.0.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -197,7 +196,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
-					<version>2.15</version>
+					<version>2.17</version>
 					<executions>
 						<execution>
 							<phase>prepare-package</phase>
