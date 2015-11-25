@@ -51,12 +51,22 @@ capacity DrivingCapacity {
 		perception : Iterable<? extends Perceivable>,
 		ground : Map<Vector2i, Serializable>) : Vector2i
 
-	/** Test if the vehicle should stop according to the given parameters. 
+	/** Test if the vehicle should stop according to the traffic state.
 	 * 
 	 * @param body the vehicle
 	 * @return <code>true</code> if the vehicle should stop, otherwise <code>false</code>.
 	 */
 	def isVehicleStop(body : TurtleObject) : boolean
+
+	/** Test if the vehicle should stop if the siren is heard.
+	 * 
+	 * @param sirenPosition the position of the siren.
+	 * @param groundType the type of the ground.
+	 * @param position the position of the vehicle.
+	 * @param direction the direction of the vehicle.
+	 * @return <code>true</code> if the vehicle should stop, otherwise <code>false</code>.
+	 */
+	def isStopOnSiren(sirenPosition : Point2i, groundType : Serializable, position : Point2i, direction : Vector2i) : boolean
 
 }
 

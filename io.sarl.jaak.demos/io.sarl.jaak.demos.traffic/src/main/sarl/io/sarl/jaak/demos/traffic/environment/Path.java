@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import org.arakhne.afc.math.discrete.object2d.Path2i;
 import org.arakhne.afc.math.discrete.object2d.Point2i;
+import org.eclipse.xtext.xbase.lib.Inline;
 
 /** Definition of a path.
  * 
@@ -12,7 +14,9 @@ import org.arakhne.afc.math.discrete.object2d.Point2i;
  * @version $FullVersion$
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
+ * @deprecated replaced by {@link Path2i}
  */
+@Deprecated
 public class Path extends ArrayList<Point2i> implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = 3927921866951405752L;
@@ -56,6 +60,33 @@ public class Path extends ArrayList<Point2i> implements Cloneable, Serializable 
 			return true;
 		}
 		return false;
+	}
+	
+	/** Replies the size of the segment that is shared by the two paths from the starting point.
+	 *
+	 * @param otherPath other path.
+	 * @return the number of points that are shared.
+	 */
+	public int sharedSegmentSize(Path otherPath) {
+		int i = 0;
+		for (; i < size() && i < otherPath.size(); ++i) {
+			Point2i a = get(i);
+			Point2i b = otherPath.get(i);
+			if (!a.equals(b)) {
+				return i;
+			}
+		}
+		return i;
+	}
+
+	/** Replies the size of the segment that is shared by the two paths from the starting point.
+	 *
+	 * @param otherPath other path.
+	 * @return the number of points that are shared.
+	 */
+	@Inline("sharedSegmentSize($1)")
+	public int operator_diamond(Path otherPath) {
+		return sharedSegmentSize(otherPath);
 	}
 
 }

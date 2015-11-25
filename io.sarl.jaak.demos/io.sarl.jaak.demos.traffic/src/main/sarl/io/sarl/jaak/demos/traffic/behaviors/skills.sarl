@@ -1,6 +1,7 @@
 package io.sarl.jaak.demos.traffic.behaviors
 
 import io.sarl.jaak.demos.traffic.environment.Astar
+import io.sarl.jaak.demos.traffic.environment.GroundType
 import io.sarl.jaak.demos.traffic.environment.MapUtil
 import io.sarl.jaak.demos.traffic.environment.Path
 import io.sarl.jaak.demos.traffic.environment.TrafficLight
@@ -74,17 +75,21 @@ skill RoadhogDrivingSkill implements DrivingCapacity {
 	def isVehicleStop(body : TurtleObject) : boolean {
 		return false
 	}
-
+	
+	def isStopOnSiren(sirenPosition : Point2i, groundType : Serializable, position : Point2i, direction : Vector2i) : boolean {
+		return false
+	}
+	
 }
 
-/** The skill for driving.
+/** The skill for driving and only considering the roads and the traffic lights.
  * 
  * @author $Author: sgalland$
  * @version $FullVersion$
  * @mavengroupid $GroupId$
  * @mavenartifactid $ArtifactId$
  */
-skill StandardDrivingSkill implements DrivingCapacity {
+skill BasicDrivingSkill implements DrivingCapacity {
 	
 	var random = new Random
 	
@@ -151,7 +156,35 @@ skill StandardDrivingSkill implements DrivingCapacity {
 		v.sub(to, from)
 		return v;
 	}
+	
+	def isStopOnSiren(sirenPosition : Point2i, groundType : Serializable, position : Point2i, direction : Vector2i) : boolean {
+		return false
+	}
+	
+}
 
+/** The skill for driving.
+ * 
+ * @author $Author: sgalland$
+ * @version $FullVersion$
+ * @mavengroupid $GroupId$
+ * @mavenartifactid $ArtifactId$
+ */
+skill StandardDrivingSkill extends BasicDrivingSkill {
+	
+	def isStopOnSiren(sirenPosition : Point2i, groundType : Serializable, position : Point2i, direction : Vector2i) : boolean {
+		// Do not stop on cross road.
+		if (groundType !== GroundType::CROSS_ROAD) {
+			var sirenDirection = new Vector2i
+			sirenDirection.sub(sirenPosition, position)
+			var dot = direction.dot(sirenDirection)
+			if (dot >= 0) {
+				return true
+			}
+		}
+		return false
+	}
+	
 }
 
 skill GPSSkill implements GPSCapacity {

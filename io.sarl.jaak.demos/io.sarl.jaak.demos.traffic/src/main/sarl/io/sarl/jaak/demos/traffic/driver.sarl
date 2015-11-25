@@ -4,6 +4,7 @@ import io.sarl.core.Behaviors
 import io.sarl.core.Destroy
 import io.sarl.core.Initialize
 import io.sarl.core.Lifecycle
+import io.sarl.jaak.demos.traffic.behaviors.BasicDrivingSkill
 import io.sarl.jaak.demos.traffic.behaviors.DrivingCapacity
 import io.sarl.jaak.demos.traffic.behaviors.EmergencyDriver
 import io.sarl.jaak.demos.traffic.behaviors.GPSCapacity
@@ -41,9 +42,11 @@ agent Driver {
 		synchronized(this) {
 			var body = new PhysicBodySkill
 			// Select the driving capacity:
-			//    ROADHOG
+			//    ROADHOG: No traffic light
 			//setSkill(typeof(DrivingCapacity), new RoadhogDrivingSkill) 
-			//    STANDARD
+			//    BASIC: Traffic light, no siren
+			//setSkill(typeof(DrivingCapacity), new BasicDrivingSkill) 
+			//    STANDARD: Traffic light, siren
 			setSkill(typeof(DrivingCapacity), new StandardDrivingSkill)
 			
 			setSkill(typeof(GPSCapacity), new GPSSkill)
@@ -54,11 +57,11 @@ agent Driver {
 	}
 	
 	on Destroy {
-		clearSkill(typeof(SimulationAgentLoggerCapacity));
-		clearSkill(typeof(SimulationEmergencyAgentLoggerCapacity));
-		clearSkill(typeof(PhysicBody));
-		clearSkill(typeof(GPSCapacity));
-		clearSkill(typeof(DrivingCapacity));
+		<SimulationAgentLoggerSkill>clearSkill(typeof(SimulationAgentLoggerCapacity));
+		<SimulationEmergencyAgentLoggerSkill>clearSkill(typeof(SimulationEmergencyAgentLoggerCapacity));
+		<PhysicBodySkill>clearSkill(typeof(PhysicBody));
+		<GPSSkill>clearSkill(typeof(GPSCapacity));
+		<StandardDrivingSkill>clearSkill(typeof(DrivingCapacity));
 	}
 	
 	def createEmergencyDriverBehavior : Behavior {

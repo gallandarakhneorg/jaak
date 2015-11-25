@@ -97,7 +97,7 @@ class JaakGrid implements GridModel, ActionApplier {
 				this.grid[x][y] = cell;
 			}
 			return cell;
-		} catch (Throwable _) {
+		} catch (Throwable exception) {
 			return null;
 		}
 	}

@@ -93,7 +93,7 @@ class AgentBodyCreator implements JaakBodyCreator {
 					Constructor<?> c = f.getConstructor(int.class);
 					return (TurtleFrustum) c.newInstance(this.parameters.frustumLength);
 				}
-			} catch (Throwable _) {
+			} catch (Throwable exception) {
 				//
 			}
 		}

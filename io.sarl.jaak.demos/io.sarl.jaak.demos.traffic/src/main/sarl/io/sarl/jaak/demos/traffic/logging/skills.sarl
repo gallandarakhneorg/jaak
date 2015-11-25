@@ -19,6 +19,7 @@ skill SimulationAgentLoggerSkill implements SimulationAgentLoggerCapacity {
 	
 	var t : float = 0
 	var path : Path
+	var pathChangeAfterNumberOfCells = -1
 	var emergencySirenPosition : Point2i
 	var position : Point2i
 	var isStopDecidedWhenEmergency : boolean
@@ -29,7 +30,7 @@ skill SimulationAgentLoggerSkill implements SimulationAgentLoggerCapacity {
 		agentFolder.mkdirs
 		this.logFile = new File(agentFolder, "a_" + owner.ID + ".csv")
 		var writer = new PrintWriter(this.logFile)
-		writer.println("t\tPosition\tSiren?\tSiren Position\tStop?\tPath")
+		writer.println("t\tPosition\tSiren?\tSiren Position\tStop?\tPath\tChange after")
 		writer.close
 	}
 	
@@ -41,9 +42,14 @@ skill SimulationAgentLoggerSkill implements SimulationAgentLoggerCapacity {
 		}
 	}
 	
-	def logEmergencyVehicleStarted(newPath : Path, t : float) {
+	def logEmergencyVehicleStarted(newPath : Path, changeAfter : int, t : float) {
 		if (t >= this.t) {
 			this.path = path;
+			if ((0..this.path.size).contains(changeAfter)) {
+				this.pathChangeAfterNumberOfCells = changeAfter
+			} else {
+				this.pathChangeAfterNumberOfCells = -1
+			}
 		}
 	}
 
@@ -83,6 +89,10 @@ skill SimulationAgentLoggerSkill implements SimulationAgentLoggerCapacity {
 				writer.print(" ")
 				writer.print(p.y())
 			}
+		}
+		writer.print("\t")
+		if (this.pathChangeAfterNumberOfCells >= 0) {
+			writer.print(this.pathChangeAfterNumberOfCells)
 		}
 		writer.print("\n")
 		writer.flush

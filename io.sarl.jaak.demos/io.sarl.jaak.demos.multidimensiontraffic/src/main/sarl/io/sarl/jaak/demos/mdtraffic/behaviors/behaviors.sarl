@@ -128,8 +128,9 @@ behavior StandardDriver extends io.sarl.jaak.demos.traffic.behaviors.StandardDri
 	on EmergencyVehicleActivated {
 		synchronized(owner) {
 			var direction = Vector2i::toOrientationVector(headingAngle)
+			var oldPath = this.path.clone
 			path = findPath(position, target, direction, occurrence.path)
-			logEmergencyVehicleStarted(path, currentTime)
+			logEmergencyVehicleStarted(path, (oldPath <> path), currentTime)
 		}
 	}
 

@@ -6,13 +6,12 @@ import io.sarl.jaak.demos.traffic.environment.GroundType
 import io.sarl.jaak.demos.traffic.environment.Path
 import io.sarl.jaak.demos.traffic.environment.Siren
 import io.sarl.jaak.demos.traffic.logging.SimulationAgentLoggerCapacity
+import io.sarl.jaak.demos.traffic.logging.SimulationEmergencyAgentLoggerCapacity
 import io.sarl.jaak.environment.Perception
 import io.sarl.jaak.environment.PhysicBody
 import io.sarl.lang.core.Agent
-import java.io.Serializable
 import org.arakhne.afc.math.discrete.object2d.Point2i
 import org.arakhne.afc.math.discrete.object2d.Vector2i
-import io.sarl.jaak.demos.traffic.logging.SimulationEmergencyAgentLoggerCapacity
 
 /** This class defines a standard driver.
  * 
@@ -31,24 +30,13 @@ behavior StandardDriver {
 	
 	var path : Path
 	
+	var accelerationFactor = 0
+	
 	new (owner : Agent, target : Point2i) {
 		super(owner);
 		this.target = target
 	}
 	
-	def stopWhenEmergency(sirenPosition : Point2i, groundType : Serializable, direction : Vector2i) : boolean {
-		// Do not stop on cross road.
-		if (groundType !== GroundType::CROSS_ROAD) {
-			var sirenDirection = new Vector2i
-			sirenDirection.sub(sirenPosition, position)
-			var dot = direction.dot(sirenDirection)
-			if (dot >= 0) {
-				return true
-			}
-		}
-		return false
-	}
-
 	on Perception {
 		synchronized(owner) {
 			var groundType = occurrence.body.currentGroundType
@@ -56,43 +44,64 @@ behavior StandardDriver {
 				killMe
 			}
 
-			var direction = Vector2i::toOrientationVector(headingAngle)
-	
-			path = updatePath(path, position, target, direction)
-			logPath(position, path, occurrence.currentTime)
-
 			var siren = occurrence.body.getFirstPerceptionAtCurrentPosition(typeof(Siren))
-			
-			var stopForEmergencyVehicle = false
-			
-			if (siren != null) {
-				var sirenPosition = siren.soundSourcePosition
-				stopForEmergencyVehicle = stopWhenEmergency(sirenPosition, occurrence.body.currentGroundType, direction)
-				logEmergencySirenSignal(sirenPosition, stopForEmergencyVehicle, occurrence.currentTime)
-			}
-			
-			if (!stopForEmergencyVehicle && !occurrence.body.vehicleStop) {
-				var motion : Vector2i = null
-				if (path !== null && !path.empty) {
-					motion = followPath(
-						path,
+	
+			if (this.accelerationFactor > 0 && siren !== null) {
+				this.accelerationFactor --
+			} else {
+				var direction = Vector2i::toOrientationVector(headingAngle)
+		
+				path = updatePath(path, position, target, direction)
+				logPath(position, path, occurrence.currentTime)
+					
+				var stopForEmergencyVehicle = false
+				
+				if (siren != null) {
+					var sirenPosition = siren.soundSourcePosition
+					stopForEmergencyVehicle = isStopOnSiren(
+						sirenPosition,
+						occurrence.body.currentGroundType,
 						position,
-						direction,
-						previousOrientation,
-						occurrence.body.perception,
-						occurrence.body.groundPerception)
+						direction)
+					logEmergencySirenSignal(sirenPosition, stopForEmergencyVehicle, occurrence.currentTime)
 				}
-				if (motion === null) {
-					motion = driveRandomly(
-						position,
-						direction,
-						previousOrientation,
-						occurrence.body.perception,
-						occurrence.body.groundPerception)
-				}
-				if (motion !== null && motion.lengthSquared > 0) {
-					move(motion, true)
-					this.previousOrientation = direction
+				
+				if (!occurrence.body.vehicleStop) {
+					if (stopForEmergencyVehicle) {
+						var v = new Vector2i
+						v.sub(siren.soundSourcePosition, position)
+						var d = v.length
+						if (d > 0) {
+							this.accelerationFactor = Math::round(TrafficConstants::SIREN_RADIUS/d)
+						} else {
+							this.accelerationFactor = 0
+						}
+					} else {
+						this.accelerationFactor = 0
+					}
+
+					var motion : Vector2i = null
+					if (path !== null && !path.empty) {
+						motion = followPath(
+							path,
+							position,
+							direction,
+							previousOrientation,
+							occurrence.body.perception,
+							occurrence.body.groundPerception)
+					}
+					if (motion === null) {
+						motion = driveRandomly(
+							position,
+							direction,
+							previousOrientation,
+							occurrence.body.perception,
+							occurrence.body.groundPerception)
+					}
+					if (motion !== null && motion.lengthSquared > 0) {
+						move(motion, true)
+						this.previousOrientation = direction
+					}
 				}
 			}
 		}

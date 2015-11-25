@@ -291,7 +291,7 @@ public class AntPanel extends JPanel implements JaakListener, MouseListener {
 			try {
 				this.speed = environment.getTurtleSpeed(sx, sy);
 			}
-			catch(Throwable _) {
+			catch(Throwable exception) {
 				this.speed = Float.NaN;
 			}
 		} else {

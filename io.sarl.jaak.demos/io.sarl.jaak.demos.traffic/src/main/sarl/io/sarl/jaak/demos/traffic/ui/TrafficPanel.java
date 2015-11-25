@@ -124,7 +124,7 @@ public class TrafficPanel extends JPanel implements TrafficPrinter, JaakListener
 	}
 
 	@Override
-	public void environmentStateChanged(JaakEvent event) {
+	public synchronized void environmentStateChanged(JaakEvent event) {
 		EnvironmentArea environment = event.getEnvironment();
 		if (environment != null) {
 			this.currentTime = event.getCurrentTime();
@@ -237,13 +237,13 @@ public class TrafficPanel extends JPanel implements TrafficPrinter, JaakListener
 	}
 
 	@Override
-	public void simulationStarted(JaakEvent event) {
+	public synchronized void simulationStarted(JaakEvent event) {
 		setEnvironmentArea(event.getEnvironment());
 		repaint();
 	}
 
 	@Override
-	public void simulationStopped(JaakEvent event) {
+	public synchronized void simulationStopped(JaakEvent event) {
 		repaint();
 	}
 	
